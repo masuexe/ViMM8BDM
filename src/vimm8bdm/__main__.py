@@ -12,7 +12,7 @@ import threading
 import time
 from pathlib import Path
 
-from .control import InputLease, PixelProbe, Frame, synthetic_frame, ControlKeys
+from .control import InputLease, PixelProbe, Frame, synthetic_frame, ControlKeys, InputCheckPolicy, blank_frame, Action
 
 
 class DrySink:
@@ -28,6 +28,7 @@ class DrySink:
 
 def doctor():
     result = {"platform": platform.platform(), "python": platform.python_version(),
+              "timing_clock": "perf_counter", "timing_resolution_ns": time.get_clock_info("perf_counter").resolution * 1e9,
               "display": os.getenv("DISPLAY"), "wayland_display": os.getenv("WAYLAND_DISPLAY"),
               "dependencies": {name: bool(importlib.util.find_spec(name))
                                for name in ("mss", "pynput", "torch", "vizdoom")}}
@@ -64,9 +65,9 @@ def check_window(args):
     matched = samples = 0
     observed = set()
     try:
-        started = time.monotonic()
+        started = time.perf_counter()
         for _ in range(args.frames):
-            if time.monotonic() - started >= args.seconds:
+            if time.perf_counter() - started >= args.seconds:
                 break
             matched += focus()
             observed.add(hex(focus.current()))
@@ -81,10 +82,13 @@ def check_window(args):
 
 def summarize(rows, mode, policy_name, exit_reason):
     summary = {"mode": mode, "frames": len(rows), "units": "milliseconds",
+               "timing_clock": "perf_counter",
+               "timing_resolution_ns": time.get_clock_info("perf_counter").resolution * 1e9,
                "policy": policy_name,
                "exit_reason": exit_reason,
                "neural_inference_measured": policy_name == "continuousdoom",
                "accepted_actions": sum(row["applied"] for row in rows),
+               "inactive_or_rejected_frames": sum(not row["applied"] for row in rows),
                "input_stage": "lease_and_sink" if any(row["applied"] for row in rows)
                               else "lease_gate_without_input_dispatch"}
     for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
@@ -93,6 +97,13 @@ def summarize(rows, mode, policy_name, exit_reason):
             summary[key] = {"p50": statistics.median(vals),
                             "p95": vals[max(0, math.ceil(len(vals) * .95) - 1)],
                             "max": vals[-1]}
+    accepted = [row for row in rows if row["applied"]]
+    summary["accepted_action_latency"] = {}
+    for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
+        vals = sorted(row[key] for row in accepted)
+        if vals:
+            summary["accepted_action_latency"][key] = {
+                "p50": statistics.median(vals), "p95": vals[math.ceil(len(vals) * .95) - 1], "max": vals[-1]}
     print(json.dumps(summary, indent=2))
 
 
@@ -115,9 +126,10 @@ def run(args):
             sink = DesktopSink()
             import mss
             from pynput import keyboard
-            if args.capture == "x11-window":
-                from .desktop import X11WindowCapture
-                capture = X11WindowCapture(args.window_id)
+            if args.capture in ("x11-window", "window"):
+                from .desktop import X11WindowCapture, WindowsWindowCapture
+                capture = (WindowsWindowCapture(args.window_id) if args.capture == "window" and sys.platform == "win32"
+                           else X11WindowCapture(args.window_id))
             else:
                 capture = mss.MSS()
                 left, top, width, height = args.region
@@ -162,6 +174,8 @@ def run(args):
                 raise ValueError("ContinuousDoom requires --continuous-source, --checkpoint, and --yaw-scale")
             from .continuous import ContinuousPolicy
             policy = ContinuousPolicy(args.continuous_source, args.checkpoint, args.yaw_scale)
+        elif args.policy == "input_check":
+            policy = InputCheckPolicy()
         else:
             policy = PixelProbe()
         # Model construction can exceed the lease. Start each policy paused.
@@ -170,41 +184,61 @@ def run(args):
             lease.toggle()
         else:
             print(f"Live probe paused. F8: enable/pause. Esc: pause. F9: exit. Run limit: {args.seconds:g} seconds.", flush=True)
-        started = time.monotonic()
+        started = time.perf_counter()
+        previously_armed = False
+        previous_phase = None
         exit_reason = "frame_limit"
         for index in range(args.frames):
             if stop.is_set():
                 exit_reason = lease.reason
                 break
-            if time.monotonic() - started >= args.seconds:
+            if time.perf_counter() - started >= args.seconds:
                 exit_reason = "duration_limit"
                 break
-            begin = time.monotonic_ns()
+            begin = time.perf_counter_ns()
             if args.live:
-                if args.capture == "x11-window":
+                if args.capture in ("x11-window", "window"):
                     frame = capture.grab()
                 else:
                     shot = capture.grab(region)
                     frame = Frame(shot.width, shot.height, bytes(shot.bgra), begin)
             else:
                 frame = synthetic_frame(index)
-            captured = time.monotonic_ns()
-            action = policy.predict(frame).bounded()
-            predicted = time.monotonic_ns()
+            captured = time.perf_counter_ns()
+            armed = lease.armed
+            if armed and not previously_armed and hasattr(policy, "reset"):
+                policy.reset()
+            previously_armed = armed
+            invalid_frame = blank_frame(frame)
+            if invalid_frame:
+                lease.pause("blank_frame")
+                action = Action()
+            elif args.policy == "input_check" and not armed:
+                action = Action()
+            else:
+                action = policy.predict(frame).bounded()
+            phase = getattr(policy, "phase", None)
+            if args.live and args.policy == "input_check" and armed and phase != previous_phase:
+                print("Input check:", phase, flush=True)
+                previous_phase = phase
+            if args.policy == "input_check" and policy.complete:
+                lease.pause("probe_complete")
+            predicted = time.perf_counter_ns()
             applied = lease.submit(action, frame.captured_ns)
-            end = time.monotonic_ns()
+            end = time.perf_counter_ns()
             row = {"frame": index, "capture_started_ns": begin,
                    "capture_ms": (captured - begin) / 1e6,
                    "policy_ms": (predicted - captured) / 1e6,
                    "input_ms": (end - predicted) / 1e6, "loop_ms": (end - begin) / 1e6,
                    "applied": applied, "control_state": lease.reason,
+                   "policy_phase": phase, "blank_frame": invalid_frame,
                    "action": {"keys": sorted(action.keys), "dx": action.mouse_dx,
                               "dy": action.mouse_dy, "attack": action.attack}}
             rows.append(row)
             if output:
                 output.write(json.dumps(row) + "\n")
             if args.live:
-                stop.wait(max(0, 1 / args.hz - (end - begin) / 1e9))
+                time.sleep(max(0, 1 / args.hz - (end - begin) / 1e9))
     except KeyboardInterrupt:
         exit_reason = "keyboard_interrupt"
     finally:
@@ -241,12 +275,12 @@ def main():
     diagnostics.add_argument("--check-window", action="store_true", help="Measure window focus without sending input")
     parser.add_argument("--all-windows", action="store_true", help="Include other visible windows in the local list")
     parser.add_argument("--include-window-titles", action="store_true", help="Include titles in local diagnostic output")
-    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom"), default="red_marker_probe")
+    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check"), default="red_marker_probe")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="External ContinuousDoom state_dict path")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")
-    parser.add_argument("--capture", choices=("desktop", "x11-window"), default="desktop")
+    parser.add_argument("--capture", choices=("desktop", "x11-window", "window"), default="desktop")
     parser.add_argument("--window-id", type=lambda x: int(x, 0))
     parser.add_argument("--region", type=int, nargs=4, metavar=("LEFT", "TOP", "WIDTH", "HEIGHT"))
     parser.add_argument("--frames", type=int, default=120)

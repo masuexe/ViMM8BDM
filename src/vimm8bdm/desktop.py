@@ -27,6 +27,8 @@ class Focus:
                 return False
             if info.process_id != self.identity.process_id or info.class_name != self.identity.class_name:
                 return False
+            if (info.width, info.height) != (self.identity.width, self.identity.height):
+                return False
             return focus_matches(self.window_id, self.current(), self.windows.parent_of)
         except Exception:
             return False
@@ -44,6 +46,10 @@ class DesktopSink:
         self.key_module, self.mouse_module = keyboard, mouse
         self.held = set()
         self.attacking = False
+        self.relative_mouse = None
+        if sys.platform == "win32":
+            from .winmouse import WindowsRelativeMouse
+            self.relative_mouse = WindowsRelativeMouse()
 
     def key(self, name):
         return getattr(self.key_module.Key, name) if name in {"space", "shift"} else name
@@ -60,7 +66,12 @@ class DesktopSink:
             self.attacking = action.attack
             method = self.mouse.press if action.attack else self.mouse.release
             method(self.mouse_module.Button.left)
-        self.mouse.move(round(action.mouse_dx), round(action.mouse_dy))
+        dx, dy = round(action.mouse_dx), round(action.mouse_dy)
+        if dx or dy:
+            if self.relative_mouse:
+                self.relative_mouse.move(dx, dy)
+            else:
+                self.mouse.move(dx, dy)
 
     def release(self):
         errors = []
@@ -92,7 +103,7 @@ class X11WindowCapture:
         from Xlib import X
         from .control import Frame
         import time
-        started = time.monotonic_ns()
+        started = time.perf_counter_ns()
         geometry = self.window.get_geometry()
         visual = self.window.get_attributes().visual
         # The prototype supports the tested 24-bit TrueColor visual only.
@@ -110,3 +121,32 @@ class X11WindowCapture:
 
     def close(self):
         self.connection.close()
+
+
+class WindowsWindowCapture:
+    """Capture the client area only while the selected window has focus."""
+
+    def __init__(self, window_id):
+        import mss
+        from .windows import WindowsDesktop
+        self.window_id = window_id
+        self.windows = WindowsDesktop()
+        self.capture = mss.MSS()
+
+    def grab(self):
+        import time
+        from .control import Frame
+        from .windows import focus_matches
+        started = time.perf_counter_ns()
+        info = self.windows.describe(self.window_id)
+        if info is None or not info.visible or info.width <= 0 or info.height <= 0:
+            raise RuntimeError("The selected window is unavailable for capture")
+        if not focus_matches(self.window_id, self.windows.current(), self.windows.parent_of):
+            return Frame(info.width, info.height, bytes(info.width * info.height * 4), started)
+        region = {"left": info.left, "top": info.top, "width": info.width, "height": info.height}
+        shot = self.capture.grab(region)
+        return Frame(shot.width, shot.height, bytes(shot.bgra), started)
+
+    def close(self):
+        self.capture.close()
+        self.windows.close()

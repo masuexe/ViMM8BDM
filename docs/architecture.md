@@ -5,6 +5,11 @@ The deployment process will observe displayed pixels and send normal keyboard an
 Add target-game recordings before training a larger policy.
 Do not change the engine for Milestone 1.
 
+Use official `3.3-alpha-r260925-2352` as the primary runtime target.
+This revision matches the engine used for normal play.
+Keep 3.2.1 as a separate compatibility baseline.
+Do not transfer an acceptance result between engine revisions without a new test.
+
 ## Final deployment contract
 
 The client must use the official, unchanged Zandronum executable.
@@ -64,7 +69,7 @@ It must also accept the user's pause command without waiting for inference.
 
 ## Host choice
 
-Use a Windows process for capture and input if the client runs on Windows.
+Use a Windows process for capture and input on the primary runtime.
 Use a Linux process if the client runs on Linux.
 WSL remains suitable for research and training.
 Do not assume that WSL screenshot packages can capture Windows application surfaces.
@@ -75,11 +80,18 @@ Direct X11 window capture returned the rendered game image.
 The prototype therefore offers an `x11-window` backend.
 That backend supports the tested 24-bit TrueColor format only.
 
-The current Windows code checks the foreground HWND and uses pynput input.
-No Windows live test ran.
-SDL relative mouse input and Windows Raw Input need separate tests.
-If pynput fails, replace that input backend with normal Win32 `SendInput`.
+The Windows code checks the foreground HWND and window identity.
+Keyboard and button events use pynput.
+Relative mouse movement uses normal Win32 `SendInput` events.
+The capture backend follows the client area and omits other foreground applications.
+The Windows alpha input test passed the operator's visual check without camera flicker.
+Mouse calibration and performance under network delay still require tests.
 Do not use engine hooks as a fallback.
+
+The optional local-server test uses a stock server bound to the loopback address.
+The ordinary stock client joins that server as a Player.
+This avoids the automatic bots in the single-player campaign.
+It does not install an additional server component or inspect network packets.
 
 ## Observation contract
 

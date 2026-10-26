@@ -1,0 +1,72 @@
+{
+  "engine": "3.3-alpha - 260925-2352",
+  "operating_system": "Windows 11",
+  "python": "3.12.5",
+  "official_archive": {
+    "url": "https://zandronum.com/downloads/testing/3.3/ZandroDev3.3-260925-2352windows-x86_64.zip",
+    "archive_bytes": 7240352,
+    "archive_sha256": "9e3544ee46fdfa9cbff6f5d3f30583db4fd9ba617bc8dd7bc30fabb84596b3dc",
+    "files": [
+      {
+        "file": "brightmaps.pk3",
+        "bytes": 245157,
+        "sha256": "22a2d4bb6e6023f240a9ec709354724d9d9e10ff1d80c722d907a543d38b1e7d"
+      },
+      {
+        "file": "fmodex64.dll",
+        "bytes": 1503232,
+        "sha256": "da233648ed16dfc0c109447784e55995f8a11156d9c9e7c0f1feb8e6b523473c"
+      },
+      {
+        "file": "skulltag_actors.pk3",
+        "bytes": 57280,
+        "sha256": "3f270becdb0e2df670e93dd4acd6fbc2a57e82a1244915672bc386b034b44e99"
+      },
+      {
+        "file": "zandronum.exe",
+        "bytes": 11836416,
+        "sha256": "b141887e5f60448e8567291787ab2b761a5f841768f1373220005cdb8876babf"
+      },
+      {
+        "file": "zandronum.pk3",
+        "bytes": 958077,
+        "sha256": "a709dec2d228afb411f67d36e34603371da50dd5051da22984fba29dc4badb52"
+      }
+    ]
+  },
+  "policy": "input_check",
+  "frames": 1705,
+  "accepted_actions": 119,
+  "accepted_phases": {
+    "ready": 9,
+    "forward": 10,
+    "release_movement": 6,
+    "strafe_right": 8,
+    "release_strafe": 5,
+    "yaw_right": 9,
+    "yaw_left": 10,
+    "pitch_up": 8,
+    "pitch_down": 9,
+    "release_aim": 6,
+    "attack": 10,
+    "release_attack": 10,
+    "jump": 2,
+    "release_jump": 8,
+    "weapon_slot_2": 1,
+    "release_weapon": 8
+  },
+  "control_states": {
+    "blank_frame": 1259,
+    "armed": 119,
+    "probe_complete": 327
+  },
+  "operator_report": "No flicker. Automatic actions were normal.",
+  "physical_mouse": "normal, according to the operator",
+  "automatic_mouse": "normal, according to the operator",
+  "aim_interface_acceptance": "pass",
+  "neural_policy_inference": false,
+  "latency_acceptance": "not established by this run",
+  "timing_limit": "The first Windows trace used a clock with approximately 16 ms steps. Zero-duration samples do not establish zero latency.",
+  "exit_reason": "duration_limit",
+  "server_scope": "Loopback only, stock server mode, ordinary Player client."
+}

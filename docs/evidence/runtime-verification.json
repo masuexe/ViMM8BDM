@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-26",
+  "primary_engine": "3.3-alpha-r260925-2352",
+  "primary_host": "Windows native",
+  "development_host": "WSL",
+  "linux_offline_tests": {
+    "tests": 42,
+    "result": "pass"
+  },
+  "windows_offline_tests": {
+    "tests": 42,
+    "result": "pass",
+    "python": "3.12.5"
+  },
+  "windows_performance_counter": {
+    "clock": "perf_counter",
+    "reported_resolution_ns": 100,
+    "visible_response_latency_measured": false
+  },
+  "windows_engine_unchanged_after_test": true,
+  "public_repository": "https://github.com/masuexe/ViMM8BDM",
+  "limits": [
+    "The input-check policy is a rule sequence, not a learned combat policy.",
+    "Linux/WSLg camera flicker remains unresolved.",
+    "An independent input watchdog and long-session acceptance remain incomplete."
+  ]
+}

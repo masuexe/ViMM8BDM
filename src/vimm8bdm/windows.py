@@ -13,6 +13,8 @@ class WindowInfo:
     width: int
     height: int
     visible: bool
+    left: int | None = None
+    top: int | None = None
 
     def diagnostic_view(self, include_title=False):
         # This output is local diagnostic data, not public experiment evidence.
@@ -97,17 +99,28 @@ class WindowsDesktop:
         from ctypes import wintypes
         self.wintypes = wintypes
         self.lib = ctypes.WinDLL("user32", use_last_error=True)
+        # Set DPI handling before recording any client dimensions or screen coordinates.
+        if hasattr(self.lib, "SetProcessDpiAwarenessContext"):
+            self.lib.SetProcessDpiAwarenessContext.argtypes = [ctypes.c_void_p]
+            self.lib.SetProcessDpiAwarenessContext.restype = wintypes.BOOL
+            self.lib.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
+        else:
+            self.lib.SetProcessDPIAware.argtypes = []
+            self.lib.SetProcessDPIAware.restype = wintypes.BOOL
+            self.lib.SetProcessDPIAware()
         for name in ("GetForegroundWindow", "GetAncestor"):
             getattr(self.lib, name).restype = ctypes.c_void_p
         self.lib.GetAncestor.argtypes = [ctypes.c_void_p, ctypes.c_uint]
         self.lib.GetForegroundWindow.argtypes = []
-        for name in ("IsWindow", "IsWindowVisible"):
+        for name in ("IsWindow", "IsWindowVisible", "IsIconic"):
             getattr(self.lib, name).argtypes = [ctypes.c_void_p]
             getattr(self.lib, name).restype = wintypes.BOOL
         self.lib.GetWindowThreadProcessId.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.DWORD)]
         self.lib.GetWindowThreadProcessId.restype = wintypes.DWORD
         self.lib.GetClientRect.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.RECT)]
         self.lib.GetClientRect.restype = wintypes.BOOL
+        self.lib.ClientToScreen.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.POINT)]
+        self.lib.ClientToScreen.restype = wintypes.BOOL
         for name in ("GetClassNameW", "GetWindowTextW"):
             getattr(self.lib, name).argtypes = [ctypes.c_void_p, wintypes.LPWSTR, ctypes.c_int]
             getattr(self.lib, name).restype = ctypes.c_int
@@ -133,9 +146,13 @@ class WindowsDesktop:
         title, class_name = ctypes.create_unicode_buffer(1024), ctypes.create_unicode_buffer(256)
         self.lib.GetWindowTextW(window_id, title, len(title))
         self.lib.GetClassNameW(window_id, class_name, len(class_name))
+        origin = self.wintypes.POINT()
+        if not self.lib.ClientToScreen(window_id, ctypes.byref(origin)):
+            return None
         return WindowInfo(window_id, pid.value or None, class_name.value, title.value,
                           rectangle.right - rectangle.left, rectangle.bottom - rectangle.top,
-                          bool(self.lib.IsWindowVisible(window_id)))
+                          bool(self.lib.IsWindowVisible(window_id)) and not self.lib.IsIconic(window_id),
+                          origin.x, origin.y)
 
     def enumerate(self):
         result = []

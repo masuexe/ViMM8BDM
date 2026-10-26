@@ -57,6 +57,57 @@ class PixelProbe:
         return Action(frozenset({"w"}), dx, dy, abs(dx) < 2 and abs(dy) < 2)
 
 
+def blank_frame(frame):
+    """Reject an image when every sampled RGB pixel is almost black."""
+    step = max(1, frame.width * frame.height // 4096)
+    return all(max(frame.bgra[i:i + 3]) <= 3
+               for i in range(0, len(frame.bgra), step * 4))
+
+
+class InputCheckPolicy:
+    """Exercise each input separately in a short local sequence."""
+
+    STEPS = (
+        ("ready", .5, Action()),
+        ("forward", .5, Action(frozenset({"w"}))),
+        ("release_movement", .3, Action()),
+        ("strafe_right", .5, Action(frozenset({"d"}))),
+        ("release_strafe", .3, Action()),
+        ("yaw_right", .5, Action(mouse_dx=4)),
+        ("yaw_left", .5, Action(mouse_dx=-4)),
+        ("pitch_up", .5, Action(mouse_dy=-2)),
+        ("pitch_down", .5, Action(mouse_dy=2)),
+        ("release_aim", .3, Action()),
+        ("attack", .6, Action(attack=True)),
+        ("release_attack", .5, Action()),
+        ("jump", .1, Action(frozenset({"space"}))),
+        ("release_jump", .5, Action()),
+        ("weapon_slot_2", .1, Action(frozenset({"2"}))),
+        ("release_weapon", .5, Action()),
+    )
+
+    def __init__(self, clock=time.perf_counter):
+        self.clock = clock
+        self.reset()
+
+    def reset(self):
+        self.started = self.clock()
+        self.phase = "ready"
+        self.complete = False
+
+    def predict(self, frame):
+        elapsed = max(0, self.clock() - self.started)
+        end = 0
+        for phase, duration, action in self.STEPS:
+            end += duration
+            if elapsed < end:
+                self.phase = phase
+                return action
+        self.phase = "complete"
+        self.complete = True
+        return Action()
+
+
 class InputLease:
     """Disarm on takeover, stale frames, lost focus, or an expired heartbeat.
 
@@ -64,7 +115,7 @@ class InputLease:
     inputs owned by this process. Desktop calls are serialized with takeover.
     """
 
-    def __init__(self, sink, focused, clock=time.monotonic_ns,
+    def __init__(self, sink, focused, clock=time.perf_counter_ns,
                  max_age_ns=150_000_000, lease_ns=200_000_000):
         self.sink, self.focused, self.clock = sink, focused, clock
         self.max_age_ns, self.lease_ns = max_age_ns, lease_ns
@@ -151,4 +202,4 @@ def synthetic_frame(index=0, width=160, height=120):
         for x in range(cx - 12, cx + 12):
             i = (y * width + x) * 4
             raw[i:i + 4] = bytes((0, 0, 255, 255))
-    return Frame(width, height, bytes(raw), time.monotonic_ns())
+    return Frame(width, height, bytes(raw), time.perf_counter_ns())

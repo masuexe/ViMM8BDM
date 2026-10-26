@@ -1,0 +1,82 @@
+{
+  "engine": "3.3-alpha - 260925-2352",
+  "official_archive": {
+    "url": "https://zandronum.com/downloads/testing/3.3/ZandroDev3.3-260925-2352linux-x86_64.tar.bz2",
+    "archive_sha256": "bee270ad15a3fe8ca895bc7ab9aacc500789702aba9006d65d8eee3707e66a43",
+    "archive_bytes": 8467178,
+    "files": [
+      {
+        "file": "libfmodex64-4.44.64.so",
+        "bytes": 1491584,
+        "sha256": "251bbf53d1ce7e886057f44ebb92fd857688d7887c45d04ebabf705759f179e9"
+      },
+      {
+        "file": "liboutput_sdl.so",
+        "bytes": 29544,
+        "sha256": "3adcbf55928b0a0866c06ec4fb6941a09b957ba111094cc803282e17c84f1bec"
+      },
+      {
+        "file": "skulltag_actors.pk3",
+        "bytes": 57280,
+        "sha256": "3f270becdb0e2df670e93dd4acd6fbc2a57e82a1244915672bc386b034b44e99"
+      },
+      {
+        "file": "zandronum",
+        "bytes": 8550688,
+        "sha256": "1aab924647f3a30ad381f20b45b24cc905b666c092640c949aff811ee08aeb2c"
+      },
+      {
+        "file": "zandronum-server",
+        "bytes": 9851176,
+        "sha256": "5aa390e0bcfe00d9dc7cccf92775da680a70d5949c042792ee26e5e83754fa32"
+      },
+      {
+        "file": "zandronum.pk3",
+        "bytes": 958077,
+        "sha256": "a709dec2d228afb411f67d36e34603371da50dd5051da22984fba29dc4badb52"
+      }
+    ]
+  },
+  "test": "stock_loopback_server_input_check",
+  "frames": 1798,
+  "accepted_actions": 154,
+  "blank_frames": 0,
+  "accepted_phases": {
+    "ready": 21,
+    "forward": 19,
+    "release_movement": 6,
+    "strafe_right": 10,
+    "release_strafe": 6,
+    "yaw_right": 10,
+    "yaw_left": 10,
+    "pitch_up": 10,
+    "pitch_down": 10,
+    "release_aim": 6,
+    "attack": 12,
+    "release_attack": 10,
+    "jump": 2,
+    "release_jump": 10,
+    "weapon_slot_2": 2,
+    "release_weapon": 10
+  },
+  "control_states": {
+    "policy_ready": 685,
+    "armed": 154,
+    "probe_complete": 302,
+    "manual": 80,
+    "escape_pause": 577
+  },
+  "operator_report": "Other actions worked. Camera movement flickered with AI input and with a physical mouse.",
+  "manual_comparison": {
+    "controller_and_capture_stopped": true,
+    "physical_mouse_flicker_persisted": true
+  },
+  "aim_acceptance": "failed",
+  "cause": "Unresolved. This experiment does not isolate an engine fault.",
+  "runtime_libraries": {
+    "SDL12_compat": "1.2.68-2",
+    "SDL2": "2.30.0+dfsg-1build3"
+  },
+  "observed_escape_pause_and_reenable": true,
+  "exit_reason": "duration_limit"
+}

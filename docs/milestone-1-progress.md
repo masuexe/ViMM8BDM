@@ -78,16 +78,57 @@ The controller also explains that F8 cannot control a stopped process.
 
 The expanded suite passed 30 offline tests after this correction.
 The new tests check Escape pause, key repeat, exit, and blocked focus.
-Live regression of the corrected keys remains a separate check.
+At this stage, live regression of the corrected keys remained a separate check.
 
 
 A separate stock-client startup checked the new configuration.
 The saved game configuration contained no F8 or F9 binding.
 That test sent no control input.
 The test client stopped after the check.
-Live testing of Escape pause and F8 re-enabling remains unverified.
+At this stage, live testing of Escape pause and F8 re-enabling remained unverified.
 
 The [sanitized M1 evidence](evidence/milestone-1.json) records these results.
 The [current offline test log](evidence/milestone-1-tests.txt) records the 32-test suite.
 
 The final suite passed 32 tests, including checks against the actual Git index contents.
+
+## Later input and runtime tests
+
+The separate input-check policy exercises each control in a short sequence.
+It checks movement, both aim axes, attack, release, jump, and a weapon key.
+It pauses after the sequence.
+A new enable command starts a new sequence.
+Black images and changed client dimensions block input.
+
+The 3.2.1 loopback test accepted 268 actions across two sequences.
+The operator reported visible movement, jump, camera movement, and attack.
+The operator also reported that control could be enabled again after a pause.
+See the [baseline input evidence](evidence/input-check-321.json).
+
+The Linux alpha test accepted 154 actions.
+The log records Escape pause followed by re-enabling.
+The operator reported camera flicker with automatic and physical mouse movement.
+The physical-mouse symptom continued after capture and control stopped.
+The project did not establish its exact cause.
+Aim acceptance failed for this environment.
+See the [Linux alpha evidence](evidence/input-check-alpha.json).
+
+The project then tested official Windows alpha with Windows native Python.
+The operator reported normal physical and automatic mouse behavior without flicker.
+The sequence completed with 119 accepted actions.
+The Windows log also records Escape pause without early process exit.
+See the [Windows alpha evidence](evidence/input-check-windows-alpha.json).
+
+The primary runtime now uses Windows native capture and relative `SendInput` movement.
+The exact engine revision is `3.3-alpha-r260925-2352`.
+The [engine report](engine-and-mouse.md) explains this decision and its limits.
+
+The first Windows trace used a clock with approximately 16 ms steps.
+Its zero-duration samples do not establish zero latency.
+The code now uses `perf_counter_ns` for capture, action age, and stage timing.
+Windows reports a 100 ns counter resolution in the local check.
+This is a clock property, not measured visible response latency.
+The summary separates accepted-action timing from inactive or rejected frames.
+
+The current Linux and Windows suites each passed 42 tests.
+Independent watchdog recovery, calibrated aim, and long-session acceptance remain incomplete.

@@ -23,6 +23,9 @@ This estimate excludes combat training and unresolved upstream permissions.
 ### Step 1: select and identify the deployment host
 
 Use the operating system that will run the official client.
+Use official `3.3-alpha-r260925-2352` for primary acceptance tests.
+Keep the 3.2.1 results as a separate baseline.
+The normal-play environment determines the primary revision rather than the stable or alpha label alone.
 For Windows, use Windows Python for capture and input.
 For Linux, use the tested X11 path first.
 

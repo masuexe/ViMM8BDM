@@ -1,9 +1,16 @@
 # ViMM8BDM
 
+Public repository: [masuexe/ViMM8BDM](https://github.com/masuexe/ViMM8BDM).
+
 ViMM8BDM will control an unmodified Zandronum client through game images and normal keyboard and mouse input.
 The target stack is MM8BDM v6a, CBM v9fh, and Gondola Patch v2.7h2.
 The AI must join permitted servers as a normal Player.
 The user must be able to stop AI input at any time.
+
+The primary runtime target is the official `3.3-alpha-r260925-2352` build used for normal play.
+Zandronum 3.2.1 remains a compatibility baseline.
+Test results apply only to the engine revision that produced them.
+The project does not use an MCP engine for the deployment path.
 
 Run the commands from the repository root.
 
@@ -69,15 +76,40 @@ python3 -m venv .venv
 For a Windows game, use these commands:
 
 ```powershell
-py -m venv .venv
-.venv\Scripts\python -m pip install -e ".[desktop]"
+py -3.12 -m venv .local/windows-venv
+.local\windows-venv\Scripts\python -m pip install -e ".[desktop]"
 ```
+
+Use a separate Windows environment when the repository already contains a Linux environment.
+The primary runtime uses Windows native capture and relative mouse input.
+The Linux/WSLg alpha test produced camera flicker even after the controller stopped.
+The Windows native test did not reproduce that flicker.
+See the [engine and mouse report](docs/engine-and-mouse.md).
 
 The experiment used a project environment with Python 3.13.15.
 The initial system Python was 3.12.3.
 See the tested package versions in the experiment report.
-A Windows desktop test remains necessary.
+The Windows alpha input test passed the operator's visual check.
 Native Wayland capture and control are outside this prototype.
+
+## Primary Windows input test
+
+Run these commands from the repository root in PowerShell:
+
+```powershell
+.local\windows-venv\Scripts\python -m vimm8bdm --list-windows
+.local\windows-venv\Scripts\python -m vimm8bdm --live --capture window `
+  --window-id 0xYOUR_WINDOW_ID --policy input_check `
+  --seconds 90 --frames 1800 --hz 20 --output runs/input-check.jsonl
+```
+
+Select the game window rather than the server console.
+Press F8 to start a sequence.
+Press Esc to pause.
+Press F9 to stop the controller.
+The `window` capture backend uses the current client position and dimensions.
+It does not capture another foreground application while waiting for the selected game.
+Relative mouse events use normal Win32 `SendInput` calls.
 
 ## Run a local desktop probe
 
@@ -140,6 +172,22 @@ Press F8 again to enable input after a pause.
 The probe assumes WASD movement and mouse-button-1 attack.
 It does not change the user's game configuration.
 
+Use the separate input-check policy for a local interface test:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m vimm8bdm --live --capture x11-window \
+  --window-id 0xYOUR_WINDOW_ID --policy input_check \
+  --seconds 90 --frames 1800 --hz 20 --output runs/input-check.jsonl
+```
+
+Press F8 to start the sequence.
+It checks movement, both aim axes, attack, jump, and a weapon key separately.
+It releases inputs between actions and pauses after approximately seven seconds.
+Press F8 to start a new sequence after a pause.
+This policy checks the interface rather than enemy detection or combat skill.
+Black captured images block input.
+A changed client size also blocks input until a new run selects the window again.
+
 Use a separate configuration when starting a local test client:
 
 ```bash
@@ -159,7 +207,14 @@ The controller cannot suppress those keys in an unrelated game configuration.
 The final summary reports the exit reason.
 After exit, F8 cannot enable the stopped controller.
 The Linux startup path passed a local test.
-The Windows startup path remains untested.
+The local Windows startup path passed the alpha test.
+
+Add `--loopback-server` for a stock local server without campaign bots.
+The server binds to `127.0.0.1` and does not join a public session.
+Linux requires `zandronum-server` in the engine directory.
+Windows uses `zandronum-server.exe` if present, or the stock `zandronum.exe` server mode.
+The script records both process IDs in the excluded run directory.
+Stop both test processes after the experiment.
 
 The Python watchdog cannot guarantee release after a hard interpreter failure or forced process termination.
 A separate input process is a deployment requirement.

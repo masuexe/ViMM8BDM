@@ -115,6 +115,13 @@ class ControlTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Frame(2, 2, b"", self.now)
 
+    def test_capture_and_default_lease_use_the_same_clock(self):
+        sink = Sink()
+        lease = InputLease(sink, lambda: True, max_age_ns=5_000_000_000, lease_ns=5_000_000_000)
+        frame = synthetic_frame()
+        lease.toggle()
+        self.assertTrue(lease.submit(Action(), frame.captured_ns))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,46 @@
+{
+  "engine": "3.2.1 - 250804-2140",
+  "test": "loopback_server_input_check",
+  "frames": 1997,
+  "accepted_actions": 268,
+  "blank_frames": 0,
+  "accepted_phases": {
+    "ready": 21,
+    "forward": 20,
+    "release_movement": 12,
+    "strafe_right": 20,
+    "release_strafe": 12,
+    "yaw_right": 20,
+    "yaw_left": 20,
+    "pitch_up": 20,
+    "pitch_down": 20,
+    "release_aim": 12,
+    "attack": 24,
+    "release_attack": 20,
+    "jump": 4,
+    "release_jump": 20,
+    "weapon_slot_2": 4,
+    "release_weapon": 19
+  },
+  "control_states": {
+    "policy_ready": 240,
+    "armed": 268,
+    "manual": 650,
+    "probe_complete": 839
+  },
+  "accepted_input_call_duration": {
+    "p50_ms": 1.3470935000000002,
+    "p95_ms": 1.886559,
+    "max_ms": 2.541529
+  },
+  "exit_reason": "duration_limit",
+  "operator_report": [
+    "Movement, jump, camera movement, and mouse-button-1 attack were visible.",
+    "Control could be enabled again after a pause."
+  ],
+  "limits": [
+    "The operator did not separately identify every aim direction.",
+    "This is not an autonomous combat benchmark.",
+    "Input-call duration is not visible game response latency."
+  ]
+}
