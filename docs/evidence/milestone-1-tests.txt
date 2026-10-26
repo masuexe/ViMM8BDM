@@ -1,0 +1,37 @@
+test_cannot_arm_on_another_window (test_control.ControlTests.test_cannot_arm_on_another_window) ... ok
+test_corrupt_frame_rejected (test_control.ControlTests.test_corrupt_frame_rejected) ... ok
+test_default_pause_prevents_input (test_control.ControlTests.test_default_pause_prevents_input) ... ok
+test_focus_loss_releases_and_requires_rearm (test_control.ControlTests.test_focus_loss_releases_and_requires_rearm) ... ok
+test_invalid_model_action_disarms (test_control.ControlTests.test_invalid_model_action_disarms) ... ok
+test_late_inference_cannot_reapply_after_takeover (test_control.ControlTests.test_late_inference_cannot_reapply_after_takeover) ... ok
+test_late_submit_cannot_revive_expired_lease (test_control.ControlTests.test_late_submit_cannot_revive_expired_lease) ... ok
+test_marker_drives_both_axes_and_attack (test_control.ControlTests.test_marker_drives_both_axes_and_attack) ... ok
+test_partial_input_failure_releases_and_disarms (test_control.ControlTests.test_partial_input_failure_releases_and_disarms) ... ok
+test_stale_and_future_frames_disarm (test_control.ControlTests.test_stale_and_future_frames_disarm) ... ok
+test_takeover_releases_movement_and_attack (test_control.ControlTests.test_takeover_releases_movement_and_attack) ... ok
+test_watchdog_releases_without_policy_heartbeat (test_control.ControlTests.test_watchdog_releases_without_policy_heartbeat) ... ok
+test_blocked_focus_has_an_explicit_state (test_control_keys.ControlKeyTests.test_blocked_focus_has_an_explicit_state) ... ok
+test_escape_pauses_without_ending_the_process (test_control_keys.ControlKeyTests.test_escape_pauses_without_ending_the_process) ... ok
+test_exit_releases_and_prevents_reenabling (test_control_keys.ControlKeyTests.test_exit_releases_and_prevents_reenabling) ... ok
+test_key_repeat_does_not_toggle_twice (test_control_keys.ControlKeyTests.test_key_repeat_does_not_toggle_twice) ... ok
+test_other_keys_do_not_control_the_lease (test_control_keys.ControlKeyTests.test_other_keys_do_not_control_the_lease) ... ok
+test_staged_private_path_is_not_hidden_by_working_copy (test_public_files.PublicFileTests.test_staged_private_path_is_not_hidden_by_working_copy) ... ok
+test_unstaged_local_path_does_not_change_public_index (test_public_files.PublicFileTests.test_unstaged_local_path_does_not_change_public_index) ... ok
+test_ancestor_and_unrelated_focus_do_not_match (test_windows.WindowTests.test_ancestor_and_unrelated_focus_do_not_match) ... ok
+test_candidates_exclude_startup_dialog_and_other_apps (test_windows.WindowTests.test_candidates_exclude_startup_dialog_and_other_apps) ... ok
+test_changed_class_fails_closed (test_windows.WindowTests.test_changed_class_fails_closed) ... ok
+test_cyclic_parent_chain_fails_closed (test_windows.WindowTests.test_cyclic_parent_chain_fails_closed) ... ok
+test_destroyed_window_fails_closed (test_windows.WindowTests.test_destroyed_window_fails_closed) ... ok
+test_diagnostic_view_excludes_titles_by_default (test_windows.WindowTests.test_diagnostic_view_excludes_titles_by_default) ... ok
+test_hidden_or_small_window_blocks_input (test_windows.WindowTests.test_hidden_or_small_window_blocks_input) ... ok
+test_invalid_target_closes_display (test_windows.WindowTests.test_invalid_target_closes_display) ... ok
+test_metadata_errors_fail_closed (test_windows.WindowTests.test_metadata_errors_fail_closed) ... ok
+test_parent_focus_is_not_child_focus (test_windows.WindowTests.test_parent_focus_is_not_child_focus) ... ok
+test_reused_window_with_another_process_fails_closed (test_windows.WindowTests.test_reused_window_with_another_process_fails_closed) ... ok
+test_target_and_descendant_focus_match (test_windows.WindowTests.test_target_and_descendant_focus_match) ... ok
+test_title_changes_do_not_change_identity (test_windows.WindowTests.test_title_changes_do_not_change_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.050s
+
+OK

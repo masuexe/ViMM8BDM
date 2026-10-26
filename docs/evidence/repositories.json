@@ -1,0 +1,638 @@
+{
+  "audited_on": "2026-10-26",
+  "method": "GitHub connector source audit, followed by separate binary downloads and CPU inference after access changed. See experiments.json.",
+  "repositories": [
+    {
+      "repository": "bebeal/ContinuousDoom",
+      "tree_sha": "ae10f186d3f936dab2b4b669797c2a3c0d410e71",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/bebeal/ContinuousDoom/git/trees/ae10f186d3f936dab2b4b669797c2a3c0d410e71?recursive=1",
+      "license_files": [],
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "blob_sha": "e7e8c7a4c8b3fa5a3270828a38a41371ae75388c",
+          "bytes": 15311,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/README.md",
+          "lines": 302
+        },
+        {
+          "path": "VizDoomGym/VizDoomEnv.py",
+          "blob_sha": "8094e5c571ae013592bb2bac168ca8e296d37942",
+          "bytes": 20976,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/VizDoomGym/VizDoomEnv.py",
+          "lines": 479
+        },
+        {
+          "path": "VizDoomGym/scenarios/defend_the_center.cfg",
+          "blob_sha": "0fdc2067721190ff8ed812bd92aea63cb60df786",
+          "bytes": 865,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/VizDoomGym/scenarios/defend_the_center.cfg",
+          "lines": 39
+        },
+        {
+          "path": "actor_critic.py",
+          "blob_sha": "68e4982196a1985742d95ae0763e680ad81ca6c1",
+          "bytes": 7697,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/actor_critic.py",
+          "lines": 212
+        },
+        {
+          "path": "config.py",
+          "blob_sha": "b2eb4bef39ac9436d20414dbb728316dbfda3784",
+          "bytes": 1773,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/config.py",
+          "lines": 39
+        },
+        {
+          "path": "doomEnv.yml",
+          "blob_sha": "67341fd12842533e93644b9842be1e5fc2c6abd6",
+          "bytes": 3095,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/doomEnv.yml",
+          "lines": 111
+        },
+        {
+          "path": "train.py",
+          "blob_sha": "acc11a1d2b6822fd1aa70d3a06c5019c38cb8ebe",
+          "bytes": 6340,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/train.py",
+          "lines": 137
+        },
+        {
+          "path": "utils.py",
+          "blob_sha": "81c325f7698edaa961edbc9ee10bdf41a0c17d30",
+          "bytes": 913,
+          "url": "https://github.com/bebeal/ContinuousDoom/blob/ae10f186d3f936dab2b4b669797c2a3c0d410e71/utils.py",
+          "lines": 34
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".gitignore",
+        "README.md",
+        "actor_critic.py",
+        "config.py",
+        "doomEnv.yml",
+        "memory_buffer.py",
+        "modules.py",
+        "ppo.py",
+        "train.py",
+        "utils.py"
+      ]
+    },
+    {
+      "repository": "tetsuo-ai/tetsuo-doom",
+      "tree_sha": "c09cb3e5b3f67072c8de662b789e6e59398bf24c",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/tetsuo-ai/tetsuo-doom/git/trees/c09cb3e5b3f67072c8de662b789e6e59398bf24c?recursive=1",
+      "license_files": [],
+      "reviewed_files": [
+        {
+          "path": "pyproject.toml",
+          "blob_sha": "727e4b1bbf3299f9e5aaa71dd34adb197b477e2c",
+          "bytes": 563,
+          "url": "https://github.com/tetsuo-ai/tetsuo-doom/blob/c09cb3e5b3f67072c8de662b789e6e59398bf24c/pyproject.toml",
+          "lines": 31
+        },
+        {
+          "path": "src/doom_mcp/actions.py",
+          "blob_sha": "7535ad4d51727569b7a8270d161da7d01bbab940",
+          "bytes": 1417,
+          "url": "https://github.com/tetsuo-ai/tetsuo-doom/blob/c09cb3e5b3f67072c8de662b789e6e59398bf24c/src/doom_mcp/actions.py",
+          "lines": 44
+        },
+        {
+          "path": "src/doom_mcp/game_manager.py",
+          "blob_sha": "e46a3676192dbd5c4c1f46255b9d57696be4aadf",
+          "bytes": 69127,
+          "url": "https://github.com/tetsuo-ai/tetsuo-doom/blob/c09cb3e5b3f67072c8de662b789e6e59398bf24c/src/doom_mcp/game_manager.py",
+          "lines": 1632
+        },
+        {
+          "path": "src/doom_mcp/state.py",
+          "blob_sha": "6cd01f17861f218583c4dac116599298805cc03e",
+          "bytes": 5119,
+          "url": "https://github.com/tetsuo-ai/tetsuo-doom/blob/c09cb3e5b3f67072c8de662b789e6e59398bf24c/src/doom_mcp/state.py",
+          "lines": 167
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".gitignore",
+        "README.md",
+        "pyproject.toml"
+      ]
+    },
+    {
+      "repository": "TencentARC/Player-1",
+      "tree_sha": "63c5a8d65fca75b78b9011e73ecf10aae8c7a7e6",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/TencentARC/Player-1/git/trees/63c5a8d65fca75b78b9011e73ecf10aae8c7a7e6?recursive=1",
+      "license_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "d7861fe3f7c10056b1054c74cc7e19e57bf36e8d"
+        }
+      ],
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "d7861fe3f7c10056b1054c74cc7e19e57bf36e8d",
+          "bytes": 1288,
+          "url": "https://github.com/TencentARC/Player-1/blob/63c5a8d65fca75b78b9011e73ecf10aae8c7a7e6/LICENSE",
+          "lines": 28
+        },
+        {
+          "path": "README.md",
+          "blob_sha": "f1e810d42dd587f7932450423d6e99bfa4369a23",
+          "bytes": 3818,
+          "url": "https://github.com/TencentARC/Player-1/blob/63c5a8d65fca75b78b9011e73ecf10aae8c7a7e6/README.md",
+          "lines": 66
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        "LICENSE",
+        "README.md"
+      ]
+    },
+    {
+      "repository": "JoelJimenez23/DoomBot",
+      "tree_sha": "ecf45c99ff86224399f3d78fa694627f3b830fe8",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/JoelJimenez23/DoomBot/git/trees/ecf45c99ff86224399f3d78fa694627f3b830fe8?recursive=1",
+      "license_files": [],
+      "reviewed_files": [
+        {
+          "path": "doom_env/core/action_space.py",
+          "blob_sha": "b046a82def948841e6899694215bed9ffa570f6f",
+          "bytes": 3720,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/core/action_space.py",
+          "lines": 96
+        },
+        {
+          "path": "doom_env/core/state.py",
+          "blob_sha": "68d60fab74323e548d54012c5c44001a213e6985",
+          "bytes": 6237,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/core/state.py",
+          "lines": 251
+        },
+        {
+          "path": "doom_env/core/vizdoom_core.py",
+          "blob_sha": "609922c8defbf8cae90cf9907e246e577d618cd4",
+          "bytes": 12985,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/core/vizdoom_core.py",
+          "lines": 367
+        },
+        {
+          "path": "doom_env/features/detectors.py",
+          "blob_sha": "48dc60b24c96dfab8e0c5e685e435131a600b80e",
+          "bytes": 4055,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/features/detectors.py",
+          "lines": 108
+        },
+        {
+          "path": "doom_env/features/enemies.py",
+          "blob_sha": "04d511497b56b245c56020da4a708974272088a1",
+          "bytes": 8032,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/features/enemies.py",
+          "lines": 228
+        },
+        {
+          "path": "doom_env/tasks/aim_shoot.py",
+          "blob_sha": "bf595f3146df4c9d49b1b9c236ac9aaf7b8e740d",
+          "bytes": 11310,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/doom_env/tasks/aim_shoot.py",
+          "lines": 287
+        },
+        {
+          "path": "eval/bot_evaluation.py",
+          "blob_sha": "b9e535a7c896b316d9f7a056473e8c83ab8f587f",
+          "bytes": 3248,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/eval/bot_evaluation.py",
+          "lines": 97
+        },
+        {
+          "path": "utils/doom_controller.py",
+          "blob_sha": "0982b0d97b192475e4cfbafa87b868d4459d58b1",
+          "bytes": 20062,
+          "url": "https://github.com/JoelJimenez23/DoomBot/blob/ecf45c99ff86224399f3d78fa694627f3b830fe8/utils/doom_controller.py",
+          "lines": 503
+        }
+      ],
+      "checkpoint_entries": [
+        {
+          "path": "models/ppo_doom_center.zip",
+          "bytes": 172962,
+          "blob_sha": "31aa0dc85bf85b017cee2cdf6c4164701762633e"
+        },
+        {
+          "path": "models/ppo_doom_deadly_corridor_multitask.zip",
+          "bytes": 169777,
+          "blob_sha": "cbc8328a9f99c6d3e1f5e097c6aa1b2a594a5238"
+        },
+        {
+          "path": "models/ppo_doom_health_gathering.zip",
+          "bytes": 180937,
+          "blob_sha": "2731246f26c7fbc9ebce18d8c160dba362e507f4"
+        },
+        {
+          "path": "models/ppo_doom_multiscenario_AB.zip",
+          "bytes": 171314,
+          "blob_sha": "637f721320a9f1f4944bc6f431f316ba374280a1"
+        },
+        {
+          "path": "models/ppo_multimap_labels_800k.zip",
+          "bytes": 171703,
+          "blob_sha": "263743a507114587f084f2720905ccf098bc63b2"
+        },
+        {
+          "path": "models/ppo_multimap_yolo_ft.zip",
+          "bytes": 171325,
+          "blob_sha": "cd43a391cd952af02d546d067cefecf54ff94f12"
+        },
+        {
+          "path": "models/ppo_wadsfolder_paralo_800k.zip",
+          "bytes": 170165,
+          "blob_sha": "f4fd74c75e1fe68987ba8729136ac7d0dfae956f"
+        }
+      ],
+      "root_files": [
+        "README.md",
+        "_vizdoom.ini"
+      ]
+    },
+    {
+      "repository": "Farama-Foundation/ViZDoom",
+      "tree_sha": "ceb89752e79c250cc34718df9b5a71988601a252",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/Farama-Foundation/ViZDoom/git/trees/ceb89752e79c250cc34718df9b5a71988601a252?recursive=1",
+      "license_files": [
+        {
+          "path": "src/vizdoom/bzip2/LICENSE",
+          "blob_sha": "f420cffb67dcd4277b626c20e0da8064b7516e6e"
+        },
+        {
+          "path": "src/vizdoom/dumb/licence.txt",
+          "blob_sha": "961fe4ef8f121495745ec965333211eebb554c7c"
+        },
+        {
+          "path": "src/vizdoom/game-music-emu/license.txt",
+          "blob_sha": "5faba9d48ce750f6f718874fbd6732c89353dc08"
+        },
+        {
+          "path": "src/vizdoom/src/sfmt/LICENSE.txt",
+          "blob_sha": "decb299153989ac0fcf3253a430ae5e25ad268ad"
+        },
+        {
+          "path": "src/vizdoom/src/timidity/COPYING",
+          "blob_sha": "2fa5da3ac5ccf1ff3ba70e1798b1e9050ab7de9a"
+        }
+      ],
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "blob_sha": "ce85806a7d626a2e5177a841bc4b2ab046f601f9",
+          "bytes": 9970,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/README.md",
+          "lines": 183
+        },
+        {
+          "path": "examples/python/learning_pytorch.py",
+          "blob_sha": "f82abb051fe2905c1057de6bc6bcc45ef8f7616a",
+          "bytes": 11025,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/examples/python/learning_pytorch.py",
+          "lines": 362
+        },
+        {
+          "path": "examples/python/record_episodes.py",
+          "blob_sha": "8f3f45f8f98ee7daa2e49bc3cc720d2bb9a03d45",
+          "bytes": 3231,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/examples/python/record_episodes.py",
+          "lines": 109
+        },
+        {
+          "path": "examples/python/spectator.py",
+          "blob_sha": "a2d34415b665ca3c028ed114ebc23c94f434f6fb",
+          "bytes": 2385,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/examples/python/spectator.py",
+          "lines": 81
+        },
+        {
+          "path": "pyproject.toml",
+          "blob_sha": "d47de9f931b06d29921e9bcfc9ac573fbc964649",
+          "bytes": 2254,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/pyproject.toml",
+          "lines": 62
+        },
+        {
+          "path": "setup.py",
+          "blob_sha": "b20fc93629eaaf72d3a13196b63fc9316f3eeaa5",
+          "bytes": 10535,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/setup.py",
+          "lines": 314
+        },
+        {
+          "path": "src/lib/ViZDoomGame.cpp",
+          "blob_sha": "a2099f182da1938f95611fb1ce85056c7c782a39",
+          "bytes": 34586,
+          "url": "https://github.com/Farama-Foundation/ViZDoom/blob/ceb89752e79c250cc34718df9b5a71988601a252/src/lib/ViZDoomGame.cpp",
+          "lines": 873
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".gitignore",
+        ".gitmodules",
+        ".pre-commit-config.yaml",
+        "AGENTS.md",
+        "CMakeLists.txt",
+        "CODE_OF_CONDUCT.md",
+        "ISSUE_TEMPLATE.md",
+        "MANIFEST.in",
+        "README.md",
+        "pyproject.toml",
+        "setup.py",
+        "stubtest_allowlists.txt"
+      ]
+    },
+    {
+      "repository": "glample/Arnold",
+      "tree_sha": "86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/glample/Arnold/git/trees/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4?recursive=1",
+      "license_files": [],
+      "reviewed_files": [
+        {
+          "path": "run.sh",
+          "blob_sha": "5d88ea18ed93803cfcd1b4bd3ca1e54dae1eb207",
+          "bytes": 3400,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/run.sh",
+          "lines": 113
+        },
+        {
+          "path": "src/doom/actions.py",
+          "blob_sha": "835b4dd6c2b5f43679d3ba4e0e285cb8aa996f89",
+          "bytes": 11952,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/doom/actions.py",
+          "lines": 299
+        },
+        {
+          "path": "src/doom/game.py",
+          "blob_sha": "f4c9cfb7d46b0005d76811ed7a8622640ec8d877",
+          "bytes": 30478,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/doom/game.py",
+          "lines": 816
+        },
+        {
+          "path": "src/doom/scenarios/deathmatch.py",
+          "blob_sha": "e78fcb525f765c963a00a181f52f794910b3ac0e",
+          "bytes": 7236,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/doom/scenarios/deathmatch.py",
+          "lines": 207
+        },
+        {
+          "path": "src/model/dqn/base.py",
+          "blob_sha": "6e1c61c9f7ea0e6d15d02e68c185078b5ebde618",
+          "bytes": 9154,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/model/dqn/base.py",
+          "lines": 243
+        },
+        {
+          "path": "src/model/dqn/recurrent.py",
+          "blob_sha": "3e17dc33b986be35b44ff9cd3816c19e9758c75c",
+          "bytes": 6194,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/model/dqn/recurrent.py",
+          "lines": 160
+        },
+        {
+          "path": "src/model/utils.py",
+          "blob_sha": "1d4cc7a708472af5e40858261f29a9359bbe61d0",
+          "bytes": 3465,
+          "url": "https://github.com/glample/Arnold/blob/86af06d2fdb35c4bf552ecacfe8fe6ac1abd8cd4/src/model/utils.py",
+          "lines": 114
+        }
+      ],
+      "checkpoint_entries": [
+        {
+          "path": "pretrained/deathmatch_shotgun.pth",
+          "bytes": 52192720,
+          "blob_sha": "7e72b3098e17db26c4aba1b046d8c853f5eafa4c"
+        },
+        {
+          "path": "pretrained/defend_the_center.pth",
+          "bytes": 9859181,
+          "blob_sha": "17659c62452c051881c5d0e0f0c4b7effe77cbda"
+        },
+        {
+          "path": "pretrained/health_gathering.pth",
+          "bytes": 9765249,
+          "blob_sha": "e2f86a7f85fa1c527098c448d85ae35a9eedcd4d"
+        },
+        {
+          "path": "pretrained/vizdoom_2017_track1.pth",
+          "bytes": 52196840,
+          "blob_sha": "556fc62a446722d53f6f1e6c22c8688bab1d13ab"
+        },
+        {
+          "path": "pretrained/vizdoom_2017_track2.pth",
+          "bytes": 52184528,
+          "blob_sha": "2e3caf179c9899ba037ae5f638309b4744c588b8"
+        }
+      ],
+      "root_files": [
+        ".gitignore",
+        "README.md",
+        "arnold.py",
+        "bots.cfg",
+        "run.sh"
+      ]
+    },
+    {
+      "repository": "alex-petrenko/sample-factory",
+      "tree_sha": "7a837983d3625671650e75c9e9d1c1a99f7b7454",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/alex-petrenko/sample-factory/git/trees/7a837983d3625671650e75c9e9d1c1a99f7b7454?recursive=1",
+      "license_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "aaa4dbc3be1c294e199c5c1a5db4d19897c475b3"
+        }
+      ],
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "aaa4dbc3be1c294e199c5c1a5db4d19897c475b3",
+          "bytes": 1078,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/LICENSE",
+          "lines": 22
+        },
+        {
+          "path": "setup.py",
+          "blob_sha": "f685acfa8cb4664171e47688a6d08500aa29f010",
+          "bytes": 2985,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/setup.py",
+          "lines": 96
+        },
+        {
+          "path": "sf_examples/vizdoom/doom/action_space.py",
+          "blob_sha": "242cd63e6717f7f57bf7220c5f936c5d40222370",
+          "bytes": 4989,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/sf_examples/vizdoom/doom/action_space.py",
+          "lines": 194
+        },
+        {
+          "path": "sf_examples/vizdoom/doom/doom_gym.py",
+          "blob_sha": "3cd85f308cd9996a545ba3c461cbbb357fa5f159",
+          "bytes": 25204,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/sf_examples/vizdoom/doom/doom_gym.py",
+          "lines": 698
+        },
+        {
+          "path": "sf_examples/vizdoom/doom/doom_model.py",
+          "blob_sha": "453559ab6aef08a578ae91891dc74c2508ae3113",
+          "bytes": 1724,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/sf_examples/vizdoom/doom/doom_model.py",
+          "lines": 48
+        },
+        {
+          "path": "sf_examples/vizdoom/doom/doom_utils.py",
+          "blob_sha": "602fd11043581868e734b4d1f2d3f1e67f00e21a",
+          "bytes": 13559,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/sf_examples/vizdoom/doom/doom_utils.py",
+          "lines": 395
+        },
+        {
+          "path": "sf_examples/vizdoom/doom/wrappers/additional_input.py",
+          "blob_sha": "20cb32c099a12abc6a7378b951ff51b40b65313f",
+          "bytes": 3767,
+          "url": "https://github.com/alex-petrenko/sample-factory/blob/7a837983d3625671650e75c9e9d1c1a99f7b7454/sf_examples/vizdoom/doom/wrappers/additional_input.py",
+          "lines": 102
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".core-coveragerc",
+        ".flake8",
+        ".gitignore",
+        ".pre-commit-config.yaml",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "MANIFEST.in",
+        "Makefile",
+        "README.md",
+        "mkdocs.yml",
+        "pyproject.toml",
+        "setup.py"
+      ]
+    },
+    {
+      "repository": "wendlerc/doom-arena",
+      "tree_sha": "363570905f532cbf4507029271e94c1ae744493f",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/wendlerc/doom-arena/git/trees/363570905f532cbf4507029271e94c1ae744493f?recursive=1",
+      "license_files": [],
+      "reviewed_files": [
+        {
+          "path": "doom_arena/agent.py",
+          "blob_sha": "6b25e72813d3f5aabc2cff8ecba0f4ba1a7ae8d2",
+          "bytes": 6691,
+          "url": "https://github.com/wendlerc/doom-arena/blob/363570905f532cbf4507029271e94c1ae744493f/doom_arena/agent.py",
+          "lines": 203
+        },
+        {
+          "path": "doom_arena/download_models.py",
+          "blob_sha": "9a1d0c42ba83ca46f1f92260aeb890b7065c1b7b",
+          "bytes": 2273,
+          "url": "https://github.com/wendlerc/doom-arena/blob/363570905f532cbf4507029271e94c1ae744493f/doom_arena/download_models.py",
+          "lines": 73
+        },
+        {
+          "path": "pyproject.toml",
+          "blob_sha": "18bc78a67068375a8b6b5a947d1d594381ac1abb",
+          "bytes": 1092,
+          "url": "https://github.com/wendlerc/doom-arena/blob/363570905f532cbf4507029271e94c1ae744493f/pyproject.toml",
+          "lines": 39
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".gitignore",
+        "CLAUDE.md",
+        "README.md",
+        "pyproject.toml",
+        "test_deathmatch_fs4.py",
+        "uv.lock"
+      ]
+    },
+    {
+      "repository": "rc4l/ZandronumMCP",
+      "tree_sha": "0a943b67bc187f5ce86d3a0a7f813337bacbab86",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/rc4l/ZandronumMCP/git/trees/0a943b67bc187f5ce86d3a0a7f813337bacbab86?recursive=1",
+      "license_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "14fac913ccf80234b1848540089a3bbcb6e5283d"
+        }
+      ],
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "14fac913ccf80234b1848540089a3bbcb6e5283d",
+          "bytes": 1056,
+          "url": "https://github.com/rc4l/ZandronumMCP/blob/0a943b67bc187f5ce86d3a0a7f813337bacbab86/LICENSE",
+          "lines": 22
+        },
+        {
+          "path": "engine-bridge/apply-bridge.mjs",
+          "blob_sha": "c6f7f6a734adbc73da2b3db478b9e1fa9c262ae7",
+          "bytes": 1054,
+          "url": "https://github.com/rc4l/ZandronumMCP/blob/0a943b67bc187f5ce86d3a0a7f813337bacbab86/engine-bridge/apply-bridge.mjs",
+          "lines": 27
+        }
+      ],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".gitignore",
+        "AGENTS.md",
+        "LICENSE",
+        "PROTOCOL.md",
+        "README.md",
+        "README.tools.md",
+        "package-lock.json",
+        "package.json",
+        "tsconfig.json",
+        "vitest.config.ts"
+      ]
+    },
+    {
+      "repository": "wendlerc/sample-factory",
+      "tree_sha": "3793cde8bbbefea9b09c5cec423a588a8e96ae6c",
+      "tree_truncated": false,
+      "tree_url": "https://api.github.com/repos/wendlerc/sample-factory/git/trees/3793cde8bbbefea9b09c5cec423a588a8e96ae6c?recursive=1",
+      "license_files": [
+        {
+          "path": "LICENSE",
+          "blob_sha": "aaa4dbc3be1c294e199c5c1a5db4d19897c475b3"
+        }
+      ],
+      "reviewed_files": [],
+      "checkpoint_entries": [],
+      "root_files": [
+        ".core-coveragerc",
+        ".flake8",
+        ".gitignore",
+        ".pre-commit-config.yaml",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "MANIFEST.in",
+        "Makefile",
+        "README.md",
+        "mkdocs.yml",
+        "pyproject.toml",
+        "setup.py"
+      ]
+    }
+  ]
+}

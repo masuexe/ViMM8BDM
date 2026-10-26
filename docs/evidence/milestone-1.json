@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-26",
+  "publication": "Machine paths, account names, process IDs, window IDs, and titles are absent.",
+  "native_x11_checks": {
+    "metadata": "pass",
+    "parent_relationship": "pass",
+    "unmapped_window_blocks_input": "pass",
+    "CLI_focus_probe_samples": 2,
+    "input_sent": false
+  },
+  "game_window_selection": {
+    "visible_candidates": 1,
+    "width": 640,
+    "height": 480,
+    "matching_process_metadata": true
+  },
+  "live_probe": {
+    "policy": "red_marker_probe",
+    "frames": 638,
+    "accepted_actions": 77,
+    "duration_between_first_and_last_capture_s": 31.894774952,
+    "accepted_movement_frames": 77,
+    "accepted_horizontal_aim_frames": 77,
+    "accepted_vertical_aim_frames": 0,
+    "accepted_attack_frames": 0,
+    "state_counts": {
+      "policy_ready": 460,
+      "armed": 77,
+      "manual": 101
+    },
+    "accepted_input_call_duration": {
+      "p50_ms": 1.524351,
+      "p95_ms": 4.263227,
+      "max_ms": 4.733634
+    },
+    "operator_report": "Automatic forward movement worked. Later F8 only toggled the game message display.",
+    "exit_cause": "Unknown. The old trace did not record the exit reason.",
+    "limits": [
+      "Input-call duration is not visible response latency.",
+      "The test does not establish effective aiming or attack.",
+      "Corrected Escape behavior was not tested live."
+    ]
+  },
+  "hotkey_correction": {
+    "escape": "Pause without process exit",
+    "f9": "Stop with an explicit exit reason",
+    "game_f8_binding_removed_in_separate_configuration": true,
+    "game_f9_binding_removed_in_separate_configuration": true,
+    "saved_configuration_checked": true,
+    "configuration_test_sent_input": false,
+    "test_clients_stopped": true
+  },
+  "offline_tests": {
+    "tests": 32,
+    "exit_code": 0,
+    "result": "pass",
+    "after_hotkey_correction_tests": 30
+  },
+  "publication_index_tests": 2
+}

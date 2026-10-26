@@ -1,0 +1,17 @@
+test_cannot_arm_on_another_window (test_control.ControlTests.test_cannot_arm_on_another_window) ... ok
+test_corrupt_frame_rejected (test_control.ControlTests.test_corrupt_frame_rejected) ... ok
+test_default_pause_prevents_input (test_control.ControlTests.test_default_pause_prevents_input) ... ok
+test_focus_loss_releases_and_requires_rearm (test_control.ControlTests.test_focus_loss_releases_and_requires_rearm) ... ok
+test_invalid_model_action_disarms (test_control.ControlTests.test_invalid_model_action_disarms) ... ok
+test_late_inference_cannot_reapply_after_takeover (test_control.ControlTests.test_late_inference_cannot_reapply_after_takeover) ... ok
+test_late_submit_cannot_revive_expired_lease (test_control.ControlTests.test_late_submit_cannot_revive_expired_lease) ... ok
+test_marker_drives_both_axes_and_attack (test_control.ControlTests.test_marker_drives_both_axes_and_attack) ... ok
+test_partial_input_failure_releases_and_disarms (test_control.ControlTests.test_partial_input_failure_releases_and_disarms) ... ok
+test_stale_and_future_frames_disarm (test_control.ControlTests.test_stale_and_future_frames_disarm) ... ok
+test_takeover_releases_movement_and_attack (test_control.ControlTests.test_takeover_releases_movement_and_attack) ... ok
+test_watchdog_releases_without_policy_heartbeat (test_control.ControlTests.test_watchdog_releases_without_policy_heartbeat) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+OK

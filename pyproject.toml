@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vimm8bdm"
+version = "0.0.1"
+description = "Visual control experiments for an unmodified Zandronum client"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+desktop = ["mss", "pynput"]
+
+[project.scripts]
+vimm8bdm = "vimm8bdm.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
