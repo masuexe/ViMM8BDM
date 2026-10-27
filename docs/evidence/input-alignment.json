@@ -1,5 +1,5 @@
 {
-  "recorded_at_utc": "2026-10-27T06:48:24.033362+00:00",
+  "recorded_at_utc": "2026-10-27T08:06:11.373571+00:00",
   "source_recording": "First Grenade Man interface check, random selection",
   "analyses": [
     {
@@ -47,7 +47,7 @@
     }
   ],
   "guided_protocol": {
-    "status": "first_live_run_complete_replication_pending",
+    "status": "two_valid_live_runs_candidate_response_reproduced",
     "duration_s": 38,
     "target_capture_hz": 60,
     "phases": [
@@ -97,7 +97,8 @@
   "limits": [
     "No real-game response delay was selected from the first mixed recording.",
     "Synthetic known-delay tests do not establish the stock-client delay.",
-    "A fitted image response delay does not justify shifting action labels to images containing their effects."
+    "A fitted image response delay does not justify shifting action labels to images containing their effects.",
+    "The repeat followed a client and server restart, so it did not preserve the exact scene."
   ],
   "first_valid_guided_run": {
     "summary": {
@@ -195,6 +196,155 @@
     "image_window_ms": 80,
     "training_labels_modified": false,
     "operator_report": "Both game audio and cues were audible. Both phases were completed.",
-    "replication_status": "pending"
+    "replication_status": "repeated_after_wsl_and_client_restart"
+  },
+  "repeat_guided_run": {
+    "summary": {
+      "exit_reason": "protocol_complete",
+      "frames": 2237,
+      "events": 705,
+      "dropped_items": 0,
+      "writer_error": null,
+      "max_frame_queue_wait_ms": 0.6068,
+      "max_frame_write_ms": 10.052,
+      "complete": true,
+      "cleanup_errors": [],
+      "cue_errors": [],
+      "segments": 1,
+      "input_sent": false
+    },
+    "integrity": {
+      "frames": 2237,
+      "events": 705,
+      "segments": 1,
+      "event_types": {
+        "segment_start": 1,
+        "protocol_phase": 4,
+        "motion": 698,
+        "segment_end": 1,
+        "recording_end": 1
+      },
+      "capture_ms_median": 7.1439,
+      "capture_ms_max": 23.745,
+      "same_segment_gap_ms_max": 24.3784,
+      "archive_integrity": "pass",
+      "input_sent": false,
+      "training_ready": false,
+      "label_alignment": "Receipt-clock data. Visual alignment requires operator review."
+    },
+    "axes": {
+      "x": {
+        "axis": "x",
+        "status": "candidate",
+        "pairs": 129,
+        "delay_definition": "Positive delay means input receipt precedes visible response.",
+        "automatic_label_shift_applied": false,
+        "holdout_guard_ms": 300,
+        "delay_selection": "training_rmse_only",
+        "best": {
+          "delay_ms": 10,
+          "scale_px_per_raw_count": -1.1007518796992481,
+          "train_rmse_px": 0.8229952673021568,
+          "validation_rmse_px": 0.8261702581758649,
+          "validation_r2": 0.9693060238113828,
+          "train_positive": 14,
+          "train_negative": 21,
+          "validation_positive": 8,
+          "validation_negative": 12
+        },
+        "training_near_best_range_ms": [
+          0,
+          15
+        ],
+        "range_is_statistical_confidence_interval": false,
+        "train_pairs": 86,
+        "validation_pairs": 40,
+        "reasons": []
+      },
+      "y": {
+        "axis": "y",
+        "status": "candidate",
+        "pairs": 120,
+        "delay_definition": "Positive delay means input receipt precedes visible response.",
+        "automatic_label_shift_applied": false,
+        "holdout_guard_ms": 300,
+        "delay_selection": "training_rmse_only",
+        "best": {
+          "delay_ms": 10,
+          "scale_px_per_raw_count": -0.587083236185591,
+          "train_rmse_px": 1.0107201101484633,
+          "validation_rmse_px": 1.5161894060137604,
+          "validation_r2": 0.8297940991704048,
+          "train_positive": 15,
+          "train_negative": 25,
+          "validation_positive": 7,
+          "validation_negative": 10
+        },
+        "training_near_best_range_ms": [
+          0,
+          15
+        ],
+        "range_is_statistical_confidence_interval": false,
+        "train_pairs": 80,
+        "validation_pairs": 36,
+        "reasons": []
+      }
+    },
+    "frame_time_reference": "Midpoint of capture start and completion",
+    "image_window_ms": 80,
+    "training_labels_modified": false,
+    "operator_report": "Recording completed.",
+    "conditions": {
+      "engine_client_and_loopback_server_restarted": true,
+      "scene_identity_not_guaranteed": true,
+      "character": "grenademan",
+      "class_selection": "fixed",
+      "input_config_sha256": "6f799801a6955dc3750651327dace602ad8ce494a3ee023919b83d6244084f8c",
+      "selected_saved_mouse_settings_match_first_valid_run": true
+    }
+  },
+  "repeat_interruption": {
+    "status": "excluded_incomplete_session",
+    "context": "WSL stopped before a completed repeat recording. No final recording summary exists.",
+    "crash_cause": "not determined"
+  },
+  "comparison": {
+    "candidate_delays_ms": {
+      "horizontal": [
+        5,
+        10
+      ],
+      "vertical": [
+        10,
+        10
+      ]
+    },
+    "near_best_training_ranges_ms": {
+      "horizontal": [
+        [
+          5,
+          10
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "vertical": [
+        [
+          10,
+          10
+        ],
+        [
+          0,
+          15
+        ]
+      ]
+    },
+    "range_is_statistical_confidence_interval": false,
+    "universal_fixed_offset_established": false,
+    "hardware_latency_measured": false,
+    "training_labels_modified": false,
+    "interpretation": "Both runs passed the existing candidate criteria. The observations support a small response delay, but not an exact fixed timing correction or a permanent raw-input-to-actuator scale."
   }
 }

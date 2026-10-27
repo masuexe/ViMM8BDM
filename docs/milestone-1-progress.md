@@ -243,3 +243,20 @@ The data does not yet establish precise training-label alignment or stable chara
 Linux and Windows each passed 73 automated tests.
 See the [human recording report](human-recording.md).
 Use one selected character for later collection after timing and action-unit checks.
+
+
+## Repeated mouse response check
+
+Two complete mouse-only recordings passed archive checks and the existing response-fit criteria.
+The first saved 2238 frames and the repeat saved 2237 frames.
+Neither run reported queue drops or cue errors.
+The repeat followed a WSL interruption and a stock server/client restart.
+Saved mouse settings match, but the scene can differ.
+
+Horizontal delay candidates were five and ten milliseconds.
+Both vertical candidates were ten milliseconds.
+The repeat's near-best search ranges were zero through fifteen milliseconds on both axes.
+These ranges do not establish exact physical latency or a permanent timing correction.
+The analysis preserved all original timestamps and kept both sessions outside the training set.
+See the [alignment comparison](input-alignment.md).
+Causal dataset construction and physical-input-to-actuator conversion remain separate work.

@@ -133,7 +133,8 @@ Synthetic data checks known positive and negative delays, constant panning, unre
 Archive tests cover phase guards and large capture gaps.
 These checks do not establish the stock client's response delay.
 The first guided run passed the integrity and fitting checks.
-Repetition remains necessary before accepting a calibration.
+A later repeat also passed the candidate criteria.
+An exact fixed offset remains unverified.
 See the [sanitized alignment record](evidence/input-alignment.json).
 
 
@@ -177,4 +178,41 @@ These estimates describe receipt-to-image response under this setup.
 They do not establish exact hardware latency or a universal fixed offset.
 The range is not a statistical confidence interval.
 The analysis preserved the original image and event timestamps.
-A second recording under the same conditions remains pending.
+A second complete recording followed a WSL interruption and client restart.
+The next section records that comparison.
+
+
+## Repeat after restart
+
+WSL stopped during preparation for a repeat.
+That interrupted session has no final summary and supplies no valid calibration result.
+The interruption did not establish a crash cause.
+The stock server, client, and recorder then restarted in new local directories.
+The saved character was Grenade Man.
+The two valid sessions have identical input configuration digests.
+Selected saved mouse, FOV, and resolution settings also match.
+The restart did not preserve the exact scene.
+
+The repeat completed all protocol phases with 2237 frames and 705 events.
+It reported zero queue drops, cleanup errors, and cue errors.
+Archive verification passed.
+Both axes passed the existing candidate criteria without threshold changes.
+
+| Axis | First candidate | Repeat candidate | Repeat near-best training range | Repeat validation R-squared |
+| --- | --- | --- | --- | --- |
+| Horizontal | 5 milliseconds | 10 milliseconds | 0 to 15 milliseconds | 0.969 |
+| Vertical | 10 milliseconds | 10 milliseconds | 0 to 15 milliseconds | 0.830 |
+
+The repeat used 129 horizontal and 120 vertical active image pairs.
+Horizontal validation error was 0.83 pixels RMS.
+Vertical validation error was 1.52 pixels RMS.
+The near-best ranges overlap those from the first valid run.
+These are search diagnostics rather than confidence bounds on physical latency.
+The observations support a small response delay under the tested setup.
+They do not establish an exact fixed offset or a universal device-to-actuator scale.
+No image or action timestamp changed.
+
+Timing recordings remain calibration data with `training_ready: false`.
+Their deliberate camera oscillation is not a navigation or combat demonstration.
+The next dataset step must define causal image histories and future action windows.
+Use separate human task demonstrations for behavior cloning.
