@@ -27,19 +27,56 @@ class VisualNavigationTests(unittest.TestCase):
             action = self.policy.predict(frame(tick / 20, shade, hud))
         return action
 
-    def test_static_view_releases_forward_and_turns_by_exactly_64_counts(self):
+    def test_static_view_releases_forward_and_turns_by_exactly_256_counts(self):
         self.assertEqual(self.policy.predict(frame(0)), Action())
         self.assertEqual(self.advance(.3).keys, frozenset({'w'}))
         self.assertEqual(self.advance(.9), Action())
         total = 0
-        for tick in range(19, 32):
+        for tick in range(19, 60):
             action = self.policy.predict(frame(tick / 20))
             total += action.mouse_dx
             self.assertFalse(action.keys)
             self.assertFalse(action.attack)
             self.assertLessEqual(action.mouse_dx, 8)
-        self.assertEqual(total, 64)
+            if total == 256:
+                break
+        self.assertEqual(total, 256)
         self.assertEqual(self.policy.blocked_probes, 1)
+
+    def test_repeated_blockage_increases_turn_budget_with_a_limit(self):
+        self.policy.predict(frame(0))
+        budgets = []
+        previous = 0
+        for tick in range(1, 1000):
+            action = self.policy.predict(frame(tick / 20))
+            if self.policy.blocked_probes != previous:
+                previous = self.policy.blocked_probes
+                budgets.append(self.policy.turn_budget)
+            if self.policy.phase == 'turn':
+                self.assertFalse(action.keys)
+            self.assertLessEqual(action.mouse_dx, 8)
+            if len(budgets) == 5:
+                break
+        self.assertEqual(budgets, [256, 512, 768, 1024, 1024])
+
+    def test_one_changed_probe_does_not_clear_escape_history(self):
+        self.policy.predict(frame(0))
+        self.advance(2.85)
+        self.assertEqual(self.policy.phase, 'forward')
+        self.advance(3.45, shade=100)
+        self.assertEqual(self.policy.changed_streak, 1)
+        self.assertEqual(self.policy.escape_attempts, 1)
+        self.advance(4.1, shade=100)
+        self.assertEqual(self.policy.turn_budget, 512)
+
+    def test_three_changed_probes_clear_escape_history(self):
+        self.policy.predict(frame(0))
+        self.advance(2.85)
+        self.advance(3.5, shade=100)
+        self.advance(4.15, shade=150)
+        self.advance(4.8, shade=200)
+        self.assertEqual(self.policy.changed_streak, 3)
+        self.assertEqual(self.policy.escape_attempts, 0)
 
     def test_changed_view_keeps_forward_without_turning(self):
         self.policy.predict(frame(0))

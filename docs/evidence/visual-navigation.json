@@ -5,24 +5,38 @@
   "map": "MM1CUT",
   "probe_seconds": 0.6,
   "settle_seconds": 0.3,
-  "nominal_turn_seconds": 0.4,
-  "turn_total_injected_counts": 64,
   "maximum_turn_counts_per_action": 8,
   "image_change_threshold": 2,
   "image_sample_points": 512,
   "automated_tests": {
     "Linux": {
-      "passed": 152
+      "passed": 155
     },
     "Windows": {
-      "passed": 152
+      "passed": 155
     }
   },
   "synthetic_cli_frames": 12,
   "synthetic_cli_mode": "synthetic_dry_run",
   "synthetic_cli_input_sent": false,
-  "live_game_check": "pending",
+  "live_game_check": "first_revision_failed_wall_escape; larger_turn_revision_pending",
   "neural_checkpoint_used": false,
   "engine_state_read": false,
-  "navigation_success_established": false
+  "navigation_success_established": false,
+  "first_turn_counts": 256,
+  "repeat_turn_increment_counts": 256,
+  "maximum_turn_counts": 1024,
+  "nominal_turn_counts_per_second": 160,
+  "changed_probes_to_clear_escape_history": 3,
+  "first_live_check": {
+    "revision_turn_counts": 64,
+    "accepted_actions": 593,
+    "static_view_probes": 7,
+    "changed_view_probes": 33,
+    "total_horizontal_mouse_counts": 448,
+    "policy_resets": 0,
+    "exit_reason": "duration_limit",
+    "operator_report": "Movement worked. A left turn followed wall contact. Forward movement then caused repeated wall contact.",
+    "navigation_success": false
+  }
 }

@@ -23,7 +23,7 @@ def image_change(previous, current):
 
 
 class VisualNavigationPolicy:
-    """Probe forward motion, then turn a fixed small amount if the view stays static."""
+    """Probe forward motion, then increase the turn budget after repeated static views."""
 
     def __init__(self):
         self.reset()
@@ -35,6 +35,9 @@ class VisualNavigationPolicy:
         self.shape = None
         self.reference = None
         self.turn_sent = 0.
+        self.turn_budget = 256
+        self.escape_attempts = 0
+        self.changed_streak = 0
         self.blocked_probes = 0
         self.successful_probes = 0
         self.motion_score = None
@@ -68,21 +71,31 @@ class VisualNavigationPolicy:
                 self.since_ns, self.reference = now, view
                 if self.motion_score < 2:
                     self.blocked_probes += 1
+                    self.changed_streak = 0
+                    self.escape_attempts += 1
+                    self.turn_budget = min(1024, 256 * self.escape_attempts)
                     self.phase, self.turn_sent = 'turn', 0.
                     action = Action()
                 else:
                     self.successful_probes += 1
+                    self.changed_streak += 1
+                    if self.changed_streak >= 3:
+                        self.escape_attempts = 0
         elif self.phase == 'turn':
-            desired = 64 * min(elapsed / .4, 1)
+            desired = min(self.turn_budget, int(elapsed * 160))
             # Use integer packets so the backend cannot lose fractional requests.
             delta = min(8, max(0, int(desired - self.turn_sent)))
             self.turn_sent += delta
             action = Action(mouse_dx=delta)
-            if self.turn_sent >= 64:
+            if self.turn_sent >= self.turn_budget:
                 # The last turn packet still executes before the settling interval.
                 self.phase, self.since_ns = 'settle', now
         self.last_prediction = {'type': 'visual_navigation_rule', 'phase': self.phase,
                                 'image_change_score': self.motion_score,
+                                'turn_budget_counts': self.turn_budget,
+                                'turn_sent_counts': self.turn_sent,
+                                'escape_attempts': self.escape_attempts,
+                                'changed_view_streak': self.changed_streak,
                                 'static_view_probes': self.blocked_probes,
                                 'changed_view_probes': self.successful_probes,
                                 'reset_reason': reset_reason}

@@ -11,7 +11,7 @@ The rule first waits for the displayed scene to settle.
 It then holds W for a forward probe.
 After 0.6 seconds, it compares sampled grayscale pixels with the probe's starting view.
 If the image changes enough, it continues forward with a new reference view.
-If the image stays nearly static, it releases W and attempts a small right turn.
+If the image stays nearly static, it releases W and sends a positive horizontal turn request.
 It then lets the scene settle before another forward probe.
 
 The image sample covers the central upper scene, away from Grenade Man's current weapon and left HUD.
@@ -19,8 +19,11 @@ The rule removes the largest ten percent of pixel differences before calculating
 This reduces isolated animation effects.
 A score below two triggers a turn attempt.
 
-Each turn requests 64 horizontal mouse counts, with at most eight counts in one action.
-The nominal turn duration is 0.4 seconds, followed by 0.3 seconds of settling.
+The first turn requests 256 horizontal mouse counts.
+Repeated blockage increases the turn budget by 256 counts, with a limit of 1024 counts.
+Three consecutive changed views clear the blockage history.
+Each action requests at most eight counts, at a nominal rate of 160 counts per second.
+Each turn ends with 0.3 seconds of settling.
 Slow capture can extend the turn rather than increase its total motion.
 The requests specify relative mouse counts.
 Their angle conversion remains uncalibrated.
@@ -66,10 +69,15 @@ The initial wait has no timeout.
 
 ## Evidence status
 
-Linux and Windows each passed 152 automated tests after both the event model and rule changes.
+Linux and Windows each passed 155 automated tests after the turn adjustment.
 Rule tests check static and changed views, HUD exclusion, bounded turns, capture resets, and pause behavior.
 A synthetic command-line check also completed without desktop input.
-The attended game check remains pending.
+Movement and turn execution worked in the first attended check.
+The operator reported a left turn followed by repeated wall contact.
+The log recorded seven turns of 64 counts and 593 accepted actions.
+The 30-second run ended at its duration limit.
+This check failed to establish useful navigation.
+The larger turn budgets require another attended check.
 These checks do not establish collision detection or navigation success in the actual game.
 The [evidence file](evidence/visual-navigation.json) records the current status.
 Keep logs and screenshots private.
