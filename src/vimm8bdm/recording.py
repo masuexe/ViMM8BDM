@@ -47,8 +47,16 @@ class RecordingWriter:
         self.dropped = 0
         self.frames = 0
         self.events = 0
+        self.ready = threading.Event()
+        self.max_frame_queue_wait_ms = 0
+        self.max_frame_write_ms = 0
         self.thread = threading.Thread(target=self._run, name='recording-writer', daemon=True)
         self.thread.start()
+        if not self.ready.wait(15):
+            self.error = 'The recording writer did not become ready'
+        if self.error:
+            self.close()
+            raise RuntimeError(self.error)
 
     def put(self, kind, value):
         if self.error:
@@ -71,10 +79,13 @@ class RecordingWriter:
     def _run(self):
         try:
             from PIL import Image
+            Image.new('RGB', (2, 2)).save(io.BytesIO(), format='PNG', compress_level=1)
             with ((self.directory / 'frames.vrec').open('xb') as archive,
                   (self.directory / 'frames.jsonl').open('x', encoding='utf-8') as index,
                   (self.directory / 'events.jsonl').open('x', encoding='utf-8') as events):
                 archive.write(MAGIC)
+                archive.flush()
+                self.ready.set()
                 while True:
                     item = self.queue.get()
                     if item is None:
@@ -85,6 +96,9 @@ class RecordingWriter:
                         self.events += 1
                     else:
                         frame, metadata = value
+                        work_started = time.perf_counter_ns()
+                        self.max_frame_queue_wait_ms = max(self.max_frame_queue_wait_ms,
+                                                          (work_started - metadata['capture_finished_ns']) / 1e6)
                         try:
                             output = io.BytesIO()
                             image = Image.frombytes('RGB', (frame.width, frame.height), frame.bgra, 'raw', 'BGRX')
@@ -96,10 +110,14 @@ class RecordingWriter:
                             index.write(json.dumps({**metadata, 'offset': offset, 'png_bytes': len(png),
                                                     'width': frame.width, 'height': frame.height}) + '\n')
                             self.frames += 1
+                            self.max_frame_write_ms = max(self.max_frame_write_ms,
+                                                          (time.perf_counter_ns() - work_started) / 1e6)
                         finally:
                             self.frame_slots.release()
         except BaseException as exc:
             self.error = str(exc)
+        finally:
+            self.ready.set()
 
     def close(self):
         try:
@@ -380,6 +398,8 @@ def run(args):
                    'events': writer.events if writer else 0,
                    'dropped_items': writer.dropped if writer else 0,
                    'writer_error': writer.error if writer else 'writer_not_started',
+                   'max_frame_queue_wait_ms': writer.max_frame_queue_wait_ms if writer else None,
+                   'max_frame_write_ms': writer.max_frame_write_ms if writer else None,
                    'complete': reason != 'error' and writer is not None and not writer.error and not cleanup_errors,
                    'cleanup_errors': cleanup_errors, 'cue_errors': cue_errors,
                    'segments': session.segment if session else 0, 'input_sent': False}

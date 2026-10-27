@@ -13,6 +13,7 @@ def main():
     for name in ("engine", "iwad", "base", "classes", "gondola"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--map", default="MM1CUT")
+    parser.add_argument("--mute", action="store_true", help="Disable client sound and music")
     parser.add_argument("--loopback-server", action="store_true", help="Use a stock server on the loopback address")
     parser.add_argument("--port", type=int, default=10668)
     parser.add_argument("--run-dir", type=Path, required=True, help="New local run directory")
@@ -43,7 +44,7 @@ def main():
                       "bind mouse1 +attack\nbind space +jump\nfreelook true\n"
                       "mouse_sensitivity 1\nm_filter false\nm_pitch 1\nm_yaw 1\n"
                       "cl_capfps true\n", encoding="utf-8")
-    command = [paths["engine"], "-noautoload", "-nosound", "-nomusic", "-config",
+    command = [paths["engine"], "-noautoload", *(["-nosound", "-nomusic"] if args.mute else []), "-config",
                str(run / "zandronum.ini"), "-iwad", paths["iwad"], "-file",
                paths["base"], paths["classes"], paths["gondola"],
                "+set", "fullscreen", "0", "+set", "vid_defwidth", "640",

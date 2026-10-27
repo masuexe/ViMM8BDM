@@ -122,7 +122,8 @@ After interference rejection, adjacent-image analysis retained 32 horizontal and
 The 80-millisecond analysis retained 12 horizontal and eight vertical active samples.
 Both analyses reported insufficient data.
 Neither analysis selected a response delay or changed training labels.
-The guided mouse-only experiment remains pending.
+The first guided mouse-only run later produced candidate estimates.
+See the live result below.
 
 
 ## Automated checks and current limits
@@ -131,5 +132,49 @@ Linux and Windows each passed 81 automated tests.
 Synthetic data checks known positive and negative delays, constant panning, unrelated image changes, and failed validation.
 Archive tests cover phase guards and large capture gaps.
 These checks do not establish the stock client's response delay.
-The guided protocol still requires operator setup and a live check.
+The first guided run passed the integrity and fitting checks.
+Repetition remains necessary before accepting a calibration.
 See the [sanitized alignment record](evidence/input-alignment.json).
+
+
+## First guided attempt
+
+The first guided run stopped after eight frames because the writer queue filled during startup.
+The run did not reach the horizontal phase or call a phase cue.
+It supplied no response-delay measurement.
+The recorder now waits for encoder readiness before accepting recording commands.
+The updated writer passed isolated Windows throughput checks.
+The live retry completed all phases with no dropped frames or cue errors.
+The operator reported audible game sound and phase cues.
+See the [startup correction record](evidence/recorder-startup.json).
+
+The earlier local launcher disabled game sound and music.
+The launcher now enables client audio by default.
+Use `--mute` only when a quiet client test is necessary.
+The audio restart preserved a separate copy of the saved configuration.
+The stock client initialized FMOD after the restart.
+Successful audio initialization or a cue API return does not prove audible output.
+The operator must check the actual sound.
+
+
+## First complete guided run
+
+The retry completed all phases and saved 2238 frames and 1383 events.
+It reported no queue drops, cleanup errors, or cue errors.
+Maximum frame queue wait was 1.37 milliseconds.
+Maximum frame write duration was 9.40 milliseconds.
+The operator reported both audio paths working and both movement phases complete.
+
+| Axis | Active image pairs | Candidate delay | Near-best training range | Validation R-squared |
+| --- | --- | --- | --- | --- |
+| Horizontal | 141 | 5 milliseconds | 5 to 10 milliseconds | 0.978 |
+| Vertical | 135 | 10 milliseconds | 10 milliseconds on the tested grid | 0.908 |
+
+The horizontal validation error was 1.46 pixels RMS.
+The vertical validation error was 2.37 pixels RMS.
+The first run passed the candidate criteria on both axes.
+These estimates describe receipt-to-image response under this setup.
+They do not establish exact hardware latency or a universal fixed offset.
+The range is not a statistical confidence interval.
+The analysis preserved the original image and event timestamps.
+A second recording under the same conditions remains pending.

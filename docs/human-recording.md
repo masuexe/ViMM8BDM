@@ -173,3 +173,27 @@ See the [sanitized recording record](evidence/human-recording.json).
 
 Use the [mouse alignment protocol](input-alignment.md) before selecting a response delay.
 It adds sound cues and phase markers to the existing recorder.
+
+
+## Writer startup correction
+
+The first 60 Hz timing attempt stopped before its first phase cue.
+The writer queue filled after eight frames while the encoder was still initializing.
+The session has `complete: false` and cannot supply alignment data.
+A separate replay reproduced the same eight-frame overflow with the earlier writer.
+
+The recorder now waits for Pillow, PNG encoder warm-up, and archive creation before reporting readiness.
+The frame queue retains its existing limit.
+A new regression test checks delayed writer initialization.
+Writer-only Windows replay tests then saved 480 and 240 frames at a target rate of 60 Hz.
+Both tests reported zero dropped items.
+The cold-import test waited approximately 347 milliseconds before becoming ready.
+These writer tests do not replace the live capture retry.
+
+The summary now reports maximum frame queue wait and maximum frame write duration.
+Linux and Windows each passed 82 automated tests.
+See the [startup correction record](evidence/recorder-startup.json).
+
+The subsequent live timing run saved 2238 frames with no dropped items or cue errors.
+The operator reported that game audio and the cues were audible.
+The response estimates remain candidates pending repetition.

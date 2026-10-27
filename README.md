@@ -210,6 +210,8 @@ python3 scripts/launch_local.py --engine .local/engine/zandronum \
 Replace these example paths with your installation paths.
 The run directory must not exist before startup.
 The script does not join a remote server.
+The launcher enables client sound and music by default.
+Add `--mute` for a quiet client test.
 It writes the configuration and startup records into the new run directory.
 The separate configuration removes the game bindings for F8 and F9.
 This prevents the game message toggle from sharing the controller key.

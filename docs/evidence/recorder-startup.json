@@ -1,0 +1,104 @@
+{
+  "recorded_at_utc": "2026-10-27T07:21:49.236864+00:00",
+  "guided_attempt": {
+    "summary": {
+      "exit_reason": "writer_error",
+      "frames": 8,
+      "events": 2,
+      "dropped_items": 1,
+      "writer_error": "The frame writer queue is full",
+      "complete": false,
+      "cleanup_errors": [],
+      "cue_errors": [],
+      "segments": 1,
+      "input_sent": false
+    },
+    "last_protocol_phase": "ready",
+    "phase_cue_calls": 0,
+    "result": "invalid_incomplete_recording"
+  },
+  "audio": {
+    "previous_client_flags": [
+      "-nosound",
+      "-nomusic"
+    ],
+    "restarted_client_flags_removed": true,
+    "fmod_initialized": true,
+    "saved_character": "grenademan",
+    "diagnostic_cue_api_errors": [],
+    "operator_audibility_confirmation": "The operator heard both game audio and the test or phase cues."
+  },
+  "writer_fix": {
+    "ready_after": [
+      "Pillow import",
+      "PNG encoder warm-up",
+      "Archive and index creation"
+    ],
+    "cold_startup_reproduction_and_benchmarks": [
+      {
+        "implementation": "before startup readiness fix",
+        "target_hz": 60,
+        "submitted": 8,
+        "saved": 8,
+        "error": "The frame writer queue is full",
+        "dropped": 1,
+        "elapsed_s": 0.41991890000099374
+      },
+      {
+        "target_hz": 60,
+        "ready_ms": 4.098100000192062,
+        "submitted": 480,
+        "saved": 480,
+        "error": null,
+        "dropped": 0,
+        "max_queue_wait_ms": 0.1875,
+        "max_write_ms": 8.3513,
+        "elapsed_s": 8.00144150000051
+      },
+      {
+        "target_hz": 60,
+        "cold_python_import": true,
+        "ready_ms": 347.2031000001152,
+        "submitted": 240,
+        "saved": 240,
+        "error": null,
+        "dropped": 0,
+        "max_queue_wait_ms": 0.2721,
+        "max_write_ms": 7.4203,
+        "elapsed_s": 4.001335000000836
+      }
+    ],
+    "scope": "Writer-only replay of a saved 640 by 480 game image. No live capture or input listener in these benchmarks."
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 82,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 82,
+      "result": "pass"
+    }
+  },
+  "retry": {
+    "status": "protocol_complete",
+    "character": "grenademan",
+    "class_selection": "fixed",
+    "target_capture_hz": 60,
+    "summary": {
+      "exit_reason": "protocol_complete",
+      "frames": 2238,
+      "events": 1383,
+      "dropped_items": 0,
+      "writer_error": null,
+      "max_frame_queue_wait_ms": 1.3727,
+      "max_frame_write_ms": 9.4032,
+      "complete": true,
+      "cleanup_errors": [],
+      "cue_errors": [],
+      "segments": 1,
+      "input_sent": false
+    },
+    "response_delay_status": "candidate_requires_replication"
+  }
+}

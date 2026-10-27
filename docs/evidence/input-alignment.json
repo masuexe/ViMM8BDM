@@ -47,7 +47,7 @@
     }
   ],
   "guided_protocol": {
-    "status": "pending_operator_setup_and_live_check",
+    "status": "first_live_run_complete_replication_pending",
     "duration_s": 38,
     "target_capture_hz": 60,
     "phases": [
@@ -98,5 +98,103 @@
     "No real-game response delay was selected from the first mixed recording.",
     "Synthetic known-delay tests do not establish the stock-client delay.",
     "A fitted image response delay does not justify shifting action labels to images containing their effects."
-  ]
+  ],
+  "first_valid_guided_run": {
+    "summary": {
+      "exit_reason": "protocol_complete",
+      "frames": 2238,
+      "events": 1383,
+      "dropped_items": 0,
+      "writer_error": null,
+      "max_frame_queue_wait_ms": 1.3727,
+      "max_frame_write_ms": 9.4032,
+      "complete": true,
+      "cleanup_errors": [],
+      "cue_errors": [],
+      "segments": 1,
+      "input_sent": false
+    },
+    "integrity": {
+      "frames": 2238,
+      "events": 1383,
+      "segments": 1,
+      "event_types": {
+        "segment_start": 1,
+        "protocol_phase": 4,
+        "motion": 1376,
+        "segment_end": 1,
+        "recording_end": 1
+      },
+      "capture_ms_median": 7.4940999999999995,
+      "capture_ms_max": 15.7729,
+      "same_segment_gap_ms_max": 18.526,
+      "archive_integrity": "pass",
+      "input_sent": false,
+      "training_ready": false,
+      "label_alignment": "Receipt-clock data. Visual alignment requires operator review."
+    },
+    "axes": {
+      "x": {
+        "axis": "x",
+        "status": "candidate",
+        "pairs": 141,
+        "delay_definition": "Positive delay means input receipt precedes visible response.",
+        "automatic_label_shift_applied": false,
+        "holdout_guard_ms": 300,
+        "delay_selection": "training_rmse_only",
+        "best": {
+          "delay_ms": 5,
+          "scale_px_per_raw_count": -1.013607331296862,
+          "train_rmse_px": 1.9803999207470093,
+          "validation_rmse_px": 1.4610413046310213,
+          "validation_r2": 0.9775710750789522,
+          "train_positive": 23,
+          "train_negative": 33,
+          "validation_positive": 10,
+          "validation_negative": 16
+        },
+        "training_near_best_range_ms": [
+          5,
+          10
+        ],
+        "range_is_statistical_confidence_interval": false,
+        "train_pairs": 94,
+        "validation_pairs": 43,
+        "reasons": []
+      },
+      "y": {
+        "axis": "y",
+        "status": "candidate",
+        "pairs": 135,
+        "delay_definition": "Positive delay means input receipt precedes visible response.",
+        "automatic_label_shift_applied": false,
+        "holdout_guard_ms": 300,
+        "delay_selection": "training_rmse_only",
+        "best": {
+          "delay_ms": 10,
+          "scale_px_per_raw_count": -0.6083733974358975,
+          "train_rmse_px": 1.5571339481491733,
+          "validation_rmse_px": 2.3736004654209317,
+          "validation_r2": 0.9081839146768549,
+          "train_positive": 23,
+          "train_negative": 25,
+          "validation_positive": 9,
+          "validation_negative": 13
+        },
+        "training_near_best_range_ms": [
+          10,
+          10
+        ],
+        "range_is_statistical_confidence_interval": false,
+        "train_pairs": 90,
+        "validation_pairs": 44,
+        "reasons": []
+      }
+    },
+    "frame_time_reference": "Midpoint of capture start and completion",
+    "image_window_ms": 80,
+    "training_labels_modified": false,
+    "operator_report": "Both game audio and cues were audible. Both phases were completed.",
+    "replication_status": "pending"
+  }
 }

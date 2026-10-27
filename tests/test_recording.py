@@ -120,6 +120,34 @@ class RecordingTests(unittest.TestCase):
         self.assertEqual(self.session.keys, {0x57})
         self.assertEqual(self.writer.items[0][1]['held_buttons'], ['left'])
 
+    def test_writer_constructor_waits_for_initialization(self):
+        try:
+            import PIL
+        except ImportError:
+            self.skipTest('Pillow is required for the writer test')
+        import threading
+        entered, release = threading.Event(), threading.Event()
+        result = []
+        class SlowWriter(RecordingWriter):
+            def _run(self):
+                entered.set()
+                release.wait(3)
+                super()._run()
+        with tempfile.TemporaryDirectory() as directory:
+            def create():
+                result.append(SlowWriter(Path(directory)))
+            creator = threading.Thread(target=create)
+            creator.start()
+            try:
+                self.assertTrue(entered.wait(3))
+                self.assertEqual(result, [])
+            finally:
+                release.set()
+                creator.join(timeout=5)
+            self.assertEqual(len(result), 1)
+            self.assertTrue(result[0].ready.is_set())
+            result[0].close()
+
     def test_archive_round_trip_and_exclusive_creation(self):
         try:
             from PIL import Image
@@ -143,9 +171,8 @@ class RecordingTests(unittest.TestCase):
                 image = Image.open(io.BytesIO(archive.read(length)))
                 self.assertEqual([image.getpixel((x, 0)) for x in range(2)], [(255, 0, 0), (0, 255, 0)])
             original = (path / 'frames.vrec').read_bytes()
-            second = RecordingWriter(path)
-            second.close()
-            self.assertIsNotNone(second.error)
+            with self.assertRaises(RuntimeError):
+                RecordingWriter(path)
             self.assertEqual((path / 'frames.vrec').read_bytes(), original)
             (path / 'session.json').write_text(json.dumps({'input_sent': False, 'training_ready': False}))
             (path / 'summary.json').write_text(json.dumps({'complete': True, 'dropped_items': 0,
