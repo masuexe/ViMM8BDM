@@ -51,6 +51,23 @@ def fixture(root, name, split, mouse):
 
 @unittest.skipIf(torch is None, 'Install the optional training packages')
 class BehaviorCloningTests(unittest.TestCase):
+    def test_loader_reconstructs_reviewed_exclusions_and_rejects_changed_ranges(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = fixture(root, 'train', 'train', 100)
+            metadata = json.loads((full / 'dataset.json').read_text())
+            exclusions = {'source_session_id': metadata['source_session_id'],
+                          'reason': 'Synthetic reviewed overlay', 'frame_ranges': [[0, 0]]}
+            clean = root / 'clean'
+            result = build(root / 'train-source', clean, split='train', exclusions=exclusions)
+            self.assertEqual(result['samples'], metadata['samples'] - 1)
+            images, _, _ = load_inputs(clean, 'train')
+            self.assertEqual(len(images), result['samples'])
+            result['reviewed_frame_exclusions']['frame_ranges'] = [[0, 1]]
+            (clean / 'dataset.json').write_text(json.dumps(result))
+            with self.assertRaisesRegex(ValueError, 'causal source reconstruction'):
+                load_inputs(clean, 'train')
+
     def test_targets_retain_fractional_tap_and_large_raw_mouse_count(self):
         with tempfile.TemporaryDirectory() as directory:
             data = fixture(Path(directory), 'train', 'train', 413)

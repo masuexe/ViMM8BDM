@@ -17,7 +17,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .dataset import check_splits, make_samples, verify_source
+from .dataset import check_splits, filter_reviewed_samples, make_samples, verify_source
 from .recording import file_digest
 
 KEYS = ('w', 'a', 's', 'd')
@@ -58,6 +58,8 @@ def load_inputs(directory, expected_split):
     events = [json.loads(line) for line in (source / 'events.jsonl').read_text().splitlines()]
     samples = [json.loads(line) for line in (directory / 'samples.jsonl').read_text().splitlines()]
     expected, _ = make_samples(frames, events)
+    expected, _ = filter_reviewed_samples(expected, frames, meta.get('reviewed_frame_exclusions'),
+                                         meta['source_session_id'])
     if samples != expected or len(samples) != meta['samples'] or not samples:
         raise ValueError('Candidate samples do not match the causal source reconstruction')
     targets = torch.tensor([label_target(sample) for sample in samples], dtype=torch.float32)

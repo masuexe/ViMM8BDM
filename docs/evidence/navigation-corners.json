@@ -1,0 +1,98 @@
+{
+  "task": "ground_navigation_near_corners",
+  "character": "grenademan",
+  "map": "MM1CUT",
+  "runtime": "Windows native",
+  "frames": 2177,
+  "events": 1711,
+  "dropped_items": 0,
+  "archive_integrity": "pass",
+  "active_segment_seconds": 109.8034792,
+  "image_span_seconds": 109.712133,
+  "segment_end_reason": "user_pause",
+  "overall_exit_reason": "duration_limit",
+  "capture_ms_median": 7.239,
+  "same_segment_gap_ms_max": 218.5058,
+  "source_key_held_fraction": {
+    "w": 0.3113381201494752,
+    "a": 0.0764063375871609,
+    "s": 0.01852519350771173,
+    "d": 0.03314947054974557
+  },
+  "source_no_movement_key_fraction": 0.574627364813045,
+  "key_transition_counts": {
+    "87_down": 31,
+    "87_up": 31,
+    "65_down": 21,
+    "65_up": 21,
+    "68_down": 8,
+    "68_up": 8,
+    "83_down": 5,
+    "83_up": 5
+  },
+  "source_motion_sign_counts": {
+    "x": {
+      "negative": 685,
+      "zero": 33,
+      "positive": 860
+    },
+    "y": {
+      "negative": 315,
+      "zero": 1112,
+      "positive": 151
+    }
+  },
+  "image_scan": {
+    "frames_scanned": 2177,
+    "near_black_frames": 0,
+    "low_texture_frames": 0,
+    "identical_successive_sampled_images": 150
+  },
+  "operator_report": "All requested actions completed with fixed Grenade Man. No gameplay anomaly was reported.",
+  "agent_review": {
+    "initial_sampled_images": 5,
+    "additional_boundary_images": 6,
+    "desktop_notification_observed": true,
+    "full_semantic_review": false
+  },
+  "original_candidates": 2182,
+  "source_action_events": 1708,
+  "original_labelled_action_events": 1708,
+  "original_rejected_windows": {
+    "capture_gap": 2,
+    "stale_history": 7,
+    "incomplete_future_capture_coverage": 1,
+    "incomplete_future_window": 1
+  },
+  "reviewed_excluded_ranges": 1,
+  "excluded_candidates": 303,
+  "retained_candidates": 1879,
+  "retained_action_window_seconds": 93.95,
+  "retained_labelled_action_events": 1479,
+  "retained_timed_packets": 5336,
+  "retained_causal_training_loader": "pass",
+  "source_files_changed": false,
+  "source_hashes_match": true,
+  "split_check": {
+    "source_sessions": 3,
+    "session_split_overlap": false
+  },
+  "source_assets_match_first_recording": true,
+  "pointer_snapshot_matches_first_recording": true,
+  "candidate_mouse_scales": [
+    1.06,
+    0.92
+  ],
+  "independent_corner_validation_collected": false,
+  "input_sent": false,
+  "training_ready": false,
+  "model_improvement_established": false,
+  "automated_tests": {
+    "Linux": {
+      "passed": 121
+    },
+    "Windows": {
+      "passed": 121
+    }
+  }
+}

@@ -156,5 +156,42 @@ These results establish slice construction and image loading, rather than learne
 Use the [action audit](action-mapping.md) to identify labels that the current executor cannot represent.
 An offline candidate does not certify game bindings or mouse-unit equivalence.
 
+## Reviewed image exclusions
+
+Use `--exclude-frames` when a reviewed overlay obscures part of a recording.
+Supply a private JSON file with this structure:
+
+```json
+{
+  "source_session_id": "copy the exact source identity from the original dataset manifest",
+  "reason": "Reviewed desktop notification",
+  "frame_ranges": [[100, 130]]
+}
+```
+
+Frame indices start at zero, and both range endpoints are inclusive.
+Ranges must be ordered, disjoint, and inside the source archive.
+The source identity must match the recording.
+The builder rejects samples whose history-to-action interval overlaps an excluded capture interval.
+This rule covers both observed images and the following action window.
+Use reviewed margins when an overlay moves or fades near its visible boundary.
+The tool does not identify notifications automatically.
+
+Build a new dataset directory instead of changing the original:
+
+```bash
+python -m vimm8bdm.dataset \
+  --session data/corner-recording --output data/corner-clean-slices \
+  --split train --exclude-frames runs/corner-review/frame-exclusions.local.json
+```
+
+The new manifest embeds the exclusion record and reports the excluded sample count.
+Retained samples preserve their original identifiers, labels, and timestamps.
+The builder does not join the intervals on opposite sides of an exclusion.
+The original recording remains unchanged.
+The training loader reconstructs the exclusions before comparing the stored samples with the source.
+Use only the reviewed derived dataset for that experiment.
+Do not combine the full dataset and its filtered copy as independent training examples.
+
 The [first navigation demonstration](navigation-demo.md) also produced 2005 causal candidate slices.
 Its action audit exposes fast-turn and within-window timing limits in the current executor.

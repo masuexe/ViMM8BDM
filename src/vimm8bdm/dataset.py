@@ -162,7 +162,37 @@ def make_samples(frames, events, *, history=4, step_ns=50_000_000, max_age_ns=75
     return samples, dict(rejected)
 
 
-def build(source, output, *, split='diagnostic', allow_interface_check=False):
+def filter_reviewed_samples(samples, frames, exclusions, source_session_id):
+    """Exclude reviewed image intervals without changing source input or timestamps."""
+    if exclusions is None:
+        return samples, 0
+    if (not isinstance(exclusions, dict) or exclusions.get('source_session_id') != source_session_id
+            or not isinstance(exclusions.get('reason'), str) or not exclusions['reason'].strip()):
+        raise ValueError('Frame exclusions require the matching source identity and a review reason')
+    ranges = exclusions.get('frame_ranges')
+    if not isinstance(ranges, list) or not ranges:
+        raise ValueError('Frame exclusions require at least one inclusive frame range')
+    indexed = {row['frame']: row for row in frames}
+    intervals, previous = [], -1
+    for pair in ranges:
+        if (not isinstance(pair, list) or len(pair) != 2
+                or any(type(value) is not int for value in pair)):
+            raise ValueError('Each frame range requires two integer indices')
+        first, last = pair
+        if first <= previous or last < first or first not in indexed or last not in indexed:
+            raise ValueError('Frame ranges must be ordered, disjoint, and inside the source archive')
+        intervals.append((indexed[first]['capture_started_ns'], indexed[last]['capture_finished_ns']))
+        previous = last
+    retained = []
+    for sample in samples:
+        begin = min(h['capture_started_ns'] for h in sample['history'])
+        end = sample['action_end_ns']
+        if not any(begin <= last and end > first for first, last in intervals):
+            retained.append(sample)
+    return retained, len(samples) - len(retained)
+
+
+def build(source, output, *, split='diagnostic', allow_interface_check=False, exclusions=None):
     source, output = source.resolve(), output.resolve()
     if output.exists():
         raise FileExistsError('The output directory already exists. Select a new directory')
@@ -189,6 +219,9 @@ def build(source, output, *, split='diagnostic', allow_interface_check=False):
     session_id = hashlib.sha256(json.dumps({name: hashes[name] for name in
                                            ('events.jsonl', 'frames.jsonl', 'frames.vrec')},
                                           sort_keys=True).encode()).hexdigest()
+    samples, excluded = filter_reviewed_samples(samples, frames, exclusions, session_id)
+    if exclusions is not None:
+        rejected['reviewed_frame_exclusion'] = excluded
     dataset = {'format': 'vimm8bdm-bc-v1', 'source_directory': Path(os.path.relpath(source, output)).as_posix(),
                'source_session_id': session_id, 'source_hashes': hashes, 'split': split,
                'character': manifest['character'], 'map': manifest.get('map'), 'task': manifest.get('task'),
@@ -202,6 +235,8 @@ def build(source, output, *, split='diagnostic', allow_interface_check=False):
                'input_units': 'Recorded Windows Raw Input counts; actuator conversion not applied',
                'training_ready': False, 'blockers': ['human_review_required', 'actuator_conversion_unverified'],
                'timestamps_changed': False, 'automatic_response_delay_correction': False}
+    if exclusions is not None:
+        dataset['reviewed_frame_exclusions'] = copy.deepcopy(exclusions)
     if diagnostic_source:
         dataset['blockers'].append('interface_or_calibration_source')
     if not samples:
@@ -270,21 +305,24 @@ def main():
     parser.add_argument('--output', type=Path)
     parser.add_argument('--split', choices=('diagnostic', 'train', 'validation', 'test'), default='diagnostic')
     parser.add_argument('--allow-interface-check', action='store_true')
+    parser.add_argument('--exclude-frames', type=Path)
     parser.add_argument('--check-splits', type=Path, nargs='+')
     parser.add_argument('--verify-source', type=Path)
     args = parser.parse_args()
     if args.verify_source:
-        if args.check_splits or args.session or args.output:
+        if args.check_splits or args.session or args.output or args.exclude_frames:
             parser.error('Source verification cannot be combined with another mode')
         result = verify_source(args.verify_source)
     elif args.check_splits:
-        if args.session or args.output:
+        if args.session or args.output or args.exclude_frames:
             parser.error('Split checks cannot be combined with a dataset build')
         result = check_splits(args.check_splits)
     else:
         if args.session is None or args.output is None:
             parser.error('A dataset build requires --session and --output')
-        result = build(args.session, args.output, split=args.split, allow_interface_check=args.allow_interface_check)
+        exclusions = json.loads(args.exclude_frames.read_text()) if args.exclude_frames else None
+        result = build(args.session, args.output, split=args.split,
+                       allow_interface_check=args.allow_interface_check, exclusions=exclusions)
         result = {key: result[key] for key in ('samples', 'split', 'training_ready', 'blockers', 'rejected')}
     print(json.dumps(result, indent=2))
 

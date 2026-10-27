@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from vimm8bdm.dataset import HeldState, action_window, make_samples, build, load_history, check_splits, verify_source
+from vimm8bdm.dataset import HeldState, action_window, make_samples, build, load_history, check_splits, verify_source, filter_reviewed_samples
 
 MS = 1_000_000
 
@@ -22,6 +22,31 @@ def frame(number, at, segment=1):
 
 
 class DatasetTests(unittest.TestCase):
+    def test_reviewed_exclusion_covers_history_and_future_without_changing_labels(self):
+        frames = [frame(i, 50 + i * 50) for i in range(15)]
+        events = [start(), dict(type='segment_end', segment=1, sequence=2, time_ns=800 * MS)]
+        samples, _ = make_samples(frames, events)
+        original = copy.deepcopy(samples)
+        kept, count = filter_reviewed_samples(samples, frames,
+                                             {'source_session_id': 'source', 'reason': 'Reviewed overlay',
+                                              'frame_ranges': [[4, 4]]}, 'source')
+        self.assertEqual(count, 5)
+        # The first sample has a clean history, but its action window overlaps frame 4.
+        self.assertEqual(samples[0]['anchor_ns'], 200 * MS)
+        self.assertNotIn(samples[0], kept)
+        self.assertEqual(kept[0]['anchor_ns'], 450 * MS)
+        self.assertEqual(kept[0]['sample'], 5)
+        self.assertEqual(samples, original)
+
+    def test_reviewed_exclusion_rejects_wrong_source_and_invalid_ranges(self):
+        frames = [frame(i, 50 + i * 50) for i in range(4)]
+        valid = {'source_session_id': 'source', 'reason': 'Reviewed overlay', 'frame_ranges': [[0, 1]]}
+        for patch in [{'source_session_id': 'other'}, {'reason': ''}, {'frame_ranges': []},
+                      {'frame_ranges': [[2, 1]]}, {'frame_ranges': [[0, 4]]},
+                      {'frame_ranges': [[0, 1], [1, 2]]}, {'frame_ranges': [[True, 2]]}]:
+            with self.subTest(patch=patch), self.assertRaises(ValueError):
+                filter_reviewed_samples([], frames, {**valid, **patch}, 'source')
+
     def test_short_tap_and_mouse_counts_are_not_lost(self):
         events = [dict(type='button', time_ns=5, button='left', down=True, sequence=1),
                   dict(type='motion', time_ns=7, dx=36, dy=-9, sequence=2),
