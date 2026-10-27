@@ -28,3 +28,4 @@ weights/
 *.log
 *.zip
 *.tar.*
+*.vrec

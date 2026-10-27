@@ -226,3 +226,20 @@ Linux and Windows each passed 61 automated tests.
 See the [model runtime report](model-control.md) for evidence and limits.
 The screenshot, pretrained inference, and ordinary-input path now operates on the stock Windows client.
 Model action calibration, menu detection, weapon selection, and target-game combat ability remain incomplete.
+
+
+## First human recording
+
+The Windows recorder now captures foreground game images and human Raw Input events.
+It sends no game input and uses a separate message window for observation.
+A live Grenade Man session with random selection saved 416 frames and 564 events.
+The operator ended the session with F9 after an image span of 20.88 seconds.
+The archive checker passed with no queue losses or cleanup errors.
+The event stream includes WASD, jump, relative mouse motion, and both mouse buttons.
+Weapon selection was not exercised for the reported single-weapon character.
+
+A private image-and-event preview supports manual review.
+The data does not yet establish precise training-label alignment or stable character identity after respawn.
+Linux and Windows each passed 73 automated tests.
+See the [human recording report](human-recording.md).
+Use one selected character for later collection after timing and action-unit checks.

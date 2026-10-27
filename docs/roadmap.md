@@ -156,7 +156,9 @@ Keep the reports and per-frame logs.
 
 ## Milestone 2: collect target-game demonstrations
 
-Implement the synchronized recorder from the data report.
+The [first Windows recorder](human-recording.md) passed a short image-and-input collection check.
+The session remains interface-check data.
+Check the raw mouse units and label timing before building training samples.
 Start with one character and two maps.
 Check press/release timing and relative mouse labels.
 Preserve character, skill bindings, and asset digests.

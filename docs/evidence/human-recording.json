@@ -1,0 +1,168 @@
+{
+  "recorded_at_utc": "2026-10-27T06:20:33.323857+00:00",
+  "engine": "3.3-alpha-r260925-2352",
+  "character": "grenademan",
+  "character_source": "Operator report at start",
+  "class_selection": "random",
+  "character_stability_verified": false,
+  "purpose": "interface_check",
+  "training_ready": false,
+  "configured_limit_s": 30,
+  "actual_frame_span_s": 20.8821302,
+  "summary": {
+    "exit_reason": "quit_key",
+    "frames": 416,
+    "events": 564,
+    "dropped_items": 0,
+    "writer_error": null,
+    "complete": true,
+    "cleanup_errors": [],
+    "segments": 1,
+    "input_sent": false
+  },
+  "integrity_review": {
+    "frames": 416,
+    "events": 564,
+    "segments": 1,
+    "event_types": {
+      "segment_start": 1,
+      "key": 48,
+      "motion": 505,
+      "button": 8,
+      "segment_end": 1,
+      "recording_end": 1
+    },
+    "capture_ms_median": 7.26695,
+    "capture_ms_max": 20.1356,
+    "same_segment_gap_ms_max": 51.0314,
+    "archive_integrity": "pass",
+    "input_sent": false,
+    "training_ready": false,
+    "label_alignment": "Receipt-clock data. Visual alignment requires operator review."
+  },
+  "archive_bytes": 21733964,
+  "capture_size_px": [
+    640,
+    480
+  ],
+  "key_transitions": [
+    {
+      "key": "W",
+      "presses": 6,
+      "releases": 6
+    },
+    {
+      "key": "A",
+      "presses": 5,
+      "releases": 5
+    },
+    {
+      "key": "S",
+      "presses": 2,
+      "releases": 2
+    },
+    {
+      "key": "D",
+      "presses": 5,
+      "releases": 5
+    },
+    {
+      "key": "Space",
+      "presses": 6,
+      "releases": 6
+    }
+  ],
+  "button_transitions": {
+    "left_down": 3,
+    "left_up": 3,
+    "right_down": 1,
+    "right_up": 1
+  },
+  "initial_held_keys": [],
+  "initial_held_buttons": [],
+  "held_keys_at_segment_end": [],
+  "held_buttons_at_segment_end": [],
+  "event_timestamp_reversals": 0,
+  "weapon_selection": {
+    "status": "not exercised",
+    "operator_reason": "Grenade Man had one weapon in this session."
+  },
+  "operator_report": "Recording completed. Weapon selection was omitted.",
+  "visual_review": {
+    "frames_inspected": [
+      0,
+      200,
+      415
+    ],
+    "observation": "The samples contain the game view with changed camera and player position.",
+    "horizontal_translation_probes": [
+      {
+        "before_frame": 124,
+        "after_frame": 125,
+        "recorded_dx": 6,
+        "recorded_dy": -1,
+        "image_shift_px": -6,
+        "mean_error": 7.272939046223958
+      },
+      {
+        "before_frame": 126,
+        "after_frame": 127,
+        "recorded_dx": -7,
+        "recorded_dy": 0,
+        "image_shift_px": 3,
+        "mean_error": 7.0542755126953125
+      },
+      {
+        "before_frame": 136,
+        "after_frame": 137,
+        "recorded_dx": -3,
+        "recorded_dy": 0,
+        "image_shift_px": 5,
+        "mean_error": 9.818125406901041
+      },
+      {
+        "before_frame": 144,
+        "after_frame": 145,
+        "recorded_dx": 5,
+        "recorded_dy": -1,
+        "image_shift_px": -5,
+        "mean_error": 10.38262939453125
+      },
+      {
+        "before_frame": 152,
+        "after_frame": 153,
+        "recorded_dx": 2,
+        "recorded_dy": 0,
+        "image_shift_px": -5,
+        "mean_error": 11.082196553548178
+      },
+      {
+        "before_frame": 228,
+        "after_frame": 229,
+        "recorded_dx": -3,
+        "recorded_dy": 1,
+        "image_shift_px": 1,
+        "mean_error": 5.471417744954427
+      }
+    ],
+    "interpretation": "These samples show direction agreement but varying image displacement. They do not establish exact action timing or equal device and actuator units."
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 73,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 73,
+      "result": "pass"
+    }
+  },
+  "limits": [
+    "The session ended with F9 before the 30-second duration limit.",
+    "The live session had one segment and did not test focus loss or Esc during active recording.",
+    "The recorder does not automatically detect death, chat, or arbitrary menus.",
+    "Raw Input timestamps identify callback receipt rather than hardware event time.",
+    "The preview has not established precise training-label alignment.",
+    "A final modifier-state correction has automated coverage; this live session exercised WASD and Space."
+  ]
+}

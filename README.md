@@ -44,6 +44,7 @@ Read these documents:
 - [Mouse calibration](docs/mouse-calibration.md)
 - [Held-input focus check](docs/focus-check.md)
 - [Pretrained model runtime check](docs/model-control.md)
+- [Human gameplay recorder](docs/human-recording.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
 The project does not contain upstream model code, model weights, or game assets.

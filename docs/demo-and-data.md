@@ -3,6 +3,8 @@
 Use synchronized image and input recording for the first behavior-cloning dataset.
 Keep the user's existing demos for a later extraction experiment.
 Milestone 0 does not implement a demo parser.
+The [Windows recorder](human-recording.md) now implements the initial image-and-input collection path.
+Live validation and dataset preparation remain separate steps.
 
 ## What the source establishes
 

@@ -11,6 +11,7 @@ dependencies = []
 
 [project.optional-dependencies]
 desktop = ["mss", "pynput"]
+record = ["mss", "Pillow"]
 
 [project.scripts]
 vimm8bdm = "vimm8bdm.__main__:main"

@@ -15,8 +15,8 @@ PATTERNS = {
     "private key": re.compile(r"-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----"),
     "local artifact link": re.compile(r"\]\([^)]*(?:\.\./)?runs/"),
 }
-EXCLUDED_PARTS = {".local", "runs", "weights", ".venv", "__pycache__", ".aws", ".codex", ".agents"}
-EXCLUDED_SUFFIXES = {".pk3", ".wad", ".pt", ".pth", ".onnx", ".safetensors", ".zip", ".cld", ".lmp"}
+EXCLUDED_PARTS = {".local", "runs", "data", "weights", ".venv", "__pycache__", ".aws", ".codex", ".agents"}
+EXCLUDED_SUFFIXES = {".vrec", ".pk3", ".wad", ".pt", ".pth", ".onnx", ".safetensors", ".zip", ".cld", ".lmp"}
 
 
 def public_paths():
