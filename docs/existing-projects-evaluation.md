@@ -53,7 +53,9 @@ See the [spectator example](https://github.com/Farama-Foundation/ViZDoom/blob/ce
 
 `train.py` selects `num_continuous=1`.
 The input contains four grayscale images.
-The actor selects idle, attack, forward, left, backward, or right.
+The actor selects idle, attack, right, left, forward, or backward.
+The adapter now follows the exact order in the pinned training scenario.
+See the [runtime correction](model-control.md) for the earlier mapping error.
 It also produces a horizontal turn value.
 The discrete choices are mutually exclusive.
 The original model cannot move and attack simultaneously.

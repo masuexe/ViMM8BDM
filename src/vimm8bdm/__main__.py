@@ -98,6 +98,8 @@ def summarize(rows, mode, policy_name, exit_reason):
                             "p95": vals[max(0, math.ceil(len(vals) * .95) - 1)],
                             "max": vals[-1]}
     accepted = [row for row in rows if row["applied"]]
+    summary["policy_actions_suppressed"] = any(row.get("observe_only", False) for row in rows)
+    summary["dispatched_policy_actions"] = sum(row["applied"] and not row.get("observe_only", False) for row in rows)
     summary["accepted_action_latency"] = {}
     for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
         vals = sorted(row[key] for row in accepted)
@@ -140,6 +142,7 @@ def run(args):
                 raise ValueError("ContinuousDoom requires --continuous-source, --checkpoint, and --yaw-scale")
             from .continuous import ContinuousPolicy
             policy = ContinuousPolicy(args.continuous_source, args.checkpoint, args.yaw_scale)
+            print("Model loaded with strict parameter checks. CPU warm-up completed.", flush=True)
         elif args.policy == "input_check":
             policy = InputCheckPolicy()
         elif args.policy == "focus_check":
@@ -160,6 +163,8 @@ def run(args):
             waiting_label = f"{args.arm_timeout:g} seconds" if args.arm_timeout else "none"
             print(f"Input worker ready. F8: enable/pause. Esc: pause. F9: exit. Waiting limit: {waiting_label}.", flush=True)
             print(f"The {args.seconds:g}-second run limit starts after the first enable command.", flush=True)
+            if getattr(args, "observe_only", False):
+                print("Observation mode: policy actions are suppressed.", flush=True)
         started = time.perf_counter()
         previously_armed = False
         previous_generation = None
@@ -209,6 +214,7 @@ def run(args):
                 policy.reset()
             previously_armed = armed
             previous_generation = generation
+            model_output = None
             invalid_frame = blank_frame(frame)
             if invalid_frame:
                 if worker and args.policy == "focus_check":
@@ -220,6 +226,7 @@ def run(args):
                 action = Action()
             else:
                 action = policy.predict(frame).bounded()
+                model_output = getattr(policy, "last_prediction", None)
             phase = getattr(policy, "phase", None)
             if args.live and sequence_policy and armed and phase != previous_phase:
                 print("Input check:", phase, flush=True)
@@ -227,8 +234,10 @@ def run(args):
             if sequence_policy and armed and policy.complete:
                 lease.pause("probe_complete")
             predicted = time.perf_counter_ns()
-            applied = (worker.submit(action, frame.captured_ns, generation) if worker
-                       else lease.submit(action, frame.captured_ns))
+            observe_only = getattr(args, "observe_only", False)
+            dispatched = Action() if observe_only else action
+            applied = (worker.submit(dispatched, frame.captured_ns, generation) if worker
+                       else lease.submit(dispatched, frame.captured_ns))
             end = time.perf_counter_ns()
             row = {"frame": index, "capture_started_ns": begin,
                    "capture_ms": (captured - begin) / 1e6,
@@ -236,7 +245,9 @@ def run(args):
                    "input_ms": (end - predicted) / 1e6, "loop_ms": (end - begin) / 1e6,
                    "applied": applied, "control_state": lease.reason,
                    "policy_phase": phase, "blank_frame": invalid_frame,
-                   "input_generation": generation,
+                   "input_generation": generation, "observe_only": observe_only,
+                   "model_output": model_output,
+                   "dispatched_mouse_counts": [round(dispatched.mouse_dx), round(dispatched.mouse_dy)],
                    "action": {"keys": sorted(action.keys), "dx": action.mouse_dx,
                               "dy": action.mouse_dy, "attack": action.attack}}
             inject_fault = args.watchdog_fault and applied and phase == "hold" and not fault_injected
@@ -289,6 +300,7 @@ def main():
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="External ContinuousDoom state_dict path")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
+    parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")
     parser.add_argument("--capture", choices=("desktop", "x11-window", "window"), default="desktop")
     parser.add_argument("--window-id", type=lambda x: int(x, 0))
@@ -300,6 +312,8 @@ def main():
     parser.add_argument("--output", help="New JSONL path; existing files are never overwritten")
     parser.add_argument("--input-trace", help="New local JSONL file for input-worker audit events")
     args = parser.parse_args()
+    if args.observe_only and (not args.live or args.watchdog_fault or args.policy == "watchdog_check"):
+        parser.error("observe-only requires --live and cannot run a watchdog fault test")
     if args.watchdog_fault or args.policy == "watchdog_check":
         if not (args.live and args.policy == "watchdog_check" and args.watchdog_fault and args.output and args.input_trace):
             parser.error("A watchdog fault test requires --live, --policy watchdog_check, --watchdog-fault, --output, and --input-trace")

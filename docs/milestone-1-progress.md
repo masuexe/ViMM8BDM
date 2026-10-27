@@ -204,3 +204,25 @@ Model action conversion and target-game model control remain incomplete.
 
 The focus test reached its 120-second run limit and closed normally.
 The final worker audit recorded zero dropped events and no held inputs.
+
+
+## Pretrained model control
+
+The ContinuousDoom checkpoint now runs in native Windows Python without ViZDoom.
+Strict parameter loading and three CPU warm-up passes precede input-worker startup.
+The source audit corrected three movement mappings before this Windows test.
+The six-choice mapping now follows the pinned training scenario.
+
+Observation mode processed 131 nonblank images while suppressing all model actions.
+The subsequent ten-second run accepted all 87 model actions.
+The operator observed rightward turning and primary attack.
+The model selected attack for every frame in both runs.
+It made no movement-key choice in the control run.
+The final audit recorded released inputs, worker shutdown, and zero dropped events.
+
+The median live policy duration was 20.31 milliseconds.
+The median capture-to-dispatch loop duration was 28.18 milliseconds.
+Linux and Windows each passed 61 automated tests.
+See the [model runtime report](model-control.md) for evidence and limits.
+The screenshot, pretrained inference, and ordinary-input path now operates on the stock Windows client.
+Model action calibration, menu detection, weapon selection, and target-game combat ability remain incomplete.

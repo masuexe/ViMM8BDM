@@ -24,6 +24,9 @@ The research found no complete product that meets the final acceptance condition
 ContinuousDoom is the closest tested model for an initial adapter.
 Its checkpoint loads with strict parameter checks and runs without ViZDoom.
 Its original action space has no vertical aim, jump, weapon selection, or class skills.
+The Windows alpha test accepted 87 live model actions over ten seconds.
+The operator observed horizontal turning and primary attack.
+The model selected attack throughout that run.
 Target-game combat ability remains unverified.
 
 Read these documents:
@@ -40,6 +43,7 @@ Read these documents:
 - [Independent input watchdog](docs/input-watchdog.md)
 - [Mouse calibration](docs/mouse-calibration.md)
 - [Held-input focus check](docs/focus-check.md)
+- [Pretrained model runtime check](docs/model-control.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
 The project does not contain upstream model code, model weights, or game assets.

@@ -5,10 +5,22 @@ The caller must trust the supplied Python files before this module imports them.
 """
 from collections import deque
 import importlib
+import math
+import time
 from pathlib import Path
 import sys
 
 from .control import Action
+
+
+def map_prediction(choice, yaw, yaw_scale):
+    """Match the pinned defend_the_center.cfg button order."""
+    if choice not in range(6):
+        raise ValueError("The model action index must be between zero and five")
+    if not math.isfinite(yaw) or not math.isfinite(yaw_scale) or yaw_scale <= 0:
+        raise ValueError("Yaw must be finite. The yaw scale must be finite and positive")
+    key = {2: "d", 3: "a", 4: "w", 5: "s"}.get(choice)
+    return Action(frozenset({key}) if key else frozenset(), yaw * yaw_scale, 0, choice == 1)
 
 
 class ContinuousPolicy:
@@ -42,9 +54,17 @@ class ContinuousPolicy:
         state = torch.load(checkpoint, map_location="cpu", weights_only=True)
         self.model.load_state_dict(state, strict=True)
         self.model.eval()
+        self.last_prediction = None
+        self.warmup_ms = []
+        with torch.inference_mode():
+            for _ in range(3):
+                started = time.perf_counter_ns()
+                self.model.predict(torch.zeros((1, 4, 240, 320)))
+                self.warmup_ms.append((time.perf_counter_ns() - started) / 1e6)
 
     def reset(self):
         self.frames.clear()
+        self.last_prediction = None
 
     def predict(self, frame):
         image = self.Image.frombytes("RGB", (frame.width, frame.height), frame.bgra,
@@ -57,7 +77,7 @@ class ContinuousPolicy:
         with self.torch.inference_mode():
             categorical, yaw = self.model.predict(observation)
         choice = int(categorical.item())
-        keys = {2: "w", 3: "a", 4: "s", 5: "d"}
-        key = keys.get(choice)
-        return Action(frozenset({key}) if key else frozenset(),
-                      float(yaw.item()) * self.yaw_scale, 0, choice == 1)
+        raw_yaw = float(yaw.item())
+        action = map_prediction(choice, raw_yaw, self.yaw_scale)
+        self.last_prediction = {"choice": choice, "yaw": raw_yaw, "yaw_scale": self.yaw_scale}
+        return action

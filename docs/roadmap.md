@@ -115,6 +115,10 @@ The [focus test](focus-check.md) records held-input release and paused behavior 
 
 ### Step 5: compare model and rule policies
 
+The [Windows model test](model-control.md) passed the image-to-inference-to-input interface check.
+The model selected attack throughout the short run.
+Target-game task performance remains unverified.
+
 Use the tested ContinuousDoom checkpoint only as a research baseline until its reuse terms are clear.
 Keep strict loading enabled.
 Record preprocessing, action scale, and policy interval.
