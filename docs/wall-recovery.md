@@ -4,7 +4,8 @@ The operator reported completion of a 120-second human recording on MM1CUT.
 The session metadata specifies fixed Grenade Man and the official Windows alpha client.
 The executable and target asset hashes match the earlier directed training recording.
 The recorder sent no game input.
-Full-session operator confirmation remains pending.
+The operator reported completion of wall approaches and turns after slow movement along angled walls.
+The operator reported no death, chat, menu, character change, or long wall obstruction.
 
 ## Recording checks
 
@@ -62,7 +63,10 @@ Normalization uses the combined training labels only.
 Epoch 7 supplied the selected checkpoint.
 The complete training command took approximately 61.38 seconds.
 
-Both the new recording and validation recording still need full-session operator confirmation.
+At training time, full-session operator confirmation was pending for the new recording.
+The operator supplied that confirmation after training.
+A separate review record preserves this later report without changing the training-time review.
+The validation recording still needs full-session operator confirmation.
 The explicit experimental mode permits this candidate-data diagnosis.
 All source and model status fields remain unsuitable for deployment.
 
@@ -126,5 +130,6 @@ python -m vimm8bdm.behavior_cloning \
 
 Use a new output directory for repetition.
 Do not overwrite the source recording or assign it to validation after training.
-Check the operator's report before treating the session as reviewed demonstration data.
+The new session now has the operator's full-session quality report.
+This report does not establish mouse conversion or model performance.
 Inspect steering targets and transition errors before requesting another recording or enabling model input.

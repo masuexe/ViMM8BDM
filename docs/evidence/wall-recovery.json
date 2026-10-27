@@ -1522,6 +1522,18 @@
   },
   "source_files_changed": false,
   "current_rule_changed": false,
-  "operator_full_review_complete": false,
-  "deployment_ready": false
+  "operator_full_review_complete": true,
+  "deployment_ready": false,
+  "operator_review": {
+    "operator_report": "The operator confirmed fixed Grenade Man throughout the session. Wall approaches, turns away from walls, and turns after slow movement along angled walls were completed. No death, chat, menu, character change, or long wall obstruction was reported.",
+    "source_files_changed": false,
+    "operator_full_review_complete": true,
+    "training_ready": false,
+    "remaining_limits": [
+      "Raw mouse actuator conversion remains provisional.",
+      "The validation recording still lacks full-session operator confirmation.",
+      "The offline model did not pass steering acceptance."
+    ]
+  },
+  "review_provenance": "The operator supplied full-session confirmation after the experimental training run. The training-time review file remains unchanged."
 }
