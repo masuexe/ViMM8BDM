@@ -149,6 +149,9 @@ def run(args):
             policy = FocusCheckPolicy()
         elif args.policy == "watchdog_check":
             policy = WatchdogCheckPolicy()
+        elif args.policy == "visual_navigation":
+            from .visual_navigation import VisualNavigationPolicy
+            policy = VisualNavigationPolicy()
         else:
             policy = PixelProbe()
         # Initialize desktop ownership only after the policy is ready.
@@ -171,6 +174,7 @@ def run(args):
         previous_phase = None
         fault_injected = False
         sequence_policy = args.policy in ("input_check", "watchdog_check", "focus_check")
+        stateful_policy = sequence_policy or args.policy == "visual_navigation"
         exit_reason = "frame_limit"
         frame_budget = args.frames
         if worker:
@@ -222,7 +226,7 @@ def run(args):
                 else:
                     lease.pause("blank_frame")
                 action = Action()
-            elif sequence_policy and not armed:
+            elif stateful_policy and not armed:
                 action = Action()
             else:
                 action = policy.predict(frame).bounded()
@@ -295,7 +299,7 @@ def main():
     diagnostics.add_argument("--check-window", action="store_true", help="Measure window focus without sending input")
     parser.add_argument("--all-windows", action="store_true", help="Include other visible windows in the local list")
     parser.add_argument("--include-window-titles", action="store_true", help="Include titles in local diagnostic output")
-    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check"), default="red_marker_probe")
+    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check", "visual_navigation"), default="red_marker_probe")
     parser.add_argument("--watchdog-fault", choices=("stall", "exit"), help="Explicit local fault test for the watchdog policy")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="External ContinuousDoom state_dict path")

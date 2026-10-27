@@ -61,6 +61,8 @@ Read these documents:
 - [Temporal image features](docs/temporal-features.md)
 - [Action transition audit](docs/action-events.md)
 - [Explicit navigation targets](docs/event-targets.md)
+- [Explicit event model experiment](docs/event-cloning.md)
+- [Visual navigation rule baseline](docs/visual-navigation.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.

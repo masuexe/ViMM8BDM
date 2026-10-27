@@ -118,6 +118,39 @@ def evaluate_events(samples, predictions, key_threshold=.5, mouse_threshold=1):
             'independent_policy_rollout': False, 'input_sent': False}
 
 
+def evaluate_explicit_events(samples, labels):
+    """Compare decoded event labels without applying an occupancy threshold."""
+    if not samples or len(samples) != len(labels):
+        raise ValueError('Provide nonempty aligned source and decoded labels')
+    result = {}
+    for name, vk in zip(KEYS, VKS):
+        true_edges, predicted_edges = [], []
+        errors = []
+        eligible = events = 0
+        for sample, label in zip(samples, labels):
+            source = [e for e in sample['action']['events'] if e['type'] == 'key' and e['vk'] == vk]
+            predicted = [e for e in label['events'] if e['type'] == 'key' and e['vk'] == vk]
+            true_edges.append(source)
+            predicted_edges.append(predicted)
+            events += len(source)
+            if source and [e['down'] for e in source] == [e['down'] for e in predicted]:
+                eligible += 1
+                errors.extend(abs(a['offset_ns'] - b['offset_ns']) for a, b in zip(source, predicted))
+        result[name] = {
+            'recorded_events': events,
+            'press': binary_events([any(e['down'] for e in edges) for edges in true_edges],
+                                    [any(e['down'] for e in edges) for edges in predicted_edges]),
+            'release': binary_events([any(not e['down'] for e in edges) for edges in true_edges],
+                                      [any(not e['down'] for e in edges) for edges in predicted_edges]),
+            'timing_matched_windows': eligible, 'timing_matched_events': len(errors),
+            'timing_mae_ms_on_matched_events': sum(errors) / len(errors) / 1e6 if errors else None}
+    flat = [[label['key_held_fraction'].get(str(vk), 0) for vk in VKS]
+            + [label['mouse_dx_raw'], label['mouse_dy_raw']] for label in labels]
+    return {'samples': len(samples), 'keys': result, 'mouse': evaluate_events(samples, flat)['mouse'],
+            'exact_window_matching': True, 'timing_uses_recorded_callback_offsets': True,
+            'hardware_latency_measured': False, 'independent_policy_rollout': False, 'input_sent': False}
+
+
 def main():
     from .behavior_cloning import load_checkpoint, load_inputs, predict
     from .recording import file_digest

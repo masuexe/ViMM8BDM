@@ -1,0 +1,28 @@
+{
+  "policy": "visual_navigation",
+  "kind": "image_change_rule",
+  "profile": "grenademan",
+  "map": "MM1CUT",
+  "probe_seconds": 0.6,
+  "settle_seconds": 0.3,
+  "nominal_turn_seconds": 0.4,
+  "turn_total_injected_counts": 64,
+  "maximum_turn_counts_per_action": 8,
+  "image_change_threshold": 2,
+  "image_sample_points": 512,
+  "automated_tests": {
+    "Linux": {
+      "passed": 152
+    },
+    "Windows": {
+      "passed": 152
+    }
+  },
+  "synthetic_cli_frames": 12,
+  "synthetic_cli_mode": "synthetic_dry_run",
+  "synthetic_cli_input_sent": false,
+  "live_game_check": "pending",
+  "neural_checkpoint_used": false,
+  "engine_state_read": false,
+  "navigation_success_established": false
+}

@@ -1,0 +1,2531 @@
+{
+  "format": "vimm8bdm-event-policy-v1",
+  "train_source": {
+    "source_session_id": "38eca5ec0c06db9e512dee0ad588faea9d5480de1315c7733f43ffcb363acef4",
+    "split": "train",
+    "character": "grenademan",
+    "map": "MM1CUT",
+    "samples": 1879,
+    "samples_sha256": "ea360c16b6b839337b63b444d4c0344eb6fda9338c7183e0c8ce778d87e0b983"
+  },
+  "validation_source": {
+    "source_session_id": "9726844bc72e4bd01e167e0a402c8b2219c36ceb920dd23119a59a1c8a57432a",
+    "split": "validation",
+    "character": "grenademan",
+    "map": "MM1CUT",
+    "samples": 1796,
+    "samples_sha256": "4ae6acb40a3394321e71db75ffc566f48268ade7d9695cbaed7ab631aba56656"
+  },
+  "operator_review_hashes": {
+    "train": "088f571754d0b3e81b575a4fbe8b06b033fc93337602052b456458a38b8bd848",
+    "validation": "4baeea3842766711afffbbfef8a776a93e3a72a43f08e997d40e54094b71558f"
+  },
+  "source_split_check": {
+    "source_sessions": 2,
+    "session_split_overlap": false
+  },
+  "seed": 0,
+  "epochs": 12,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "cpu_threads": 4,
+  "parameters": 117660,
+  "best_epoch": 10,
+  "training_statistics": {
+    "key_weights": [
+      [
+        0.8784779906272888,
+        5.106995582580566,
+        0.0
+      ],
+      [
+        0.8770416378974915,
+        6.273555755615234,
+        37.641334533691406
+      ],
+      [
+        0.9368246793746948,
+        12.807458877563477,
+        0.0
+      ],
+      [
+        0.9317294955253601,
+        11.621746063232422,
+        0.0
+      ]
+    ],
+    "mouse_weights": [
+      [
+        2.546922206878662,
+        0.7366295456886292,
+        2.250916004180908
+      ],
+      [
+        2.852494239807129,
+        0.7569286227226257,
+        3.7191975116729736
+      ]
+    ],
+    "key_class_counts": [
+      [
+        1825,
+        54,
+        0
+      ],
+      [
+        1842,
+        36,
+        1
+      ],
+      [
+        1869,
+        10,
+        0
+      ],
+      [
+        1867,
+        12,
+        0
+      ]
+    ],
+    "mouse_class_counts": [
+      [
+        132,
+        1578,
+        169
+      ],
+      [
+        119,
+        1690,
+        70
+      ]
+    ],
+    "mouse_scale": [
+      33.395347595214844,
+      3.052910089492798
+    ]
+  },
+  "selection_rule": "Maximum mean of key-change macro F1 and mouse-activity macro F1 with recorded starting states",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.9894310447242172,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.7277800790676099,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.6887308772159675,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.667476165161417,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.6350834815028883,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.624566639719522,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 427,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "selection_score": 0.0
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 1.5675623652273953,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 314,
+              "tp": 124,
+              "fp": 190,
+              "fn": 303,
+              "precision": 0.39490445859872614,
+              "recall": 0.2903981264637002,
+              "f1": 0.33468286099865047
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 225,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.16734143049932523
+        },
+        "selection_score": 0.08367071524966262
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 1.557198091286684,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 90,
+              "tp": 60,
+              "fp": 30,
+              "fn": 367,
+              "precision": 0.6666666666666666,
+              "recall": 0.1405152224824356,
+              "f1": 0.23210831721470018
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 7,
+              "tp": 2,
+              "fp": 5,
+              "fn": 223,
+              "precision": 0.2857142857142857,
+              "recall": 0.008888888888888889,
+              "f1": 0.017241379310344827
+            }
+          ],
+          "macro_f1": 0.12467484826252251
+        },
+        "selection_score": 0.062337424131261254
+      }
+    },
+    {
+      "epoch": 9,
+      "train_loss": 1.5043053751362327,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 225,
+              "tp": 125,
+              "fp": 100,
+              "fn": 302,
+              "precision": 0.5555555555555556,
+              "recall": 0.2927400468384075,
+              "f1": 0.3834355828220859
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 44,
+              "tp": 18,
+              "fp": 26,
+              "fn": 207,
+              "precision": 0.4090909090909091,
+              "recall": 0.08,
+              "f1": 0.13382899628252787
+            }
+          ],
+          "macro_f1": 0.2586322895523069
+        },
+        "selection_score": 0.12931614477615344
+      }
+    },
+    {
+      "epoch": 10,
+      "train_loss": 1.4405885047262943,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 2,
+              "tp": 0,
+              "fp": 2,
+              "fn": 18,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 22,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 360,
+              "tp": 212,
+              "fp": 148,
+              "fn": 215,
+              "precision": 0.5888888888888889,
+              "recall": 0.4964871194379391,
+              "f1": 0.5387547649301143
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 132,
+              "tp": 46,
+              "fp": 86,
+              "fn": 179,
+              "precision": 0.3484848484848485,
+              "recall": 0.20444444444444446,
+              "f1": 0.25770308123249297
+            }
+          ],
+          "macro_f1": 0.39822892308130364
+        },
+        "selection_score": 0.19911446154065182
+      }
+    },
+    {
+      "epoch": 11,
+      "train_loss": 1.46231765925345,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 1,
+              "tp": 0,
+              "fp": 1,
+              "fn": 22,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 282,
+              "tp": 193,
+              "fp": 89,
+              "fn": 234,
+              "precision": 0.6843971631205674,
+              "recall": 0.4519906323185012,
+              "f1": 0.5444287729196051
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 120,
+              "tp": 43,
+              "fp": 77,
+              "fn": 182,
+              "precision": 0.35833333333333334,
+              "recall": 0.19111111111111112,
+              "f1": 0.2492753623188406
+            }
+          ],
+          "macro_f1": 0.39685206761922287
+        },
+        "selection_score": 0.19842603380961144
+      }
+    },
+    {
+      "epoch": 12,
+      "train_loss": 1.4319184235019085,
+      "validation_activity": {
+        "key_change": {
+          "per_channel": [
+            {
+              "true_windows": 50,
+              "predicted_windows": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 50,
+              "precision": null,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 18,
+              "predicted_windows": 1,
+              "tp": 0,
+              "fp": 1,
+              "fn": 18,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 8,
+              "predicted_windows": 1,
+              "tp": 0,
+              "fp": 1,
+              "fn": 8,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            {
+              "true_windows": 22,
+              "predicted_windows": 1,
+              "tp": 0,
+              "fp": 1,
+              "fn": 22,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          ],
+          "macro_f1": 0.0
+        },
+        "mouse_activity": {
+          "per_channel": [
+            {
+              "true_windows": 427,
+              "predicted_windows": 328,
+              "tp": 186,
+              "fp": 142,
+              "fn": 241,
+              "precision": 0.5670731707317073,
+              "recall": 0.43559718969555034,
+              "f1": 0.49271523178807947
+            },
+            {
+              "true_windows": 225,
+              "predicted_windows": 93,
+              "tp": 33,
+              "fp": 60,
+              "fn": 192,
+              "precision": 0.3548387096774194,
+              "recall": 0.14666666666666667,
+              "f1": 0.20754716981132076
+            }
+          ],
+          "macro_f1": 0.3501312007997001
+        },
+        "selection_score": 0.17506560039985006
+      }
+    }
+  ],
+  "recorded_state_reference": {
+    "samples": 1796,
+    "keys": {
+      "w": {
+        "recorded_events": 50,
+        "press": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "a": {
+        "recorded_events": 18,
+        "press": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 9,
+          "predicted_windows": 2,
+          "tp": 0,
+          "fp": 2,
+          "fn": 9,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "s": {
+        "recorded_events": 8,
+        "press": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "d": {
+        "recorded_events": 22,
+        "press": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      }
+    },
+    "mouse": {
+      "x": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1319,
+            "mae_raw_counts": 1.5451924484547925,
+            "predicted_nonzero_windows": 130
+          },
+          "start": {
+            "windows": 49,
+            "mae_raw_counts": 28.751353322243205,
+            "predicted_nonzero_windows": 7
+          },
+          "continue": {
+            "windows": 375,
+            "mae_raw_counts": 36.39935467529297,
+            "predicted_nonzero_windows": 205
+          },
+          "stop": {
+            "windows": 49,
+            "mae_raw_counts": 7.739062932072853,
+            "predicted_nonzero_windows": 18
+          },
+          "reverse": {
+            "windows": 3,
+            "mae_raw_counts": 6.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 49,
+            "predicted_windows": 85,
+            "tp": 2,
+            "fp": 83,
+            "fn": 47,
+            "precision": 0.023529411764705882,
+            "recall": 0.04081632653061224,
+            "f1": 0.029850746268656716
+          },
+          "continue": {
+            "true_windows": 375,
+            "predicted_windows": 249,
+            "tp": 144,
+            "fp": 105,
+            "fn": 231,
+            "precision": 0.5783132530120482,
+            "recall": 0.384,
+            "f1": 0.46153846153846156
+          },
+          "reverse": {
+            "true_windows": 3,
+            "predicted_windows": 26,
+            "tp": 0,
+            "fp": 26,
+            "fn": 3,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 49,
+            "predicted_windows": 85,
+            "tp": 6,
+            "fp": 79,
+            "fn": 43,
+            "precision": 0.07058823529411765,
+            "recall": 0.12244897959183673,
+            "f1": 0.08955223880597014
+          },
+          "idle": {
+            "true_windows": 1319,
+            "predicted_windows": 1350,
+            "tp": 1144,
+            "fp": 206,
+            "fn": 175,
+            "precision": 0.8474074074074074,
+            "recall": 0.8673237300985596,
+            "f1": 0.8572499063319595
+          }
+        }
+      },
+      "y": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1465,
+            "mae_raw_counts": 0.09360961482793398,
+            "predicted_nonzero_windows": 64
+          },
+          "start": {
+            "windows": 105,
+            "mae_raw_counts": 2.969438929784866,
+            "predicted_nonzero_windows": 21
+          },
+          "continue": {
+            "windows": 108,
+            "mae_raw_counts": 2.9830746209179915,
+            "predicted_nonzero_windows": 22
+          },
+          "stop": {
+            "windows": 105,
+            "mae_raw_counts": 0.4538623435156686,
+            "predicted_nonzero_windows": 22
+          },
+          "reverse": {
+            "windows": 12,
+            "mae_raw_counts": 4.532208363215129,
+            "predicted_nonzero_windows": 3
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 105,
+            "predicted_windows": 50,
+            "tp": 9,
+            "fp": 41,
+            "fn": 96,
+            "precision": 0.18,
+            "recall": 0.08571428571428572,
+            "f1": 0.11612903225806452
+          },
+          "continue": {
+            "true_windows": 108,
+            "predicted_windows": 77,
+            "tp": 11,
+            "fp": 66,
+            "fn": 97,
+            "precision": 0.14285714285714285,
+            "recall": 0.10185185185185185,
+            "f1": 0.11891891891891893
+          },
+          "reverse": {
+            "true_windows": 12,
+            "predicted_windows": 5,
+            "tp": 0,
+            "fp": 5,
+            "fn": 12,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 105,
+            "predicted_windows": 50,
+            "tp": 10,
+            "fp": 40,
+            "fn": 95,
+            "precision": 0.2,
+            "recall": 0.09523809523809523,
+            "f1": 0.12903225806451613
+          },
+          "idle": {
+            "true_windows": 1465,
+            "predicted_windows": 1613,
+            "tp": 1372,
+            "fp": 241,
+            "fn": 93,
+            "precision": 0.8505889646621203,
+            "recall": 0.936518771331058,
+            "f1": 0.8914879792072774
+          }
+        }
+      }
+    },
+    "exact_window_matching": true,
+    "timing_uses_recorded_callback_offsets": true,
+    "hardware_latency_measured": false,
+    "independent_policy_rollout": false,
+    "input_sent": false
+  },
+  "predicted_state_feedback": {
+    "samples": 1796,
+    "keys": {
+      "w": {
+        "recorded_events": 50,
+        "press": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "a": {
+        "recorded_events": 18,
+        "press": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "s": {
+        "recorded_events": 8,
+        "press": {
+          "true_windows": 4,
+          "predicted_windows": 1,
+          "tp": 0,
+          "fp": 1,
+          "fn": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "d": {
+        "recorded_events": 22,
+        "press": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      }
+    },
+    "mouse": {
+      "x": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1319,
+            "mae_raw_counts": 1.9320779768601795,
+            "predicted_nonzero_windows": 147
+          },
+          "start": {
+            "windows": 49,
+            "mae_raw_counts": 30.257500064616302,
+            "predicted_nonzero_windows": 10
+          },
+          "continue": {
+            "windows": 375,
+            "mae_raw_counts": 36.75717459360759,
+            "predicted_nonzero_windows": 211
+          },
+          "stop": {
+            "windows": 49,
+            "mae_raw_counts": 9.246305679788394,
+            "predicted_nonzero_windows": 21
+          },
+          "reverse": {
+            "windows": 3,
+            "mae_raw_counts": 11.57307497660319,
+            "predicted_nonzero_windows": 1
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 49,
+            "predicted_windows": 77,
+            "tp": 2,
+            "fp": 75,
+            "fn": 47,
+            "precision": 0.025974025974025976,
+            "recall": 0.04081632653061224,
+            "f1": 0.031746031746031744
+          },
+          "continue": {
+            "true_windows": 375,
+            "predicted_windows": 286,
+            "tp": 156,
+            "fp": 130,
+            "fn": 219,
+            "precision": 0.5454545454545454,
+            "recall": 0.416,
+            "f1": 0.4720121028744327
+          },
+          "reverse": {
+            "true_windows": 3,
+            "predicted_windows": 27,
+            "tp": 0,
+            "fp": 27,
+            "fn": 3,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 49,
+            "predicted_windows": 77,
+            "tp": 6,
+            "fp": 71,
+            "fn": 43,
+            "precision": 0.07792207792207792,
+            "recall": 0.12244897959183673,
+            "f1": 0.09523809523809523
+          },
+          "idle": {
+            "true_windows": 1319,
+            "predicted_windows": 1328,
+            "tp": 1130,
+            "fp": 198,
+            "fn": 189,
+            "precision": 0.8509036144578314,
+            "recall": 0.8567096285064443,
+            "f1": 0.853796751038912
+          }
+        }
+      },
+      "y": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1465,
+            "mae_raw_counts": 0.10780947932611147,
+            "predicted_nonzero_windows": 74
+          },
+          "start": {
+            "windows": 105,
+            "mae_raw_counts": 2.9903517144066947,
+            "predicted_nonzero_windows": 26
+          },
+          "continue": {
+            "windows": 108,
+            "mae_raw_counts": 2.9425110938372434,
+            "predicted_nonzero_windows": 24
+          },
+          "stop": {
+            "windows": 105,
+            "mae_raw_counts": 0.5149581875119891,
+            "predicted_nonzero_windows": 25
+          },
+          "reverse": {
+            "windows": 12,
+            "mae_raw_counts": 4.575216859579086,
+            "predicted_nonzero_windows": 5
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 105,
+            "predicted_windows": 55,
+            "tp": 11,
+            "fp": 44,
+            "fn": 94,
+            "precision": 0.2,
+            "recall": 0.10476190476190476,
+            "f1": 0.1375
+          },
+          "continue": {
+            "true_windows": 108,
+            "predicted_windows": 94,
+            "tp": 15,
+            "fp": 79,
+            "fn": 93,
+            "precision": 0.1595744680851064,
+            "recall": 0.1388888888888889,
+            "f1": 0.1485148514851485
+          },
+          "reverse": {
+            "true_windows": 12,
+            "predicted_windows": 5,
+            "tp": 0,
+            "fp": 5,
+            "fn": 12,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 105,
+            "predicted_windows": 55,
+            "tp": 11,
+            "fp": 44,
+            "fn": 94,
+            "precision": 0.2,
+            "recall": 0.10476190476190476,
+            "f1": 0.1375
+          },
+          "idle": {
+            "true_windows": 1465,
+            "predicted_windows": 1586,
+            "tp": 1359,
+            "fp": 227,
+            "fn": 106,
+            "precision": 0.8568726355611601,
+            "recall": 0.9276450511945392,
+            "f1": 0.8908554572271387
+          }
+        }
+      }
+    },
+    "exact_window_matching": true,
+    "timing_uses_recorded_callback_offsets": true,
+    "hardware_latency_measured": false,
+    "independent_policy_rollout": false,
+    "input_sent": false
+  },
+  "shuffled_images_recorded_state": {
+    "samples": 1796,
+    "keys": {
+      "w": {
+        "recorded_events": 50,
+        "press": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "a": {
+        "recorded_events": 18,
+        "press": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "s": {
+        "recorded_events": 8,
+        "press": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "d": {
+        "recorded_events": 22,
+        "press": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      }
+    },
+    "mouse": {
+      "x": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1319,
+            "mae_raw_counts": 3.8292588280221564,
+            "predicted_nonzero_windows": 263
+          },
+          "start": {
+            "windows": 49,
+            "mae_raw_counts": 30.902600794422384,
+            "predicted_nonzero_windows": 12
+          },
+          "continue": {
+            "windows": 375,
+            "mae_raw_counts": 34.4335991007487,
+            "predicted_nonzero_windows": 95
+          },
+          "stop": {
+            "windows": 49,
+            "mae_raw_counts": 4.322726794651577,
+            "predicted_nonzero_windows": 10
+          },
+          "reverse": {
+            "windows": 3,
+            "mae_raw_counts": 6.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 49,
+            "predicted_windows": 287,
+            "tp": 9,
+            "fp": 278,
+            "fn": 40,
+            "precision": 0.0313588850174216,
+            "recall": 0.1836734693877551,
+            "f1": 0.05357142857142857
+          },
+          "continue": {
+            "true_windows": 375,
+            "predicted_windows": 51,
+            "tp": 14,
+            "fp": 37,
+            "fn": 361,
+            "precision": 0.27450980392156865,
+            "recall": 0.037333333333333336,
+            "f1": 0.06572769953051644
+          },
+          "reverse": {
+            "true_windows": 3,
+            "predicted_windows": 42,
+            "tp": 0,
+            "fp": 42,
+            "fn": 3,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 49,
+            "predicted_windows": 287,
+            "tp": 12,
+            "fp": 275,
+            "fn": 37,
+            "precision": 0.041811846689895474,
+            "recall": 0.24489795918367346,
+            "f1": 0.07142857142857142
+          },
+          "idle": {
+            "true_windows": 1319,
+            "predicted_windows": 1128,
+            "tp": 851,
+            "fp": 277,
+            "fn": 468,
+            "precision": 0.7544326241134752,
+            "recall": 0.645185746777862,
+            "f1": 0.6955455659991827
+          }
+        }
+      },
+      "y": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1465,
+            "mae_raw_counts": 0.14160419731009943,
+            "predicted_nonzero_windows": 97
+          },
+          "start": {
+            "windows": 105,
+            "mae_raw_counts": 2.950037665594192,
+            "predicted_nonzero_windows": 7
+          },
+          "continue": {
+            "windows": 108,
+            "mae_raw_counts": 2.854538142681122,
+            "predicted_nonzero_windows": 11
+          },
+          "stop": {
+            "windows": 105,
+            "mae_raw_counts": 0.20860409963698615,
+            "predicted_nonzero_windows": 10
+          },
+          "reverse": {
+            "windows": 12,
+            "mae_raw_counts": 4.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 105,
+            "predicted_windows": 112,
+            "tp": 7,
+            "fp": 105,
+            "fn": 98,
+            "precision": 0.0625,
+            "recall": 0.06666666666666667,
+            "f1": 0.06451612903225806
+          },
+          "continue": {
+            "true_windows": 108,
+            "predicted_windows": 10,
+            "tp": 1,
+            "fp": 9,
+            "fn": 107,
+            "precision": 0.1,
+            "recall": 0.009259259259259259,
+            "f1": 0.01694915254237288
+          },
+          "reverse": {
+            "true_windows": 12,
+            "predicted_windows": 3,
+            "tp": 0,
+            "fp": 3,
+            "fn": 12,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 105,
+            "predicted_windows": 112,
+            "tp": 5,
+            "fp": 107,
+            "fn": 100,
+            "precision": 0.044642857142857144,
+            "recall": 0.047619047619047616,
+            "f1": 0.04608294930875576
+          },
+          "idle": {
+            "true_windows": 1465,
+            "predicted_windows": 1558,
+            "tp": 1275,
+            "fp": 283,
+            "fn": 190,
+            "precision": 0.8183568677792041,
+            "recall": 0.8703071672354948,
+            "f1": 0.8435329143235197
+          }
+        }
+      }
+    },
+    "exact_window_matching": true,
+    "timing_uses_recorded_callback_offsets": true,
+    "hardware_latency_measured": false,
+    "independent_policy_rollout": false,
+    "input_sent": false
+  },
+  "recorded_state_errors": {
+    "key_fraction_mae": {
+      "w": 0.013055093541202671,
+      "a": 0.0055138063474387536,
+      "s": 0.0030939944320712695,
+      "d": 0.004267503340757238
+    },
+    "mouse_mae_raw_counts": {
+      "x": 9.74159089042774,
+      "y": 0.4861599548091336
+    }
+  },
+  "feedback_errors": {
+    "key_fraction_mae": {
+      "w": 0.3685439665924276,
+      "a": 0.06614084966592428,
+      "s": 0.19276361449888643,
+      "d": 0.044042314031180405
+    },
+    "mouse_mae_raw_counts": {
+      "x": 10.190844671763397,
+      "y": 0.500385427262576
+    }
+  },
+  "no_change_zero_mouse_recorded_state_reference": {
+    "samples": 1796,
+    "keys": {
+      "w": {
+        "recorded_events": 50,
+        "press": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "a": {
+        "recorded_events": 18,
+        "press": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "s": {
+        "recorded_events": 8,
+        "press": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "d": {
+        "recorded_events": 22,
+        "press": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      }
+    },
+    "mouse": {
+      "x": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1319,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "start": {
+            "windows": 49,
+            "mae_raw_counts": 27.612244897959183,
+            "predicted_nonzero_windows": 0
+          },
+          "continue": {
+            "windows": 375,
+            "mae_raw_counts": 33.328,
+            "predicted_nonzero_windows": 0
+          },
+          "stop": {
+            "windows": 49,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "reverse": {
+            "windows": 3,
+            "mae_raw_counts": 6.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 49,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 49,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "continue": {
+            "true_windows": 375,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 375,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "reverse": {
+            "true_windows": 3,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 49,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 49,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "idle": {
+            "true_windows": 1319,
+            "predicted_windows": 1795,
+            "tp": 1319,
+            "fp": 476,
+            "fn": 0,
+            "precision": 0.7348189415041783,
+            "recall": 1.0,
+            "f1": 0.8471419396274887
+          }
+        }
+      },
+      "y": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1465,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "start": {
+            "windows": 105,
+            "mae_raw_counts": 2.8476190476190477,
+            "predicted_nonzero_windows": 0
+          },
+          "continue": {
+            "windows": 108,
+            "mae_raw_counts": 2.75,
+            "predicted_nonzero_windows": 0
+          },
+          "stop": {
+            "windows": 105,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "reverse": {
+            "windows": 12,
+            "mae_raw_counts": 4.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 105,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 105,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "continue": {
+            "true_windows": 108,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 108,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "reverse": {
+            "true_windows": 12,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 12,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 105,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 105,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "idle": {
+            "true_windows": 1465,
+            "predicted_windows": 1795,
+            "tp": 1465,
+            "fp": 330,
+            "fn": 0,
+            "precision": 0.8161559888579387,
+            "recall": 1.0,
+            "f1": 0.8987730061349694
+          }
+        }
+      }
+    },
+    "exact_window_matching": true,
+    "timing_uses_recorded_callback_offsets": true,
+    "hardware_latency_measured": false,
+    "independent_policy_rollout": false,
+    "input_sent": false
+  },
+  "always_released_zero_mouse_reference": {
+    "samples": 1796,
+    "keys": {
+      "w": {
+        "recorded_events": 50,
+        "press": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 25,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 25,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "a": {
+        "recorded_events": 18,
+        "press": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 9,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 9,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "s": {
+        "recorded_events": 8,
+        "press": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 4,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      },
+      "d": {
+        "recorded_events": 22,
+        "press": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "release": {
+          "true_windows": 11,
+          "predicted_windows": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 11,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "timing_matched_windows": 0,
+        "timing_matched_events": 0,
+        "timing_mae_ms_on_matched_events": null
+      }
+    },
+    "mouse": {
+      "x": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1319,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "start": {
+            "windows": 49,
+            "mae_raw_counts": 27.612244897959183,
+            "predicted_nonzero_windows": 0
+          },
+          "continue": {
+            "windows": 375,
+            "mae_raw_counts": 33.328,
+            "predicted_nonzero_windows": 0
+          },
+          "stop": {
+            "windows": 49,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "reverse": {
+            "windows": 3,
+            "mae_raw_counts": 6.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 49,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 49,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "continue": {
+            "true_windows": 375,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 375,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "reverse": {
+            "true_windows": 3,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 49,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 49,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "idle": {
+            "true_windows": 1319,
+            "predicted_windows": 1795,
+            "tp": 1319,
+            "fp": 476,
+            "fn": 0,
+            "precision": 0.7348189415041783,
+            "recall": 1.0,
+            "f1": 0.8471419396274887
+          }
+        }
+      },
+      "y": {
+        "by_actual_phase": {
+          "boundary": {
+            "windows": 1,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "idle": {
+            "windows": 1465,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "start": {
+            "windows": 105,
+            "mae_raw_counts": 2.8476190476190477,
+            "predicted_nonzero_windows": 0
+          },
+          "continue": {
+            "windows": 108,
+            "mae_raw_counts": 2.75,
+            "predicted_nonzero_windows": 0
+          },
+          "stop": {
+            "windows": 105,
+            "mae_raw_counts": 0.0,
+            "predicted_nonzero_windows": 0
+          },
+          "reverse": {
+            "windows": 12,
+            "mae_raw_counts": 4.666666666666667,
+            "predicted_nonzero_windows": 0
+          }
+        },
+        "phase_detection": {
+          "start": {
+            "true_windows": 105,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 105,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "continue": {
+            "true_windows": 108,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 108,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "reverse": {
+            "true_windows": 12,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 12,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "stop": {
+            "true_windows": 105,
+            "predicted_windows": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 105,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "idle": {
+            "true_windows": 1465,
+            "predicted_windows": 1795,
+            "tp": 1465,
+            "fp": 330,
+            "fn": 0,
+            "precision": 0.8161559888579387,
+            "recall": 1.0,
+            "f1": 0.8987730061349694
+          }
+        }
+      }
+    },
+    "exact_window_matching": true,
+    "timing_uses_recorded_callback_offsets": true,
+    "hardware_latency_measured": false,
+    "independent_policy_rollout": false,
+    "input_sent": false
+  },
+  "no_change_zero_mouse_errors": {
+    "key_fraction_mae": {
+      "w": 0.013055093541202671,
+      "a": 0.0049823285077951,
+      "s": 0.0030939944320712695,
+      "d": 0.004267503340757238
+    },
+    "mouse_mae_raw_counts": {
+      "x": 7.723273942093541,
+      "y": 0.36302895322939865
+    }
+  },
+  "feedback_resets_to_released": 1,
+  "compiled_packet_counts": {
+    "recorded_state_reference": 4093,
+    "predicted_state_feedback": 4130
+  },
+  "elapsed_seconds": 28.213663378000092,
+  "input_sent": false,
+  "independent_policy_rollout": false,
+  "deployment_ready": false,
+  "training_ready": false,
+  "checkpoint_reload_matches": true,
+  "operator_full_validation_session_confirmation": false,
+  "automated_tests_before_visual_baseline": {
+    "Linux": {
+      "passed": 144
+    },
+    "Windows": {
+      "passed": 144
+    }
+  }
+}

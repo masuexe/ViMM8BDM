@@ -99,6 +99,7 @@ It does not create a filtered copy or change source data.
 ## Next experiment
 
 Train event counts and masked offsets as separate targets.
+The [first event model](event-cloning.md) now implements that experiment, but failed movement-initiation and steering checks.
 Retain explicit context for the agent's own starting key state.
 Evaluate both recorded-state references and sequences that use earlier predicted states.
 Report false changes, missed changes, and time-offset errors separately.
