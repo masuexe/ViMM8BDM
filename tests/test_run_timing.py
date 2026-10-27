@@ -65,7 +65,7 @@ class RunTimingTests(unittest.TestCase):
         worker = worker_class(clock, enable_at)
         capture = Capture()
         args = SimpleNamespace(live=True, window_id=100, capture="desktop", region=(0, 0, 160, 120),
-                               output=None, policy=policy_name, input_trace=None, frames=3,
+                               output=None, policy=policy_name, input_trace=None, frames=3, checkpoint="fixture.pt",
                                observe_only=observe_only,
                                seconds=.5, arm_timeout=waiting_limit, hz=20, watchdog_fault=None)
         with (patch.dict("sys.modules", {"mss": SimpleNamespace(MSS=lambda: capture)}),
@@ -103,6 +103,34 @@ class RunTimingTests(unittest.TestCase):
         self.assertEqual(worker.actions, [])
         self.assertEqual(capture.frames, 0)
         self.assertTrue(worker.closed)
+
+    def test_temporal_shadow_requires_observation_mode(self):
+        with self.assertRaisesRegex(ValueError, 'observe-only'):
+            self.execute(0, 5, policy_name='temporal_shadow')
+
+    def test_temporal_shadow_resets_and_suppresses_even_nonempty_actions(self):
+        from vimm8bdm.control import Action
+        policy = SimpleNamespace(reset=Mock(), predict=Mock(return_value=Action(frozenset({'w'}), 4, 2, True)))
+        module = SimpleNamespace(TemporalShadowPolicy=lambda checkpoint: policy)
+        with patch.dict('sys.modules', {'vimm8bdm.temporal_shadow': module}):
+            worker, _ = self.execute(0, 5, policy_name='temporal_shadow', observe_only=True)
+        policy.reset.assert_called_once()
+        self.assertEqual(policy.predict.call_count, 3)
+        self.assertTrue(all(a == Action() for a in worker.actions))
+
+    def test_temporal_shadow_does_not_advance_while_paused(self):
+        class PausedWorker(Worker):
+            def refresh(self):
+                self.calls = getattr(self, 'calls', 0) + 1
+                self.armed = self.calls == 1
+                self.generation = 1
+        policy = SimpleNamespace(reset=Mock(), predict=Mock())
+        module = SimpleNamespace(TemporalShadowPolicy=lambda checkpoint: policy)
+        with patch.dict('sys.modules', {'vimm8bdm.temporal_shadow': module}):
+            worker, _ = self.execute(0, 5, policy_name='temporal_shadow', observe_only=True,
+                                     worker_class=PausedWorker)
+        policy.predict.assert_not_called()
+        self.assertEqual(worker.actions, [])
 
     def test_visual_navigation_resets_before_the_first_active_prediction(self):
         from vimm8bdm.control import Action

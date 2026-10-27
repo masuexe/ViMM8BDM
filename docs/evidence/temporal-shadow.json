@@ -1,0 +1,97 @@
+{
+  "kind": "native_temporal_shadow_runtime",
+  "policy_always_returns_empty_actions": true,
+  "observation_mode_required": true,
+  "current_rule_changed": false,
+  "uses_engine_state": false,
+  "uses_recorded_action_history": false,
+  "automated_tests": {
+    "Linux": {
+      "passed": 189
+    },
+    "Windows": {
+      "passed": 189
+    }
+  },
+  "native_synthetic_benchmark": {
+    "mode": "synthetic_native_windows",
+    "frame_size": [
+      640,
+      480
+    ],
+    "frames": 100,
+    "inference_frames": 97,
+    "full_context_frames": 66,
+    "timing_ms": {
+      "preprocess_ms": {
+        "samples": 66,
+        "p50": 1.2495,
+        "p95": 1.6231,
+        "maximum": 1.8962
+      },
+      "encoder_ms": {
+        "samples": 66,
+        "p50": 0.5291,
+        "p95": 0.8373,
+        "maximum": 0.9981
+      },
+      "temporal_ms": {
+        "samples": 66,
+        "p50": 0.79115,
+        "p95": 0.9675,
+        "maximum": 1.1219
+      },
+      "total_predict_ms": {
+        "samples": 66,
+        "p50": 2.6883,
+        "p95": 3.5713,
+        "maximum": 3.8558
+      }
+    },
+    "all_actions_empty": true,
+    "desktop_capture_performed": false,
+    "input_sent": false,
+    "checkpoint_sha256": "9bc381ae6bd46477fe150dfe3abd9b076fa6951719b31624acbe8beca9ab0145",
+    "gameplay_success_established": false
+  },
+  "live_game_check": "pending",
+  "navigation_success_established": false,
+  "native_recorded_game_replay": {
+    "mode": "native_windows_recorded_game_replay",
+    "source_session_id": "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70",
+    "frames_replayed": 2385,
+    "inference_frames": 2314,
+    "full_context_frames": 2288,
+    "history_matches": 2313,
+    "anchors_without_labelled_future_coverage": 1,
+    "probability_checks": 100,
+    "reconstructed_features": 2396,
+    "backfilled_features": 82,
+    "feature_history_matches": 2395,
+    "maximum_probability_difference": 1.7881393432617188e-07,
+    "pixel_tensor_sha256": "35de11ab20f8f4596e2e35af5554d86103701fc7bd32753dfac2eb9c68713dd7",
+    "reset_counts": {},
+    "all_actions_empty": true,
+    "desktop_capture_performed": false,
+    "input_sent": false,
+    "checkpoint_sha256": "9bc381ae6bd46477fe150dfe3abd9b076fa6951719b31624acbe8beca9ab0145",
+    "navigation_success_established": false
+  },
+  "linux_pixel_tensor_check": {
+    "mode": "linux_recorded_pixel_tensor",
+    "source_session_id": "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70",
+    "shape": [
+      2395,
+      4,
+      84,
+      112
+    ],
+    "pixel_tensor_sha256": "35de11ab20f8f4596e2e35af5554d86103701fc7bd32753dfac2eb9c68713dd7"
+  },
+  "cross_platform_pixel_tensor_hashes_match": true,
+  "initial_sampling_revision": {
+    "unnecessary_grid_resets": 81,
+    "full_context_frames": 1593,
+    "replaced_by": "Causal reconstruction of missed feature anchors from already complete images. No old actions are dispatched."
+  }
+}

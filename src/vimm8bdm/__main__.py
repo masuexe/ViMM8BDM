@@ -86,7 +86,8 @@ def summarize(rows, mode, policy_name, exit_reason):
                "timing_resolution_ns": time.get_clock_info("perf_counter").resolution * 1e9,
                "policy": policy_name,
                "exit_reason": exit_reason,
-               "neural_inference_measured": policy_name == "continuousdoom",
+               "neural_inference_measured": policy_name == "continuousdoom" or
+                    (policy_name == "temporal_shadow" and any((row.get("model_output") or {}).get("inference_performed") for row in rows)),
                "accepted_actions": sum(row["applied"] for row in rows),
                "inactive_or_rejected_frames": sum(not row["applied"] for row in rows),
                "input_stage": ("input_process_roundtrip" if mode == "desktop" else "lease_and_sink")
@@ -112,6 +113,9 @@ def summarize(rows, mode, policy_name, exit_reason):
 def run(args):
     if args.live and (args.window_id is None or (args.capture == "desktop" and args.region is None)):
         raise ValueError("--live requires --window-id. Desktop capture also requires --region")
+    if args.policy == "temporal_shadow" and (not args.live or not getattr(args, "observe_only", False)
+                                            or not getattr(args, "checkpoint", None)):
+        raise ValueError("The temporal shadow policy requires --live, --observe-only, and --checkpoint")
     sink = capture = worker = None
     rows = []
     output = None
@@ -152,6 +156,10 @@ def run(args):
         elif args.policy == "visual_navigation":
             from .visual_navigation import VisualNavigationPolicy
             policy = VisualNavigationPolicy()
+        elif args.policy == "temporal_shadow":
+            from .temporal_shadow import TemporalShadowPolicy
+            policy = TemporalShadowPolicy(args.checkpoint)
+            print("Shadow model loaded. CPU warm-up completed. This policy returns empty actions.", flush=True)
         else:
             policy = PixelProbe()
         # Initialize desktop ownership only after the policy is ready.
@@ -174,7 +182,7 @@ def run(args):
         previous_phase = None
         fault_injected = False
         sequence_policy = args.policy in ("input_check", "watchdog_check", "focus_check")
-        stateful_policy = sequence_policy or args.policy == "visual_navigation"
+        stateful_policy = sequence_policy or args.policy in ("visual_navigation", "temporal_shadow")
         exit_reason = "frame_limit"
         frame_budget = args.frames
         if worker:
@@ -299,10 +307,10 @@ def main():
     diagnostics.add_argument("--check-window", action="store_true", help="Measure window focus without sending input")
     parser.add_argument("--all-windows", action="store_true", help="Include other visible windows in the local list")
     parser.add_argument("--include-window-titles", action="store_true", help="Include titles in local diagnostic output")
-    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check", "visual_navigation"), default="red_marker_probe")
+    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check", "visual_navigation", "temporal_shadow"), default="red_marker_probe")
     parser.add_argument("--watchdog-fault", choices=("stall", "exit"), help="Explicit local fault test for the watchdog policy")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
-    parser.add_argument("--checkpoint", help="External ContinuousDoom state_dict path")
+    parser.add_argument("--checkpoint", help="Trusted local model checkpoint path")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
     parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")

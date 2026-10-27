@@ -204,7 +204,9 @@ The [wall recovery session](wall-recovery.md) added 2395 candidate training samp
 Combined-source training completed but did not improve the earlier model on the common-scale comparison.
 Keep the checkpoint offline.
 The [direction-classification audit](steering-direction.md) reduced false turns but still missed most turn starts.
-Compare longer causal visual context before another collection request.
+The [bounded-memory experiment](temporal-steering.md) completed with no approved steering model.
+The [shadow runtime](temporal-shadow.md) passed offline checks and a native synthetic timing test.
+Check actual game capture and memory resets without model-controlled actions next.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.
