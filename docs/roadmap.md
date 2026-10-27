@@ -162,8 +162,10 @@ Check the raw mouse units and label timing before building training samples.
 The [first navigation session](navigation-demo.md) produced 2005 candidate slices.
 It covers one character and one map, with no jumping or ladder navigation.
 The [timed executor](timed-actions.md) passed offline checks and a short attended game check.
-Review the navigation demonstration before training.
-Collect a separate validation session before comparing policy results.
+The operator reviewed both navigation recordings and reported normal ground navigation.
+The [validation session](navigation-validation.md) provides 1794 candidates separate from the 2005 training candidates.
+Source-hash and split checks passed.
+Keep the validation labels outside policy training.
 Extend collection to a second map for navigation tests outside the training map.
 Check press/release timing and relative mouse labels.
 Preserve character, skill bindings, and asset digests.

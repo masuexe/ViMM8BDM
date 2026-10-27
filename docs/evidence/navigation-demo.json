@@ -38,16 +38,11 @@
     "mouse_limit_exceeded": 456,
     "multiple_edges_in_one_step": 1
   },
-  "separate_navigation_validation_session": false,
+  "separate_navigation_validation_session": true,
   "separate_navigation_test_session": false,
   "mouse_unit_conversion_verified": false,
   "input_sent": false,
   "training_ready": false,
-  "blockers": [
-    "human_review_required",
-    "actuator_conversion_unverified",
-    "timed_execution_required"
-  ],
   "automatic_image_scan": {
     "frames_scanned": 1997,
     "near_black_frames": 0,
@@ -55,5 +50,11 @@
     "identical_successive_sampled_images": 19,
     "automatic_menu_or_death_detection": false,
     "semantic_full_review": false
-  }
+  },
+  "followup_validation_evidence": "navigation-validation.json",
+  "initial_audit_blockers": [
+    "human_review_required",
+    "actuator_conversion_unverified",
+    "timed_execution_required"
+  ]
 }

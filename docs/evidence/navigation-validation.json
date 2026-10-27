@@ -1,0 +1,73 @@
+{
+  "task": "ground_navigation",
+  "character": "grenademan",
+  "map": "MM1CUT",
+  "runtime": "Windows native",
+  "engine_version": "3.3-alpha-r260925-2352",
+  "exit_reason": "duration_limit",
+  "frames": 1788,
+  "events": 6098,
+  "segments": 1,
+  "dropped_items": 0,
+  "image_span_seconds": 89.9327558,
+  "archive_integrity": "pass",
+  "capture_ms_median": 7.414,
+  "same_segment_gap_ms_max": 51.3508,
+  "candidate_samples": 1794,
+  "split": "validation",
+  "source_action_events": 6095,
+  "labelled_action_events": 6094,
+  "unlabelled_tail_motion_events": 1,
+  "unlabelled_tail_motion_counts": [
+    1,
+    0
+  ],
+  "raw_events_changed": false,
+  "end_held_keys": [
+    "d",
+    "w"
+  ],
+  "rejected_windows": {
+    "insufficient_history": 1,
+    "incomplete_future_capture_coverage": 1,
+    "incomplete_future_window": 1
+  },
+  "image_scan": {
+    "frames_scanned": 1788,
+    "near_black_frames": 0,
+    "low_texture_frames": 0,
+    "identical_successive_sampled_images": 25
+  },
+  "image_review": {
+    "agent_sampled_images": 5,
+    "agent_full_semantic_review": false,
+    "operator_report": "Normal ground navigation throughout. No death, chat, menu, character change, long wall obstruction, jumping, or ladder navigation was reported."
+  },
+  "source_hashes_match": true,
+  "split_check": {
+    "source_sessions": 2,
+    "session_split_overlap": false
+  },
+  "source_assets_match_training": true,
+  "pointer_snapshot_matches_training": true,
+  "timed_compile": {
+    "samples": 1794,
+    "packets": 9912,
+    "max_packets_per_window": 20,
+    "cumulative_integer_error_counts": [
+      -0.32000000012158125,
+      0.2800000000008822
+    ]
+  },
+  "candidate_mouse_scales": [
+    1.06,
+    0.92
+  ],
+  "training_samples": 2005,
+  "validation_samples": 1794,
+  "separate_test_session": false,
+  "unseen_map_evaluation": false,
+  "mouse_unit_conversion_verified": false,
+  "input_sent": false,
+  "training_ready": false
+}

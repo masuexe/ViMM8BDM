@@ -43,11 +43,12 @@ The builder retained all source action events without clipping or a response-del
 One final window lacked complete future coverage and produced no sample.
 
 The dataset has a provisional `train` split designation.
-No separate navigation validation or test session exists yet.
+A [separate validation session](navigation-validation.md) now provides 1794 candidate samples.
+No separate navigation test session exists yet.
 The dataset retains `training_ready: false`.
 The operator completed the session review.
 The separate review record does not change the original dataset or its default review blocker.
-Mouse-unit checks and independent validation data remain incomplete.
+Mouse-unit checks remain incomplete.
 
 ## Executor limits
 
@@ -81,7 +82,7 @@ Queued packets must not renew the lease after the parent stops sending valid act
 The [timed execution path](timed-actions.md) now passes offline checks for this session.
 The attended game check also completed with no problem reported by the operator.
 The operator reported normal navigation throughout the demonstration.
-Mouse-unit checks and independent validation data remain incomplete.
+Mouse-unit checks remain incomplete.
 Keep the original recording and labels for later checks.
 Do not clip fast turns or remove short taps to fit the current executor.
 
