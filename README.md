@@ -284,3 +284,4 @@ See the [action-window comparison](docs/action-horizons.md) for the latest offli
 See the [wall recovery follow-up](docs/wall-recovery.md) for the new human recording and combined-source results.
 See the [direction-classification audit](docs/steering-direction.md) for the current steering failure analysis.
 See the [bounded-memory experiment](docs/temporal-steering.md) and [shadow runtime](docs/temporal-shadow.md) for the next model interface checks.
+See the [sprite perception baseline](docs/sprite-perception.md) for the first combat-perception comparison and real-image collection plan.

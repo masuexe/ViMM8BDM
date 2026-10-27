@@ -209,6 +209,9 @@ The [shadow runtime](temporal-shadow.md) passed offline checks and a native synt
 The shadow interface completed a 30-second attended check with normal manual control and empty model actions.
 The complete-loop 95th percentile was 14.54 milliseconds.
 No learned navigation controller passed its steering-quality conditions.
+The [sprite perception baseline](sprite-perception.md) also failed scale, rendering, and processing conditions.
+A stock local Cutman Bot scene now supports human-controlled appearance collection.
+Automated combat remains disabled.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.

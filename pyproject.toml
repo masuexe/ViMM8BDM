@@ -13,6 +13,7 @@ dependencies = []
 desktop = ["mss", "pynput"]
 record = ["mss", "Pillow"]
 train = ["torch", "numpy", "Pillow"]
+vision = ["opencv-python-headless==4.13.0.92", "numpy", "Pillow"]
 
 [project.scripts]
 vimm8bdm = "vimm8bdm.__main__:main"

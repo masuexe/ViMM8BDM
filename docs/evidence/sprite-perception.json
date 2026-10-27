@@ -1,0 +1,569 @@
+{
+  "kind": "offline_sprite_perception",
+  "opencv": "4.13.0",
+  "source_integrity": {
+    "frames": 2385,
+    "events": 3615,
+    "segments": 1,
+    "event_types": {
+      "segment_start": 1,
+      "key": 81,
+      "motion": 3531,
+      "segment_end": 1,
+      "recording_end": 1
+    },
+    "capture_ms_median": 7.7673,
+    "capture_ms_max": 24.4174,
+    "same_segment_gap_ms_max": 51.7085,
+    "archive_integrity": "pass",
+    "input_sent": false,
+    "training_ready": false,
+    "label_alignment": "Receipt-clock data. Visual alignment requires operator review."
+  },
+  "source_hashes": [
+    {
+      "name": "MM8BDM-v6a.pk3",
+      "sha256": "a39c670536b945724fb7a6aec1b9e60ed669d39a0e9e98a999f34d93da656076"
+    },
+    {
+      "name": "classes-v9fh.pk3",
+      "sha256": "420d7077dd81a28c8a43cef2a10e369b3e459a923a06ca38c3081391e5894d23"
+    },
+    {
+      "name": "gondolapatchv2.7h2.pk3",
+      "sha256": "f108214fa71c39403c536b0e3092da2eec02632618770c181d80819c687f035b"
+    }
+  ],
+  "negative_frame_indices": [
+    0,
+    76,
+    153,
+    230,
+    307,
+    384,
+    461,
+    538,
+    615,
+    692,
+    769,
+    845,
+    922,
+    999,
+    1076,
+    1153,
+    1230,
+    1307,
+    1384,
+    1461,
+    1538,
+    1614,
+    1691,
+    1768,
+    1845,
+    1922,
+    1999,
+    2076,
+    2153,
+    2230,
+    2307,
+    2384
+  ],
+  "threshold": 0.97,
+  "variants": {
+    "neutral": {
+      "summary": {
+        "negative_candidates": 0,
+        "negative_samples": 32,
+        "exact_scale_recall_at_iou_0_5": 0.625,
+        "heldout_scale_recall_at_iou_0_5": 0.0,
+        "processing_ms": {
+          "samples": 80,
+          "p50": 132.98756200038042,
+          "p95": 143.37406800041208,
+          "maximum": 168.81284000010055
+        }
+      },
+      "conditions": {
+        "no_negative_candidates": true,
+        "exact_scale_recall_at_least_0_9": false,
+        "heldout_scale_recall_at_least_0_8": false,
+        "median_ms_at_most_50": false
+      },
+      "conditions_passed": false,
+      "negative_score_range": [
+        0.8304839134216309,
+        0.9082209467887878
+      ],
+      "synthetic_breakdown": {
+        "resample": {
+          "BILINEAR": {
+            "samples": 27,
+            "successful_iou_matches": 6
+          },
+          "NEAREST": {
+            "samples": 21,
+            "successful_iou_matches": 9
+          }
+        },
+        "recolored": {
+          "False": {
+            "samples": 24,
+            "successful_iou_matches": 9
+          },
+          "True": {
+            "samples": 24,
+            "successful_iou_matches": 6
+          }
+        },
+        "brightness": {
+          "0.75": {
+            "samples": 25,
+            "successful_iou_matches": 7
+          },
+          "1.0": {
+            "samples": 23,
+            "successful_iou_matches": 8
+          }
+        }
+      },
+      "example_failed_cases": [
+        {
+          "rotation": 6,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": true,
+          "resample": "BILINEAR",
+          "score": 0.8691979050636292,
+          "template_height": 12,
+          "box": [
+            231,
+            127,
+            9,
+            12
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            92,
+            39,
+            12,
+            16
+          ],
+          "iou": 0.0
+        },
+        {
+          "rotation": 6,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": false,
+          "resample": "BILINEAR",
+          "score": 0.8319945335388184,
+          "template_height": 12,
+          "box": [
+            253,
+            132,
+            9,
+            12
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            95,
+            71,
+            12,
+            16
+          ],
+          "iou": 0.0
+        },
+        {
+          "rotation": 6,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": false,
+          "resample": "BILINEAR",
+          "score": 0.8724725842475891,
+          "template_height": 12,
+          "box": [
+            175,
+            73,
+            9,
+            12
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            126,
+            41,
+            6,
+            16
+          ],
+          "iou": 0.0
+        }
+      ]
+    },
+    "opaque": {
+      "summary": {
+        "negative_candidates": 0,
+        "negative_samples": 32,
+        "exact_scale_recall_at_iou_0_5": 0.375,
+        "heldout_scale_recall_at_iou_0_5": 0.0,
+        "processing_ms": {
+          "samples": 80,
+          "p50": 139.78603550003754,
+          "p95": 157.0026230001531,
+          "maximum": 165.0811600011366
+        }
+      },
+      "conditions": {
+        "no_negative_candidates": true,
+        "exact_scale_recall_at_least_0_9": false,
+        "heldout_scale_recall_at_least_0_8": false,
+        "median_ms_at_most_50": false
+      },
+      "conditions_passed": false,
+      "negative_score_range": [
+        0.7151138186454773,
+        0.782183825969696
+      ],
+      "synthetic_breakdown": {
+        "resample": {
+          "BILINEAR": {
+            "samples": 27,
+            "successful_iou_matches": 3
+          },
+          "NEAREST": {
+            "samples": 21,
+            "successful_iou_matches": 6
+          }
+        },
+        "recolored": {
+          "False": {
+            "samples": 24,
+            "successful_iou_matches": 9
+          },
+          "True": {
+            "samples": 24,
+            "successful_iou_matches": 0
+          }
+        },
+        "brightness": {
+          "0.75": {
+            "samples": 25,
+            "successful_iou_matches": 6
+          },
+          "1.0": {
+            "samples": 23,
+            "successful_iou_matches": 3
+          }
+        }
+      },
+      "example_failed_cases": [
+        {
+          "rotation": 4,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": true,
+          "resample": "BILINEAR",
+          "score": 0.7487358450889587,
+          "template_height": 16,
+          "box": [
+            153,
+            86,
+            12,
+            16
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            92,
+            39,
+            12,
+            16
+          ],
+          "iou": 0.0
+        },
+        {
+          "rotation": 4,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": false,
+          "resample": "BILINEAR",
+          "score": 0.8370783925056458,
+          "template_height": 16,
+          "box": [
+            95,
+            71,
+            12,
+            16
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            95,
+            71,
+            12,
+            16
+          ],
+          "iou": 1.0
+        },
+        {
+          "rotation": 3,
+          "height": 16,
+          "exact_bank_scale": true,
+          "brightness": 0.75,
+          "recolored": false,
+          "resample": "BILINEAR",
+          "score": 0.7660914659500122,
+          "template_height": 16,
+          "box": [
+            126,
+            41,
+            6,
+            16
+          ],
+          "candidate": false,
+          "kind": "cutman_standing_sprite_candidate",
+          "enemy_identification_verified": false,
+          "input_sent": false,
+          "expected_box": [
+            126,
+            41,
+            6,
+            16
+          ],
+          "iou": 1.0
+        }
+      ]
+    }
+  },
+  "negative_frames_visually_reviewed": false,
+  "synthetic_positive_game_render_verified": false,
+  "actual_enemy_detection_verified": false,
+  "input_sent": false,
+  "negative_visual_review": {
+    "agent_review": "The 32-frame contact sheet shows the known local map, items, and the operator weapon. No other player was identified in these sampled views.",
+    "frames_reviewed": 32,
+    "review_type": "Sampled visual review by the development agent; not an automatic enemy classifier.",
+    "source_files_changed": false,
+    "actual_positive_enemy_images_reviewed": false
+  },
+  "native_benchmark": {
+    "platform": "native_windows",
+    "opencv": "4.13.0",
+    "template_searches_per_frame": 40,
+    "frames": 8,
+    "processing_ms": {
+      "p50": 193.45549999979994,
+      "p95": 247.6040000001376,
+      "maximum": 247.6040000001376
+    },
+    "scores": [
+      0.8691979050636292,
+      0.8654090762138367,
+      0.8490119576454163,
+      0.8808815479278564,
+      0.868687093257904,
+      0.8607707619667053,
+      0.8687233924865723,
+      0.8654090762138367
+    ],
+    "input_sent": false,
+    "live_capture_performed": false,
+    "startup_context": "The benchmark was launched immediately after a separate local client/server startup."
+  },
+  "protocol": {
+    "created_utc": "2026-10-27T16:12:58.953770+00:00",
+    "actor": "cutman",
+    "pose": "A",
+    "rotations": 8,
+    "scale_heights_at_320x240": [
+      12,
+      16,
+      24,
+      32,
+      48
+    ],
+    "mask_modes": [
+      "neutral",
+      "opaque"
+    ],
+    "threshold": 0.97,
+    "negative_backgrounds": 32,
+    "synthetic_cases_each_mask": 48,
+    "synthetic_exact_scale_heights": [
+      16,
+      24,
+      32
+    ],
+    "synthetic_heldout_scale_heights": [
+      20,
+      28,
+      40
+    ],
+    "render_brightness": [
+      0.75,
+      1.0
+    ],
+    "render_filters": [
+      "nearest",
+      "bilinear"
+    ],
+    "candidate_conditions": {
+      "negative_candidate_frames_maximum": 0,
+      "exact_scale_iou_0_5_recall_minimum": 0.9,
+      "heldout_scale_iou_0_5_recall_minimum": 0.8,
+      "median_processing_ms_maximum": 50
+    },
+    "actual_enemy_gameplay_verified": false,
+    "input_sent": false,
+    "current_rule_changed": false
+  },
+  "automated_tests": {
+    "Linux": {
+      "passed": 194
+    },
+    "Windows": {
+      "passed": 194
+    }
+  },
+  "license_sources": {
+    "opencv_top_level": "https://github.com/opencv/opencv/blob/4.13.0/LICENSE",
+    "matching_source": "https://github.com/opencv/opencv/blob/4.13.0/modules/imgproc/src/templmatch.cpp",
+    "python_wrapper": "https://github.com/opencv/opencv-python/blob/4.x/LICENSE.txt"
+  },
+  "local_positive_scene": {
+    "stock_client_and_server": true,
+    "loopback_only": true,
+    "map": "MM1CUT",
+    "bot_name": "Cutman",
+    "original_target_packages": true,
+    "bot_activity_observed_in_client_log": true,
+    "ordinary_player": true,
+    "source_files_changed": false,
+    "human_recording_status": "pending",
+    "automatic_player_control": false
+  },
+  "current_rule_changed": false,
+  "bank_manifest": {
+    "format": "vimm8bdm-cutman-template-bank-v1",
+    "actor": "cutman",
+    "sprite_prefix": "CUTM",
+    "pose": "A",
+    "sources": [
+      {
+        "name": "MM8BDM-v6a.pk3",
+        "sha256": "a39c670536b945724fb7a6aec1b9e60ed669d39a0e9e98a999f34d93da656076"
+      },
+      {
+        "name": "classes-v9fh.pk3",
+        "sha256": "420d7077dd81a28c8a43cef2a10e369b3e459a923a06ca38c3081391e5894d23"
+      },
+      {
+        "name": "gondolapatchv2.7h2.pk3",
+        "sha256": "f108214fa71c39403c536b0e3092da2eec02632618770c181d80819c687f035b"
+      }
+    ],
+    "templates": [
+      {
+        "rotation": 1,
+        "image": "rotation-1.png",
+        "sha256": "161fd9af36adf3fd142703506f39f39822b9b9ca5a529e3e576d4418b09a7539",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA1.png",
+        "mirrored": false,
+        "width": 25,
+        "height": 32
+      },
+      {
+        "rotation": 2,
+        "image": "rotation-2.png",
+        "sha256": "ea872fa4fb87067df8bc49859b52f2d890e5289ec4d60b9acd0f59963327524c",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA8A2.png",
+        "mirrored": true,
+        "width": 24,
+        "height": 32
+      },
+      {
+        "rotation": 3,
+        "image": "rotation-3.png",
+        "sha256": "1573c9232b33328936aee4d66b54353ff0b3cd15ec423946de13dc8161a84f32",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA7A3.png",
+        "mirrored": true,
+        "width": 12,
+        "height": 32
+      },
+      {
+        "rotation": 4,
+        "image": "rotation-4.png",
+        "sha256": "26b49e397212f0a2c69e346ec9d65cb86aa6b7853f34c102df4cac97b05431bf",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA6A4.png",
+        "mirrored": true,
+        "width": 24,
+        "height": 32
+      },
+      {
+        "rotation": 5,
+        "image": "rotation-5.png",
+        "sha256": "777c1264802d07ec2497ce511bc154431b5229b5699536e9767f573fe3f126cc",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA5.png",
+        "mirrored": false,
+        "width": 25,
+        "height": 32
+      },
+      {
+        "rotation": 6,
+        "image": "rotation-6.png",
+        "sha256": "7c49588ba511688bf586f1cfb6f01ff3a05fc5944a48099c39b6207a1658b5b5",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA6A4.png",
+        "mirrored": false,
+        "width": 24,
+        "height": 32
+      },
+      {
+        "rotation": 7,
+        "image": "rotation-7.png",
+        "sha256": "4778cca35fd3c052baadd0d8da8fa5ebb8c672af958addf4796f279a77457499",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA7A3.png",
+        "mirrored": false,
+        "width": 12,
+        "height": 32
+      },
+      {
+        "rotation": 8,
+        "image": "rotation-8.png",
+        "sha256": "587a76f365865dadced8da92b6657a91475888a256393b55b3fe1e5c52c3de78",
+        "source_package": "MM8BDM-v6a.pk3",
+        "source_member": "sprites/skins/MM1/cutman/CUTMA8A2.png",
+        "mirrored": false,
+        "width": 24,
+        "height": 32
+      }
+    ],
+    "source_files_changed": false,
+    "actual_game_render_verified": false,
+    "input_sent": false
+  },
+  "original_packages_still_match_bank_source_hashes": true,
+  "full_case_results_location": "Private evaluation report. The public evaluator reproduces the case generation and measurements."
+}
