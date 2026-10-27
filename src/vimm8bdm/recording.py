@@ -18,6 +18,26 @@ BUTTONS = ('left', 'right', 'middle', 'x1', 'x2')
 CONTROL_KEYS = {0x77, 0x78, 0x1B}  # F8, F9, Esc
 
 
+def alignment_phase(elapsed):
+    if elapsed < 2:
+        return 'ready', None, 0
+    if elapsed < 20:
+        return 'horizontal', 'x', 1
+    if elapsed < 38:
+        return 'vertical', 'y', 2
+    return 'complete', None, 3
+
+
+def sound_cue(count, errors):
+    try:
+        import winsound
+        for _ in range(count):
+            winsound.Beep(880, 100)
+            time.sleep(.1)
+    except Exception as exc:
+        errors.append(str(exc))
+
+
 class RecordingWriter:
     def __init__(self, directory):
         self.directory = directory
@@ -106,6 +126,7 @@ class RecordingSession:
         self.buttons = set()
         self.controls_down = set()
         self.first_enable_ns = None
+        self.current_enable_ns = None
         self.last_reason = 'initial_pause'
 
     def emit(self, event, at=None, **values):
@@ -162,6 +183,7 @@ class RecordingSession:
                     self.buttons = set(state['buttons'])
                     self.segment += 1
                     self.armed = True
+                    self.current_enable_ns = received_ns
                     if self.first_enable_ns is None:
                         self.first_enable_ns = received_ns
                     self.emit('segment_start', received_ns, snapshot_ns=time.perf_counter_ns(),
@@ -256,7 +278,7 @@ def run(args):
                 'character': args.character, 'character_source': 'operator_report_at_start',
                 'class_selection': args.class_selection,
                 'character_stable': args.class_selection == 'fixed', 'map': args.map,
-                'purpose': 'interface_check', 'training_ready': False,
+                'purpose': 'interface_check', 'training_ready': False, 'protocol': args.protocol,
                 'mouse_units': 'Windows Raw Input relative counts; actuator equivalence unverified',
                 'keyboard_identity': ['vk', 'scan', 'extended'],
                 'initial_snapshot_has_scan_codes': False,
@@ -281,6 +303,9 @@ def run(args):
     focus = Focus(args.window_id)
     capture = raw = writer = session = None
     reason = 'error'
+    protocol_segment = protocol_phase_name = None
+    cue_errors = []
+    cue_threads = []
     try:
         capture = WindowsWindowCapture(args.window_id)
         writer = RecordingWriter(directory)
@@ -297,6 +322,28 @@ def run(args):
             session.poll()
             if session.first_enable_ns is not None and (begin - session.first_enable_ns) / 1e9 >= args.seconds:
                 reason = 'duration_limit'
+                break
+            protocol_done = False
+            if args.protocol == 'mouse_alignment':
+                with session.lock:
+                    if session.armed:
+                        phase, axis, cue = alignment_phase((begin - session.current_enable_ns) / 1e9)
+                        if protocol_segment != session.segment:
+                            protocol_segment = session.segment
+                            protocol_phase_name = None
+                        if phase != protocol_phase_name:
+                            protocol_phase_name = phase
+                            session.emit('protocol_phase', phase=phase, axis=axis, cue_count=cue)
+                            print('Mouse alignment:', phase, flush=True)
+                            if cue:
+                                thread = threading.Thread(target=sound_cue, args=(cue, cue_errors), daemon=True)
+                                cue_threads.append(thread)
+                                thread.start()
+                        if phase == 'complete':
+                            session.pause('protocol_complete')
+                            reason = 'protocol_complete'
+                            protocol_done = True
+            if protocol_done:
                 break
             state = session.capture_state()
             if state is not None:
@@ -327,12 +374,14 @@ def run(args):
             session.emit('recording_end', reason=reason)
         if writer:
             writer.close()
+        for thread in cue_threads:
+            thread.join(timeout=1)
         summary = {'exit_reason': reason, 'frames': writer.frames if writer else 0,
                    'events': writer.events if writer else 0,
                    'dropped_items': writer.dropped if writer else 0,
                    'writer_error': writer.error if writer else 'writer_not_started',
                    'complete': reason != 'error' and writer is not None and not writer.error and not cleanup_errors,
-                   'cleanup_errors': cleanup_errors,
+                   'cleanup_errors': cleanup_errors, 'cue_errors': cue_errors,
                    'segments': session.segment if session else 0, 'input_sent': False}
         with (directory / 'summary.json').open('x', encoding='utf-8') as output:
             json.dump(summary, output, indent=2)
@@ -347,6 +396,7 @@ def main():
     parser.add_argument('--run-dir', type=Path, required=True)
     parser.add_argument('--seconds', type=float, default=30)
     parser.add_argument('--hz', type=float, default=20)
+    parser.add_argument('--protocol', choices=('free', 'mouse_alignment'), default='free')
     parser.add_argument('--character', default='unknown')
     parser.add_argument('--class-selection', choices=('random', 'fixed', 'unknown'), default='unknown')
     parser.add_argument('--map', default='unknown')
@@ -360,6 +410,8 @@ def main():
         parser.error('The duration must be finite and between zero and 3600 seconds')
     if not math.isfinite(args.hz) or not 1 <= args.hz <= 60:
         parser.error('The capture frequency must be between 1 and 60 Hz')
+    if args.protocol == 'mouse_alignment' and args.seconds < 38:
+        parser.error('The mouse alignment protocol requires a duration limit of at least 38 seconds')
     run(args)
 
 

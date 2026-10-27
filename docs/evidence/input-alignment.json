@@ -1,0 +1,102 @@
+{
+  "recorded_at_utc": "2026-10-27T06:48:24.033362+00:00",
+  "source_recording": "First Grenade Man interface check, random selection",
+  "analyses": [
+    {
+      "image_window": "adjacent_frames",
+      "axes": {
+        "x": {
+          "status": "insufficient_data",
+          "active_pairs": 32,
+          "selected_delay_ms": null
+        },
+        "y": {
+          "status": "insufficient_data",
+          "active_pairs": 21,
+          "selected_delay_ms": null
+        }
+      },
+      "rejected": {
+        "segment_boundary": 0,
+        "held_key": 147,
+        "near_key_event": 54,
+        "uncertain_match": 126
+      }
+    },
+    {
+      "image_window": "minimum_80_ms",
+      "axes": {
+        "x": {
+          "status": "insufficient_data",
+          "active_pairs": 12,
+          "selected_delay_ms": null
+        },
+        "y": {
+          "status": "insufficient_data",
+          "active_pairs": 8,
+          "selected_delay_ms": null
+        }
+      },
+      "rejected": {
+        "segment_boundary": 0,
+        "held_key": 78,
+        "near_key_event": 25,
+        "uncertain_match": 77,
+        "protocol_phase": 0
+      }
+    }
+  ],
+  "guided_protocol": {
+    "status": "pending_operator_setup_and_live_check",
+    "duration_s": 38,
+    "target_capture_hz": 60,
+    "phases": [
+      {
+        "name": "ready",
+        "start_s": 0,
+        "cue_count": 0
+      },
+      {
+        "name": "horizontal",
+        "start_s": 2,
+        "cue_count": 1
+      },
+      {
+        "name": "vertical",
+        "start_s": 20,
+        "cue_count": 2
+      },
+      {
+        "name": "complete",
+        "start_s": 38,
+        "cue_count": 3
+      }
+    ]
+  },
+  "fitter": {
+    "candidate_delays_ms": [
+      -100,
+      150
+    ],
+    "grid_step_ms": 5,
+    "holdout_guard_ms": 300,
+    "delay_selection": "training_rmse_only",
+    "training_labels_modified": false,
+    "range_is_statistical_confidence_interval": false
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 81,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 81,
+      "result": "pass"
+    }
+  },
+  "limits": [
+    "No real-game response delay was selected from the first mixed recording.",
+    "Synthetic known-delay tests do not establish the stock-client delay.",
+    "A fitted image response delay does not justify shifting action labels to images containing their effects."
+  ]
+}

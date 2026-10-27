@@ -6,7 +6,7 @@ import struct
 import tempfile
 import unittest
 from vimm8bdm.control import Frame
-from vimm8bdm.recording import RecordingSession, RecordingWriter, MAGIC
+from vimm8bdm.recording import RecordingSession, RecordingWriter, MAGIC, alignment_phase
 
 
 class MemoryWriter:
@@ -33,6 +33,13 @@ class RecordingTests(unittest.TestCase):
     def toggle(self):
         self.key(0x77)
         self.key(0x77, False)
+
+    def test_alignment_phase_cues_and_end_are_bounded(self):
+        self.assertEqual(alignment_phase(0), ('ready', None, 0))
+        self.assertEqual(alignment_phase(2), ('horizontal', 'x', 1))
+        self.assertEqual(alignment_phase(19.99), ('horizontal', 'x', 1))
+        self.assertEqual(alignment_phase(20), ('vertical', 'y', 2))
+        self.assertEqual(alignment_phase(38), ('complete', None, 3))
 
     def test_press_release_between_frames_are_both_retained(self):
         self.toggle()

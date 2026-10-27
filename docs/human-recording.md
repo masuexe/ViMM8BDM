@@ -170,3 +170,6 @@ Automated tests cover those boundaries.
 Linux and Windows each passed 73 tests after the final modifier-state correction.
 The live session exercised WASD and Space rather than paired modifier keys.
 See the [sanitized recording record](evidence/human-recording.json).
+
+Use the [mouse alignment protocol](input-alignment.md) before selecting a response delay.
+It adds sound cues and phase markers to the existing recorder.
