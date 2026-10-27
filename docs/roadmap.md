@@ -193,6 +193,8 @@ Inspect temporal features and action targets with the current data before anothe
 The [temporal comparison](temporal-features.md) improved key prediction with explicit image differences.
 Mouse prediction and the combined score still failed to beat the constant baseline.
 Check action transitions and the agent's own action history next.
+The [transition audit](action-events.md) found low transition recall and a mismatch between occupancy thresholds and final key states.
+Evaluate explicit state changes and input timing before a live model check.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.

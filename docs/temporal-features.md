@@ -117,6 +117,7 @@ The [evidence file](evidence/temporal-features.json) contains the metrics and er
 
 Keep motion features as a candidate for movement prediction.
 Use the current data to evaluate key press and release transitions separately from long held intervals.
+The [transition audit](action-events.md) now separates those errors from persistent actions and identifies an occupancy-decoder mismatch.
 Inspect mouse turn initiation, continuation, and stopping errors separately.
 Define the role of the agent's own previous actions before a state-conditioned experiment.
 Do not treat a reference with actual human history as a deployment result.
