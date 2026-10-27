@@ -102,6 +102,49 @@ class VisualNavigationTests(unittest.TestCase):
             self.assertGreaterEqual(turn_at, stopped_at)
             self.assertLessEqual(turn_at - stopped_at, .450001)
 
+    def motion_probes(self, changes):
+        self.policy.predict(frame(0, shade=20))
+        self.advance(.3, shade=20)
+        shade = 20
+        actions = []
+        for probe, change in enumerate(changes):
+            shade += change
+            actions.append(self.advance(.5 + .2 * probe, shade=shade))
+        return actions
+
+    def test_sustained_reduction_triggers_turn_while_view_still_changes(self):
+        actions = self.motion_probes([20, 20, 20, 4, 4])
+        self.assertEqual(actions[-2].keys, frozenset({'w'}))
+        self.assertEqual(actions[-1], Action())
+        self.assertEqual(self.policy.phase, 'turn')
+        self.assertEqual(self.policy.slow_probes, 1)
+        self.assertEqual(self.policy.static_probes, 0)
+        self.assertEqual(self.policy.blockage_reason, 'reduced_image_change')
+        self.assertEqual(self.policy.motion_baseline, 20)
+
+    def test_one_slow_probe_does_not_turn_and_recovery_clears_streak(self):
+        actions = self.motion_probes([20, 20, 20, 4, 20, 4, 20])
+        self.assertTrue(all(a.keys == frozenset({'w'}) for a in actions))
+        self.assertEqual(self.policy.slow_streak, 0)
+        self.assertEqual(self.policy.blocked_probes, 0)
+
+    def test_single_large_change_does_not_set_baseline(self):
+        self.motion_probes([80, 10, 10, 10, 10])
+        self.assertEqual(self.policy.phase, 'forward')
+        self.assertEqual(self.policy.motion_baseline, 10)
+
+    def test_low_but_consistent_motion_does_not_trigger_relative_rule(self):
+        self.motion_probes([4] * 10)
+        self.assertEqual(self.policy.phase, 'forward')
+        self.assertEqual(self.policy.slow_probes, 0)
+
+    def test_pause_reset_discards_speed_reference(self):
+        self.motion_probes([20, 20, 20, 4])
+        self.policy.reset()
+        self.assertFalse(self.policy.motion_history)
+        self.assertIsNone(self.policy.motion_baseline)
+        self.assertEqual(self.policy.slow_streak, 0)
+
     def test_changed_view_keeps_forward_without_turning(self):
         self.policy.predict(frame(0))
         self.advance(.3)

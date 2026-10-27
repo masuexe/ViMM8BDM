@@ -10,16 +10,16 @@
   "image_sample_points": 512,
   "automated_tests": {
     "Linux": {
-      "passed": 157
+      "passed": 162
     },
     "Windows": {
-      "passed": 157
+      "passed": 162
     }
   },
   "synthetic_cli_frames": 12,
   "synthetic_cli_mode": "synthetic_dry_run",
   "synthetic_cli_input_sent": false,
-  "live_game_check": "larger_turn_revision_improved_by_operator_report; shorter_probe_revision_pending",
+  "live_game_check": "shorter_probe_revision_improved_by_operator_report; relative_change_revision_pending",
   "neural_checkpoint_used": false,
   "engine_state_read": false,
   "navigation_success_established": false,
@@ -63,5 +63,24 @@
     "stop_phase_cases": 4,
     "maximum_allowed_first_turn_delay_seconds": 0.45,
     "scope": "Artificial images change during movement and stay constant after movement stops. This is not a game latency measurement."
+  },
+  "relative_change_reference": {
+    "history_limit": 9,
+    "minimum_samples": 3,
+    "statistic": "median of largest three accepted scores",
+    "slow_ratio": 0.35,
+    "consecutive_slow_probes_required": 2,
+    "slow_samples_enter_reference": false,
+    "reset_on_turn_pause_or_capture_reset": true,
+    "measures_player_velocity": false
+  },
+  "third_live_check": {
+    "probe_seconds": 0.2,
+    "accepted_actions": 593,
+    "static_view_probes": 3,
+    "changed_view_probes": 107,
+    "exit_reason": "duration_limit",
+    "operator_report": "Turn response improved. Slow forward movement along an angled wall still needs a turn.",
+    "physical_collision_or_velocity_measured": false
   }
 }

@@ -19,9 +19,23 @@ The rule removes the largest ten percent of pixel differences before calculating
 This reduces isolated animation effects.
 A score below two triggers a turn attempt.
 
+The rule also compares each probe with recent forward probes.
+It keeps at most nine accepted scores and uses the median of the largest three scores as its reference.
+It needs at least three scores before this comparison starts.
+Two consecutive scores below 35 percent of the reference trigger a turn, even when the view still changes.
+A single low score does not trigger this relative rule.
+Low scores do not enter the reference history.
+
+A turn, capture reset, or manual reset clears this history.
+A normal score clears the consecutive low-score count.
+This rule targets slow movement along a wall after faster movement.
+It does not measure player velocity or identify wall angles.
+It cannot detect a relative slowdown before it collects a reference.
+Changes in texture, distance, lighting, or animation can cause false decisions.
+
 The first turn requests 256 horizontal mouse counts.
 Repeated blockage increases the turn budget by 256 counts, with a limit of 1024 counts.
-Nine consecutive changed views clear the blockage history.
+Nine consecutive normal probes clear the blockage history.
 This keeps the nominal reset interval at 1.8 seconds.
 Each action requests at most eight counts, at a nominal rate of 160 counts per second.
 Each turn ends with 0.3 seconds of settling.
@@ -70,23 +84,32 @@ The initial wait has no timeout.
 
 ## Evidence status
 
-Linux and Windows each passed 157 automated tests after the turn adjustment.
+Linux and Windows each passed 162 automated tests after the relative-change adjustment.
 Rule tests check static and changed views, HUD exclusion, bounded turns, capture resets, and pause behavior.
 A synthetic command-line check also completed without desktop input.
+
 Movement and turn execution worked in the first attended check.
 The operator reported a left turn followed by repeated wall contact.
 The log recorded seven turns of 64 counts and 593 accepted actions.
 The 30-second run ended at its duration limit.
 This check failed to establish useful navigation.
+
 The second attended check used the larger turn budgets.
 The operator reported much better movement, with a delay before turns at walls.
 The log recorded four turn attempts and 592 accepted actions.
 The first turn packet followed each static-view decision by approximately 50 milliseconds.
 The log does not establish the physical collision time.
+
 The rule now uses 0.2-second probes instead of 0.6-second probes.
 A synthetic moving-to-static test checks the first turn within 0.45 seconds at 20 Hz.
 This bound applies to the synthetic images, not all game scenes.
-The shorter probes require another attended check.
+
+The operator reported better turn response with shorter probes.
+The third log recorded three turn attempts and 593 accepted actions.
+The operator also reported slow forward movement along an angled wall.
+The static-view rule did not handle that case as expected.
+The new relative-change rule requires an attended check.
+
 Slow movement can produce small image changes and cause false blockage decisions.
 These checks do not establish collision detection or navigation success in the actual game.
 The [evidence file](evidence/visual-navigation.json) records the current status.

@@ -1,4 +1,7 @@
 """Use displayed image change as a movement proxy for a navigation baseline."""
+from collections import deque
+from statistics import median
+
 from .control import Action
 
 
@@ -23,7 +26,7 @@ def image_change(previous, current):
 
 
 class VisualNavigationPolicy:
-    """Probe forward motion, then increase the turn budget after repeated static views."""
+    """Probe forward motion and turn after static or persistently reduced image change."""
 
     def __init__(self):
         self.reset()
@@ -41,6 +44,12 @@ class VisualNavigationPolicy:
         self.blocked_probes = 0
         self.successful_probes = 0
         self.motion_score = None
+        self.motion_history = deque(maxlen=9)
+        self.motion_baseline = None
+        self.slow_streak = 0
+        self.slow_probes = 0
+        self.static_probes = 0
+        self.blockage_reason = None
         self.last_prediction = None
 
     def predict(self, frame):
@@ -69,7 +78,18 @@ class VisualNavigationPolicy:
             if now - self.since_ns >= 200_000_000:
                 self.motion_score = image_change(self.reference, view)
                 self.since_ns, self.reference = now, view
-                if self.motion_score < 2:
+                self.motion_baseline = (median(sorted(self.motion_history)[-3:])
+                                        if len(self.motion_history) >= 3 else None)
+                slow = (self.motion_baseline is not None
+                        and self.motion_score < self.motion_baseline * .35)
+                self.slow_streak = self.slow_streak + 1 if slow else 0
+                static = self.motion_score < 2
+                if static or self.slow_streak >= 2:
+                    self.blockage_reason = 'static_view' if static else 'reduced_image_change'
+                    self.static_probes += int(static)
+                    self.slow_probes += int(not static)
+                    self.motion_history.clear()
+                    self.slow_streak = 0
                     self.blocked_probes += 1
                     self.changed_streak = 0
                     self.escape_attempts += 1
@@ -77,8 +97,11 @@ class VisualNavigationPolicy:
                     self.phase, self.turn_sent = 'turn', 0.
                     action = Action()
                 else:
+                    # Keep slow samples out of the baseline until they recover.
+                    if not slow:
+                        self.motion_history.append(self.motion_score)
                     self.successful_probes += 1
-                    self.changed_streak += 1
+                    self.changed_streak = 0 if slow else self.changed_streak + 1
                     if self.changed_streak >= 9:
                         self.escape_attempts = 0
         elif self.phase == 'turn':
@@ -96,7 +119,12 @@ class VisualNavigationPolicy:
                                 'turn_sent_counts': self.turn_sent,
                                 'escape_attempts': self.escape_attempts,
                                 'changed_view_streak': self.changed_streak,
-                                'static_view_probes': self.blocked_probes,
+                                'static_view_probes': self.static_probes,
+                                'slow_view_probes': self.slow_probes,
+                                'blocked_view_probes': self.blocked_probes,
+                                'motion_baseline': self.motion_baseline,
+                                'slow_view_streak': self.slow_streak,
+                                'blockage_reason': self.blockage_reason,
                                 'changed_view_probes': self.successful_probes,
                                 'reset_reason': reset_reason}
         return action
