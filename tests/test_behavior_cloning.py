@@ -21,21 +21,24 @@ from vimm8bdm.recording import RecordingWriter
 from test_dataset import frame, start, MS
 
 
-def fixture(root, name, split, mouse):
+def fixture(root, name, split, mouse, frames_count=7):
     source = root / (name + '-source')
     source.mkdir()
     writer = RecordingWriter(source)
-    for i in range(7):
+    for i in range(frames_count):
         row = frame(i, 50 + i * 50)
-        image = Frame(2, 2, bytes((i * 20, sum(map(ord, name)) % 128, 255, 255)) * 4,
+        image = Frame(2, 2, bytes((i * 20 % 256, sum(map(ord, name)) % 128, 255, 255)) * 4,
                       row['capture_started_ns'])
+        if not writer.frame_slots.acquire(timeout=5):
+            raise RuntimeError('The synthetic frame writer did not drain')
+        writer.frame_slots.release()
         writer.put('frame', (image, row))
     events = [start(),
               dict(type='key', time_ns=205 * MS, segment=1, sequence=2, vk=87, scan=17, extended=0, down=True),
               dict(type='key', time_ns=215 * MS, segment=1, sequence=3, vk=87, scan=17, extended=0, down=False),
               dict(type='motion', time_ns=225 * MS, segment=1, sequence=4, dx=mouse, dy=-4),
-              dict(type='segment_end', time_ns=400 * MS, segment=1, sequence=5),
-              dict(type='recording_end', time_ns=401 * MS, segment=1, sequence=6)]
+              dict(type='segment_end', time_ns=(frames_count + 1) * 50 * MS, segment=1, sequence=5),
+              dict(type='recording_end', time_ns=((frames_count + 1) * 50 + 1) * MS, segment=1, sequence=6)]
     for event in events:
         writer.put('event', event)
     writer.close()
@@ -45,7 +48,7 @@ def fixture(root, name, split, mouse):
                     class_selection='fixed', character_stable=True, character='grenademan',
                     training_ready=False, input_sent=False)
     (source / 'session.json').write_text(json.dumps(manifest))
-    (source / 'summary.json').write_text(json.dumps(dict(complete=True, frames=7, events=6, segments=1, dropped_items=0)))
+    (source / 'summary.json').write_text(json.dumps(dict(complete=True, frames=frames_count, events=6, segments=1, dropped_items=0)))
     output = root / name
     build(source, output, split=split)
     return output
@@ -139,6 +142,60 @@ class BehaviorCloningTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'causal source reconstruction'):
                 load_inputs(data, 'train')
 
+    def test_long_window_preserves_causal_images_and_raw_action_units(self):
+        with tempfile.TemporaryDirectory() as directory:
+            data = fixture(Path(directory), 'train', 'train', 413, frames_count=15)
+            x50, y50, _ = load_inputs(data, 'train')
+            x200, y200, identity = load_inputs(data, 'train', action_ms=200)
+            self.assertEqual(len(x200), 2)
+            self.assertTrue(torch.equal(x200[0], x50[0]))
+            self.assertTrue(torch.equal(x200[1], x50[4]))
+            self.assertAlmostEqual(y200[0, 0].item(), .05)
+            self.assertEqual(y200[0, 4:].tolist(), [413, -4])
+            self.assertEqual(identity['action_window_ms'], 200)
+            self.assertEqual(identity['history_spacing_ms'], 50)
+            # The ordinary 50 ms labels remain valid after the derived experiment.
+            self.assertTrue(torch.equal(load_inputs(data, 'train')[1], y50))
+            with self.assertRaises(ValueError):
+                load_inputs(data, 'train', action_ms=100)
+
+    def test_long_window_exclusion_also_covers_its_future(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = fixture(root, 'train', 'train', 100, frames_count=19)
+            metadata = json.loads((full / 'dataset.json').read_text())
+            clean = root / 'clean'
+            build(root / 'train-source', clean, split='train', exclusions={
+                'source_session_id': metadata['source_session_id'],
+                'reason': 'Synthetic reviewed overlay', 'frame_ranges': [[6, 6]]})
+            original, _, _ = load_inputs(full, 'train', action_ms=200)
+            filtered, _, identity = load_inputs(clean, 'train', action_ms=200)
+            self.assertEqual(len(original), 3)
+            self.assertEqual(len(filtered), 1)
+            self.assertTrue(torch.equal(filtered[0], original[2]))
+            self.assertEqual(identity['samples'], 1)
+            rows = [json.loads(line) for line in (clean / 'samples.jsonl').read_text().splitlines()]
+            rows[0]['action']['mouse_dx_raw'] += 1
+            (clean / 'samples.jsonl').write_text('\n'.join(map(json.dumps, rows)) + '\n')
+            with self.assertRaisesRegex(ValueError, 'causal source reconstruction'):
+                load_inputs(clean, 'train', action_ms=200)
+
+    def test_version3_checkpoint_retains_action_duration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'model.pt'
+            model = NavigationModel('motion')
+            value = {'format': 'vimm8bdm-navigation-bc-v3', 'features': 'motion',
+                     'action_window_ms': 200, 'image_size': list(IMAGE_SIZE), 'keys': list(KEYS),
+                     'mouse_mean': torch.zeros(2), 'mouse_scale': torch.ones(2),
+                     'state_dict': model.state_dict()}
+            torch.save(value, path)
+            loaded, _, _ = load_checkpoint(path)
+            self.assertEqual(loaded.action_window_ms, 200)
+            value['action_window_ms'] = 100
+            torch.save(value, path)
+            with self.assertRaises(ValueError):
+                load_checkpoint(path)
+
     def test_normalization_keeps_constant_axis_finite(self):
         targets = torch.tensor([[0, 0, 0, 0, 10, 0], [1, 0, 0, 0, 30, 0]], dtype=torch.float32)
         mean, scale = normalization(targets)
@@ -157,16 +214,16 @@ class BehaviorCloningTests(unittest.TestCase):
     def test_validation_targets_do_not_change_training_updates_or_normalization(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            train_data = fixture(root, 'train', 'train', 100)
-            validation_a = fixture(root, 'validation-a', 'validation', 200)
-            validation_b = fixture(root, 'validation-b', 'validation', 1000000)
+            train_data = fixture(root, 'train', 'train', 100, frames_count=15)
+            validation_a = fixture(root, 'validation-a', 'validation', 200, frames_count=15)
+            validation_b = fixture(root, 'validation-b', 'validation', 1000000, frames_count=15)
             review = root / 'review.json'
             review.write_text(json.dumps({'operator_report': 'Synthetic unit fixture', 'source_files_changed': False}))
             reports = []
             for i, validation in enumerate((validation_a, validation_b)):
                 args = SimpleNamespace(train=train_data, validation=validation, train_review=review,
                                        validation_review=review, output=root / f'run-{i}', experimental=True,
-                                       seed=0, epochs=1, batch_size=2, threads=1, learning_rate=.001)
+                                       seed=0, epochs=1, batch_size=2, threads=1, learning_rate=.001, action_ms=200)
                 with contextlib.redirect_stdout(io.StringIO()):
                     reports.append(train(args))
             a, b = [torch.load(root / f'run-{i}' / 'model.pt', weights_only=True) for i in range(2)]

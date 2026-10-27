@@ -75,6 +75,20 @@ class DatasetTests(unittest.TestCase):
         self.assertEqual(result['key_held_fraction']['16'], 1)
         self.assertEqual(result['keys_at_end'], [16])
 
+    def test_long_action_window_preserves_history_spacing_and_end_boundary(self):
+        frames = [frame(i, 50 + i * 50) for i in range(15)]
+        events = [start(), dict(type='key', vk=87, scan=17, extended=0, down=True,
+                              segment=1, sequence=2, time_ns=400 * MS),
+                  dict(type='segment_end', segment=1, sequence=3, time_ns=800 * MS)]
+        samples, _ = make_samples(frames, events, action_ns=200 * MS)
+        self.assertEqual([h['target_time_ns'] // MS for h in samples[0]['history']], [50, 100, 150, 200])
+        self.assertEqual(samples[0]['action_end_ns'], 400 * MS)
+        self.assertFalse(samples[0]['action']['events'])
+        self.assertEqual(samples[1]['action']['events'][0]['offset_ns'], 150 * MS)
+        self.assertTrue(all(s['action_end_ns'] <= 750 * MS for s in samples))
+        with self.assertRaises(ValueError):
+            make_samples(frames, events, action_ns=0)
+
     def test_histories_use_only_completed_past_images(self):
         frames = [frame(i, 50 + i * 50) for i in range(9)]
         events = [start(), dict(type='segment_end', segment=1, sequence=2, time_ns=500 * MS)]

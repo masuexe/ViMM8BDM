@@ -108,7 +108,10 @@ The operator reported better turn response with shorter probes.
 The third log recorded three turn attempts and 593 accepted actions.
 The operator also reported slow forward movement along an angled wall.
 The static-view rule did not handle that case as expected.
-The new relative-change rule requires an attended check.
+The relative-change rule completed an attended check.
+The log recorded two static-view turns, three reduced-change turns, and 592 accepted actions.
+The operator still reported an unspecified problem and requested further project work without additional rule changes.
+Keep this rule as a diagnostic baseline with unresolved behavior.
 
 Slow movement can produce small image changes and cause false blockage decisions.
 These checks do not establish collision detection or navigation success in the actual game.

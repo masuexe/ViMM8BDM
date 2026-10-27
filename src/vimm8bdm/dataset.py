@@ -88,8 +88,9 @@ def select_history(times, anchor, history, step_ns):
 
 
 def make_samples(frames, events, *, history=4, step_ns=50_000_000, max_age_ns=75_000_000,
-                 max_gap_ns=100_000_000):
-    if history < 1 or min(step_ns, max_age_ns, max_gap_ns) <= 0:
+                 max_gap_ns=100_000_000, action_ns=None):
+    action_ns = step_ns if action_ns is None else action_ns
+    if history < 1 or min(step_ns, max_age_ns, max_gap_ns, action_ns) <= 0:
         raise ValueError('History and timing limits must be positive')
     allowed = {'segment_start', 'segment_end', 'recording_end', 'protocol_phase',
                'key', 'button', 'motion', 'wheel'}
@@ -125,7 +126,7 @@ def make_samples(frames, events, *, history=4, step_ns=50_000_000, max_age_ns=75
         pointer = 0
         first_anchor = times[0] + (history - 1) * step_ns
         for anchor in range(first_anchor, end['time_ns'], step_ns):
-            finish = anchor + step_ns
+            finish = anchor + action_ns
             if finish > end['time_ns']:
                 rejected['incomplete_future_window'] += 1
                 continue

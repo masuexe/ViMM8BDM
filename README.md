@@ -279,3 +279,5 @@ It divides pixel values by 255.
 It repeats the first image to fill the initial history.
 It preserves the original six-choice action head.
 A live game test must check image scaling, mouse sensitivity, timing, and policy behavior.
+
+See the [action-window comparison](docs/action-horizons.md) for the latest offline model results.

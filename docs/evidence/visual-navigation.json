@@ -19,7 +19,7 @@
   "synthetic_cli_frames": 12,
   "synthetic_cli_mode": "synthetic_dry_run",
   "synthetic_cli_input_sent": false,
-  "live_game_check": "shorter_probe_revision_improved_by_operator_report; relative_change_revision_pending",
+  "live_game_check": "relative_change_revision_has_unresolved_operator_report; retained_as_diagnostic_baseline",
   "neural_checkpoint_used": false,
   "engine_state_read": false,
   "navigation_success_established": false,
@@ -82,5 +82,14 @@
     "exit_reason": "duration_limit",
     "operator_report": "Turn response improved. Slow forward movement along an angled wall still needs a turn.",
     "physical_collision_or_velocity_measured": false
+  },
+  "latest_operator_report": "The test still felt wrong, but the operator could not identify a specific fault. The operator requested further project work without more rule changes.",
+  "fourth_live_check": {
+    "accepted_actions": 592,
+    "static_view_probes": 2,
+    "slow_view_probes": 3,
+    "blocked_view_probes": 5,
+    "exit_reason": "duration_limit",
+    "navigation_accepted": false
   }
 }

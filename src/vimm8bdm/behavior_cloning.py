@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import copy
 import io
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -40,9 +41,9 @@ def image_features(images, mode):
     raise ValueError('The image feature mode is unsupported')
 
 
-def label_target(sample):
-    if sample['action_end_ns'] - sample['anchor_ns'] != 50_000_000:
-        raise ValueError('Navigation labels require a 50-millisecond action window')
+def label_target(sample, action_ms=50):
+    if action_ms not in (50, 200) or sample['action_end_ns'] - sample['anchor_ns'] != action_ms * 1_000_000:
+        raise ValueError('Navigation labels require the specified supported action window')
     label = sample['action']
     keys = set(label['keys_at_start']) | set(label['keys_at_end'])
     keys.update(map(int, label['key_held_fraction']))
@@ -60,8 +61,10 @@ def label_target(sample):
     return values
 
 
-def load_inputs(directory, expected_split):
+def load_inputs(directory, expected_split, *, action_ms=50):
     """Check source labels and load only the four referenced past images."""
+    if action_ms not in (50, 200):
+        raise ValueError('The action window must be 50 or 200 milliseconds')
     directory = Path(directory)
     meta = json.loads((directory / 'dataset.json').read_text())
     if (meta['split'] != expected_split or meta['task'] != 'navigation'
@@ -77,7 +80,20 @@ def load_inputs(directory, expected_split):
                                          meta['source_session_id'])
     if samples != expected or len(samples) != meta['samples'] or not samples:
         raise ValueError('Candidate samples do not match the causal source reconstruction')
-    targets = torch.tensor([label_target(sample) for sample in samples], dtype=torch.float32)
+    if action_ms != 50:
+        # Preserve the 50 ms image spacing. Only the future action duration changes.
+        samples, _ = make_samples(frames, events, action_ns=action_ms * 1_000_000)
+        origins = {}
+        selected = []
+        for sample in samples:
+            origin = origins.setdefault(sample['segment'], sample['anchor_ns'])
+            if (sample['anchor_ns'] - origin) % (action_ms * 1_000_000) == 0:
+                selected.append(sample)
+        samples, _ = filter_reviewed_samples(selected, frames, meta.get('reviewed_frame_exclusions'),
+                                             meta['source_session_id'])
+        if not samples:
+            raise ValueError('The action window has no complete causal samples')
+    targets = torch.tensor([label_target(sample, action_ms) for sample in samples], dtype=torch.float32)
     cache = {}
     needed = {h['frame'] for sample in samples for h in sample['history']}
     with (source / 'frames.vrec').open('rb') as archive:
@@ -97,6 +113,12 @@ def load_inputs(directory, expected_split):
         raise ValueError('The model requires four image channels')
     identity = {key: meta[key] for key in ('source_session_id', 'split', 'character', 'map', 'samples')}
     identity['samples_sha256'] = file_digest(directory / 'samples.jsonl')
+    identity['samples'] = len(samples)
+    identity['action_window_ms'] = action_ms
+    identity['history_spacing_ms'] = 50
+    identity['anchor_spacing_ms'] = action_ms
+    identity['derived_samples_sha256'] = hashlib.sha256(
+        json.dumps(samples, sort_keys=True).encode()).hexdigest()
     return images, targets, identity
 
 
@@ -108,6 +130,7 @@ class NavigationModel(nn.Module):
         if features not in FEATURE_MODES:
             raise ValueError('The image feature mode is unsupported')
         self.features = features
+        self.action_window_ms = 50
         self.layers = nn.Sequential(
             nn.Conv2d(4, 16, 5, stride=2, padding=2), nn.ReLU(),
             nn.Conv2d(16, 32, 3, stride=2, padding=1), nn.ReLU(),
@@ -123,7 +146,7 @@ def load_checkpoint(path):
     """Load old raw-image checkpoints or versioned feature configurations."""
     checkpoint = torch.load(path, weights_only=True, map_location='cpu')
     version = checkpoint.get('format')
-    if version not in ('vimm8bdm-navigation-bc-v1', 'vimm8bdm-navigation-bc-v2'):
+    if version not in ('vimm8bdm-navigation-bc-v1', 'vimm8bdm-navigation-bc-v2', 'vimm8bdm-navigation-bc-v3'):
         raise ValueError('The navigation checkpoint format is unsupported')
     features = checkpoint.get('features', 'raw') if version.endswith('v1') else checkpoint.get('features')
     if version.endswith('v1') and features != 'raw':
@@ -136,6 +159,9 @@ def load_checkpoint(path):
             or not torch.isfinite(scale).all() or not (scale > 0).all()):
         raise ValueError('The checkpoint requires finite mouse normalization and positive scales')
     model = NavigationModel(features)
+    model.action_window_ms = checkpoint.get('action_window_ms') if version.endswith('v3') else 50
+    if model.action_window_ms not in (50, 200):
+        raise ValueError('The checkpoint action window is unsupported')
     model.load_state_dict(checkpoint['state_dict'], strict=True)
     model.eval()
     return model, mean, scale
@@ -160,6 +186,16 @@ def metrics(predictions, targets, scale):
         'mouse_rmse_raw_counts': dict(zip(('x', 'y'), difference.square().mean(0).sqrt().tolist())),
         'selection_score': bce + (mouse_mae / scale).mean().item(),
     }
+    held = {}
+    for axis, key in enumerate(KEYS):
+        truth, selected = targets[:, axis] >= .5, probabilities[:, axis] >= .5
+        tp = int((truth & selected).sum())
+        fp = int((~truth & selected).sum())
+        fn = int((truth & ~selected).sum())
+        held[key] = {'true_positive': tp, 'false_positive': fp, 'false_negative': fn,
+                     'predicted_on': int(selected.sum()), 'target_on': int(truth.sum()),
+                     'f1': 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None}
+    result['thresholded_held_keys'] = held
     sign = {}
     for axis, name in enumerate(('x', 'y')):
         active = targets[:, axis + 4].abs() >= 1
@@ -205,8 +241,9 @@ def train(args):
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     started = time.perf_counter()
-    train_x, train_y, train_id = load_inputs(args.train, 'train')
-    validation_x, validation_y, validation_id = load_inputs(args.validation, 'validation')
+    action_ms = getattr(args, 'action_ms', 50)
+    train_x, train_y, train_id = load_inputs(args.train, 'train', action_ms=action_ms)
+    validation_x, validation_y, validation_id = load_inputs(args.validation, 'validation', action_ms=action_ms)
     if train_id['character'] != validation_id['character'] or train_id['map'] != validation_id['map']:
         raise ValueError('This first experiment requires the same character and map in both splits')
     args.output.mkdir(parents=True, exist_ok=False)
@@ -217,6 +254,7 @@ def train(args):
     baselines['train_mean_mouse'] = metrics(mean_constants.expand(len(validation_y), -1), validation_y, scale)
     features = getattr(args, 'features', 'raw')
     model = NavigationModel(features)
+    model.action_window_ms = action_ms
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     generator = torch.Generator().manual_seed(args.seed)
     history, best_state, best_epoch, best_score = [], None, None, math.inf
@@ -249,7 +287,8 @@ def train(args):
     validation_predictions = predict(model, validation_x, mean, scale, args.batch_size)
     permutation = torch.randperm(len(validation_y), generator=torch.Generator().manual_seed(args.seed + 1))
     report = {
-        'format': 'vimm8bdm-navigation-bc-v2', 'experimental': True, 'features': features,
+        'format': 'vimm8bdm-navigation-bc-v3', 'experimental': True, 'features': features,
+        'action_window_ms': action_ms, 'anchor_spacing_ms': action_ms, 'history_spacing_ms': 50,
         'train_source': train_id, 'validation_source': validation_id, 'operator_review_hashes': reviews,
         'source_split_check': split_result, 'seed': args.seed, 'epochs': args.epochs,
         'batch_size': args.batch_size, 'learning_rate': args.learning_rate, 'cpu_threads': args.threads,
@@ -271,7 +310,7 @@ def train(args):
     }
     with (args.output / 'model.pt').open('xb') as output:
         torch.save({'format': report['format'], 'state_dict': best_state,
-                    'features': features,
+                    'features': features, 'action_window_ms': action_ms,
                     'mouse_mean': mean, 'mouse_scale': scale, 'image_size': list(IMAGE_SIZE),
                     'keys': list(KEYS), 'seed': args.seed}, output)
     # Check the saved artifact without importing executable checkpoint objects.
@@ -296,6 +335,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--experimental', action='store_true')
     parser.add_argument('--features', choices=FEATURE_MODES, default='raw')
+    parser.add_argument('--action-ms', type=int, choices=(50, 200), default=50)
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--epochs', type=int, default=12)
     parser.add_argument('--batch-size', type=int, default=64)

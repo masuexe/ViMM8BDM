@@ -198,7 +198,9 @@ Evaluate explicit state changes and input timing before a live model check.
 The [explicit target representation](event-targets.md) passed keyboard and mouse-total reconstruction checks on 7474 samples.
 Train and evaluate event counts and offsets next.
 The [event model experiment](event-cloning.md) completed and failed key-change and steering acceptance checks.
-The [visual navigation rule](visual-navigation.md) provides the next attended local-game baseline.
+The [visual navigation rule](visual-navigation.md) remains a diagnostic baseline with unresolved operator feedback.
+The [action-window comparison](action-horizons.md) completed without a deployable model.
+Collect a separate human session for wall approaches and recovery next.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.
