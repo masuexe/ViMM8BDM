@@ -29,8 +29,9 @@ The operator observed horizontal turning and primary attack.
 The model selected attack throughout that run.
 Target-game combat ability remains unverified.
 
-Two offline navigation experiments used separate training and validation recordings.
-Neither model beat its median-mouse constant baseline on the combined validation score.
+The offline navigation experiments used separate training and validation recordings.
+No model beat its median-mouse constant baseline on the combined validation score.
+Explicit image differences improved key prediction, but steering remains insufficient.
 The checkpoints remain local and have no live control adapter.
 
 Read these documents:
@@ -57,6 +58,7 @@ Read these documents:
 - [Offline navigation behavior cloning](docs/behavior-cloning.md)
 - [Navigation demonstrations near corners](docs/navigation-corners.md)
 - [Second offline navigation experiment](docs/corner-behavior-cloning.md)
+- [Temporal image features](docs/temporal-features.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.

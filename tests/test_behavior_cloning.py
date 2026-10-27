@@ -9,7 +9,9 @@ import unittest
 
 try:
     import torch
-    from vimm8bdm.behavior_cloning import label_target, load_inputs, metrics, normalization, train
+    from vimm8bdm.behavior_cloning import (IMAGE_SIZE, KEYS, NavigationModel, image_features,
+                                         label_target, load_checkpoint, load_inputs, metrics,
+                                         normalization, predict, train)
 except ImportError:
     torch = None
 
@@ -51,6 +53,47 @@ def fixture(root, name, split, mouse):
 
 @unittest.skipIf(torch is None, 'Install the optional training packages')
 class BehaviorCloningTests(unittest.TestCase):
+    def test_motion_features_keep_signed_chronological_differences(self):
+        images = torch.tensor([0., .25, .5, 1.]).reshape(1, 4, 1, 1)
+        original = images.clone()
+        self.assertTrue(torch.equal(image_features(images, 'motion').flatten(),
+                                    torch.tensor([1., .5, .5, 1.])))
+        self.assertTrue(torch.equal(image_features(images, 'centered'), images * 2 - 1))
+        self.assertTrue(torch.equal(image_features(images, 'raw'), original))
+        self.assertTrue(torch.equal(images, original))
+        repeated = images[:, -1:].expand(-1, 4, -1, -1)
+        self.assertEqual(image_features(repeated, 'motion')[:, 1:].abs().sum().item(), 0)
+        with self.assertRaises(ValueError):
+            image_features(images, 'unknown')
+        with self.assertRaises(ValueError):
+            image_features(images[:, :3], 'motion')
+
+    def test_versioned_checkpoint_restores_features_and_accepts_legacy_raw(self):
+        torch.set_num_threads(1)
+        inputs = torch.rand(2, 4, 84, 112)
+        with tempfile.TemporaryDirectory() as directory:
+            for mode, version in [('raw', 'v1'), ('centered', 'v2'), ('motion', 'v2')]:
+                model = NavigationModel(mode)
+                checkpoint = {'format': 'vimm8bdm-navigation-bc-' + version,
+                              'image_size': list(IMAGE_SIZE), 'keys': list(KEYS),
+                              'mouse_mean': torch.zeros(2), 'mouse_scale': torch.ones(2),
+                              'state_dict': model.state_dict()}
+                if version == 'v2':
+                    checkpoint['features'] = mode
+                path = Path(directory) / (mode + '.pt')
+                torch.save(checkpoint, path)
+                restored, mean, scale = load_checkpoint(path)
+                self.assertEqual(restored.features, mode)
+                self.assertTrue(torch.allclose(predict(model, inputs, mean, scale, 2),
+                                               predict(restored, inputs, mean, scale, 2)))
+                self.assertTrue(torch.allclose(
+                    predict(restored, inputs, mean, scale, 2, repeat_latest=True),
+                    predict(restored, inputs[:, -1:].expand(-1, 4, -1, -1), mean, scale, 2)))
+                checkpoint['mouse_scale'] = torch.zeros(2)
+                torch.save(checkpoint, path)
+                with self.assertRaises(ValueError):
+                    load_checkpoint(path)
+
     def test_loader_reconstructs_reviewed_exclusions_and_rejects_changed_ranges(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

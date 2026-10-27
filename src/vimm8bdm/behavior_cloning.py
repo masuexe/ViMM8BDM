@@ -23,6 +23,21 @@ from .recording import file_digest
 KEYS = ('w', 'a', 's', 'd')
 VKS = (87, 65, 83, 68)
 IMAGE_SIZE = (112, 84)
+FEATURE_MODES = ('raw', 'centered', 'motion')
+
+
+def image_features(images, mode):
+    """Transform past images without using labels or changing the input tensor."""
+    if images.ndim != 4 or images.shape[1] != 4:
+        raise ValueError('Image features require four chronological channels')
+    if mode == 'raw':
+        return images
+    if mode == 'centered':
+        return images * 2 - 1
+    if mode == 'motion':
+        return torch.cat((images[:, -1:] * 2 - 1,
+                          (images[:, 1:] - images[:, :-1]) * 2), dim=1)
+    raise ValueError('The image feature mode is unsupported')
 
 
 def label_target(sample):
@@ -88,8 +103,11 @@ def load_inputs(directory, expected_split):
 class NavigationModel(nn.Module):
     """Predict four held fractions and two raw mouse totals from past images."""
 
-    def __init__(self):
+    def __init__(self, features='raw'):
         super().__init__()
+        if features not in FEATURE_MODES:
+            raise ValueError('The image feature mode is unsupported')
+        self.features = features
         self.layers = nn.Sequential(
             nn.Conv2d(4, 16, 5, stride=2, padding=2), nn.ReLU(),
             nn.Conv2d(16, 32, 3, stride=2, padding=1), nn.ReLU(),
@@ -98,7 +116,29 @@ class NavigationModel(nn.Module):
             nn.Linear(32 * 4 * 6, 128), nn.ReLU(), nn.Linear(128, 6))
 
     def forward(self, images):
-        return self.layers(images)
+        return self.layers(image_features(images, self.features))
+
+
+def load_checkpoint(path):
+    """Load old raw-image checkpoints or versioned feature configurations."""
+    checkpoint = torch.load(path, weights_only=True, map_location='cpu')
+    version = checkpoint.get('format')
+    if version not in ('vimm8bdm-navigation-bc-v1', 'vimm8bdm-navigation-bc-v2'):
+        raise ValueError('The navigation checkpoint format is unsupported')
+    features = checkpoint.get('features', 'raw') if version.endswith('v1') else checkpoint.get('features')
+    if version.endswith('v1') and features != 'raw':
+        raise ValueError('Version 1 checkpoints require raw image features')
+    if checkpoint.get('image_size') != list(IMAGE_SIZE) or checkpoint.get('keys') != list(KEYS):
+        raise ValueError('The checkpoint image size or key order is unsupported')
+    mean, scale = checkpoint['mouse_mean'], checkpoint['mouse_scale']
+    if (not isinstance(mean, torch.Tensor) or not isinstance(scale, torch.Tensor)
+            or mean.shape != (2,) or scale.shape != (2,) or not torch.isfinite(mean).all()
+            or not torch.isfinite(scale).all() or not (scale > 0).all()):
+        raise ValueError('The checkpoint requires finite mouse normalization and positive scales')
+    model = NavigationModel(features)
+    model.load_state_dict(checkpoint['state_dict'], strict=True)
+    model.eval()
+    return model, mean, scale
 
 
 def normalization(targets):
@@ -130,7 +170,7 @@ def metrics(predictions, targets, scale):
     return result
 
 
-def predict(model, images, mean, scale, batch_size, zero_images=False):
+def predict(model, images, mean, scale, batch_size, zero_images=False, repeat_latest=False):
     outputs = []
     model.eval()
     with torch.inference_mode():
@@ -138,6 +178,8 @@ def predict(model, images, mean, scale, batch_size, zero_images=False):
             batch = images[start:start + batch_size].float() / 255
             if zero_images:
                 batch.zero_()
+            if repeat_latest:
+                batch = batch[:, -1:].expand(-1, 4, -1, -1).contiguous()
             output = model(batch)
             outputs.append(torch.cat((output[:, :4].sigmoid(), output[:, 4:] * scale + mean), dim=1))
     return torch.cat(outputs)
@@ -173,7 +215,8 @@ def train(args):
     baselines = {'train_median_mouse': metrics(constants.expand(len(validation_y), -1), validation_y, scale)}
     mean_constants = torch.cat((train_y[:, :4].mean(0), mean))
     baselines['train_mean_mouse'] = metrics(mean_constants.expand(len(validation_y), -1), validation_y, scale)
-    model = NavigationModel()
+    features = getattr(args, 'features', 'raw')
+    model = NavigationModel(features)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     generator = torch.Generator().manual_seed(args.seed)
     history, best_state, best_epoch, best_score = [], None, None, math.inf
@@ -206,7 +249,7 @@ def train(args):
     validation_predictions = predict(model, validation_x, mean, scale, args.batch_size)
     permutation = torch.randperm(len(validation_y), generator=torch.Generator().manual_seed(args.seed + 1))
     report = {
-        'format': 'vimm8bdm-navigation-bc-v1', 'experimental': True,
+        'format': 'vimm8bdm-navigation-bc-v2', 'experimental': True, 'features': features,
         'train_source': train_id, 'validation_source': validation_id, 'operator_review_hashes': reviews,
         'source_split_check': split_result, 'seed': args.seed, 'epochs': args.epochs,
         'batch_size': args.batch_size, 'learning_rate': args.learning_rate, 'cpu_threads': args.threads,
@@ -220,19 +263,20 @@ def train(args):
         'shuffled_validation_images': metrics(validation_predictions[permutation], validation_y, scale),
         'zero_validation_images': metrics(predict(model, validation_x, mean, scale, args.batch_size, True),
                                           validation_y, scale),
+        'repeated_latest_validation_images': metrics(
+            predict(model, validation_x, mean, scale, args.batch_size, repeat_latest=True), validation_y, scale),
         'elapsed_seconds': time.perf_counter() - started,
         'input_sent': False, 'training_ready': False, 'deployment_ready': False,
         'mouse_unit_conversion_verified': False, 'unseen_map_evaluation': False,
     }
     with (args.output / 'model.pt').open('xb') as output:
         torch.save({'format': report['format'], 'state_dict': best_state,
+                    'features': features,
                     'mouse_mean': mean, 'mouse_scale': scale, 'image_size': list(IMAGE_SIZE),
                     'keys': list(KEYS), 'seed': args.seed}, output)
     # Check the saved artifact without importing executable checkpoint objects.
-    restored = torch.load(args.output / 'model.pt', weights_only=True, map_location='cpu')
-    loaded = NavigationModel()
-    loaded.load_state_dict(restored['state_dict'], strict=True)
-    restored_predictions = predict(loaded, validation_x[:8], restored['mouse_mean'], restored['mouse_scale'], 8)
+    loaded, restored_mean, restored_scale = load_checkpoint(args.output / 'model.pt')
+    restored_predictions = predict(loaded, validation_x[:8], restored_mean, restored_scale, 8)
     report['checkpoint_reload_matches'] = torch.allclose(restored_predictions, validation_predictions[:8], atol=1e-6)
     if not report['checkpoint_reload_matches']:
         raise ValueError('The saved checkpoint does not reproduce the model predictions')
@@ -251,6 +295,7 @@ def main():
     parser.add_argument('--validation-review', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--experimental', action='store_true')
+    parser.add_argument('--features', choices=FEATURE_MODES, default='raw')
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--epochs', type=int, default=12)
     parser.add_argument('--batch-size', type=int, default=64)

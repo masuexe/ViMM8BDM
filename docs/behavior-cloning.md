@@ -91,6 +91,8 @@ The tool checks their required fields but does not interpret the operator's pros
 
 The private output contains `model.pt` and `report.local.json`.
 The tool loads the saved checkpoint with `weights_only=True` and checks its predictions.
+New checkpoints record their feature mode and use the version 2 format.
+The [checkpoint loader](temporal-features.md#run-and-load) also supports the original version 1 raw-image weights.
 The report contains learning curves, normalization parameters, baseline metrics, and image-dependence checks.
 Model weights and raw recordings remain excluded from the public repository.
 This module provides no live control command.

@@ -81,6 +81,7 @@ The check took approximately 1.70 seconds and sent no game input.
 
 Keep the current recordings before requesting more data.
 Inspect temporal image features, target timing, and the held-fraction decoder next.
+The [feature comparison](temporal-features.md) found better forward prediction with explicit image differences, but insufficient steering.
 Compare every later change with the same constant baselines and image-correspondence check.
 Do not enable live control with the current checkpoint.
 The [experiment evidence](evidence/corner-behavior-cloning.json) contains the metrics and epoch history.
