@@ -95,8 +95,9 @@ A full queue stops recording instead of silently dropping training data.
 An incomplete session must not enter a training dataset.
 
 All current sessions have `training_ready: false`.
-The first version collects interface-check data.
-It does not implement a behavior-cloning dataset builder or training.
+The recorder supports interface checks and task demonstrations.
+It does not train models.
+Use the separate [sample builder](causal-dataset.md) and [offline training module](behavior-cloning.md) for those later steps.
 Keep recordings, previews, and configuration copies in the excluded `runs/` or `data/` directory.
 The public file check rejects `.vrec` archives and staged files from those directories.
 

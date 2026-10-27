@@ -173,13 +173,20 @@ Test one supplied demo against its exact engine and MOD versions.
 Implement a demo parser only if that test demonstrates useful recoverable labels.
 
 The [causal sample builder](causal-dataset.md) passed diagnostic archive and cross-platform loading checks.
-Human review and physical-to-actuator conversion remain necessary before training.
+The operator reviewed the two navigation sessions.
+Offline experiments can use their raw input labels with explicit candidate-data status.
+Physical-to-actuator conversion remains necessary before model deployment.
 The [action audit](action-mapping.md) records unsupported labels and candidate mouse scales.
 
 Acceptance: replay a short recording with aligned images and actions.
 Create separate training and evaluation sessions.
 
 ## Milestone 3: train and improve the policy
+
+The [first offline experiment](behavior-cloning.md) completed 12 epochs and checkpoint loading checks.
+Its visual model did not beat the constant median-mouse baseline on the selection score.
+The checkpoint remains offline.
+Improve task coverage and compare independent sessions before another model acceptance decision.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.
@@ -216,5 +223,5 @@ M0 does not establish this result.
 The target game assets are already available locally.
 A compatible user demo remains necessary for the demo feasibility test.
 ContinuousDoom reuse terms remain unresolved.
-A stable foreground-window test remains necessary for real input validation.
-The final Windows host needs a separate test if Windows will run the client.
+The native Windows client passed attended input and timed-action checks.
+More task-specific navigation data remains necessary for the next offline comparison.

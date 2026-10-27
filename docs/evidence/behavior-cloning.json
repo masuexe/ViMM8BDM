@@ -1,0 +1,335 @@
+{
+  "experiment": "First offline navigation behavior-cloning run",
+  "runtime": "Linux CPU",
+  "torch_version": "2.14.1+cpu",
+  "character": "grenademan",
+  "map": "MM1CUT",
+  "train_samples": 2005,
+  "validation_samples": 1794,
+  "image_width": 112,
+  "image_height": 84,
+  "history_frames": 4,
+  "parameters": 114710,
+  "seed": 0,
+  "epochs": 12,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "cpu_threads": 4,
+  "best_epoch": 3,
+  "selection_rule": "Minimum validation key BCE plus mean mouse MAE divided by training mouse scales",
+  "mouse_mean_train_only": [
+    4.108229637145996,
+    0.01246882788836956
+  ],
+  "mouse_scale_train_only": [
+    37.781280517578125,
+    3.9130632877349854
+  ],
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6743972449528606,
+      "validation_score": 0.8656659126281738
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5810173730303224,
+      "validation_score": 0.8408583700656891
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5795202306975747,
+      "validation_score": 0.7935196459293365
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5793788081392683,
+      "validation_score": 0.8378163278102875
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5789601935115538,
+      "validation_score": 0.8160258829593658
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.5760555280117026,
+      "validation_score": 0.8116949200630188
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.5751330773432058,
+      "validation_score": 0.8407238721847534
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.5742857082229006,
+      "validation_score": 0.8226740956306458
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.5760683047206622,
+      "validation_score": 0.8330911099910736
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5682309004434029,
+      "validation_score": 0.8255384266376495
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5661619625781242,
+      "validation_score": 0.8083401024341583
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.5568888410665745,
+      "validation_score": 0.8998092114925385
+    }
+  ],
+  "baselines": {
+    "train_median_mouse": {
+      "key_bce": 0.3463161289691925,
+      "key_held_fraction_mae": {
+        "w": 0.09003681689500809,
+        "a": 0.32801786065101624,
+        "s": 0.005503385327756405,
+        "d": 0.36665311455726624
+      },
+      "key_target_mean": {
+        "w": 0.9648465514183044,
+        "a": 0.20055781304836273,
+        "s": 0.0,
+        "d": 0.32498377561569214
+      },
+      "key_prediction_mean": {
+        "w": 0.9403925538063049,
+        "a": 0.23518916964530945,
+        "s": 0.005503385327756405,
+        "d": 0.15724553167819977
+      },
+      "mouse_mae_raw_counts": {
+        "x": 18.57525062561035,
+        "y": 1.4659978151321411
+      },
+      "mouse_rmse_raw_counts": {
+        "x": 37.177825927734375,
+        "y": 3.1987316608428955
+      },
+      "selection_score": 0.7794632315635681,
+      "mouse_sign": {
+        "x": {
+          "nonzero_targets": 1235,
+          "accuracy": 0.0
+        },
+        "y": {
+          "nonzero_targets": 801,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "train_mean_mouse": {
+      "key_bce": 0.3463161289691925,
+      "key_held_fraction_mae": {
+        "w": 0.09003681689500809,
+        "a": 0.32801786065101624,
+        "s": 0.005503385327756405,
+        "d": 0.36665311455726624
+      },
+      "key_target_mean": {
+        "w": 0.9648465514183044,
+        "a": 0.20055781304836273,
+        "s": 0.0,
+        "d": 0.32498377561569214
+      },
+      "key_prediction_mean": {
+        "w": 0.9403925538063049,
+        "a": 0.23518916964530945,
+        "s": 0.005503385327756405,
+        "d": 0.15724553167819977
+      },
+      "mouse_mae_raw_counts": {
+        "x": 21.09125328063965,
+        "y": 1.4727673530578613
+      },
+      "mouse_rmse_raw_counts": {
+        "x": 38.124027252197266,
+        "y": 3.198464870452881
+      },
+      "selection_score": 0.8136251866817474,
+      "mouse_sign": {
+        "x": {
+          "nonzero_targets": 1235,
+          "accuracy": 0.31497976183891296
+        },
+        "y": {
+          "nonzero_targets": 801,
+          "accuracy": 0.511860191822052
+        }
+      }
+    }
+  },
+  "model_validation": {
+    "key_bce": 0.34101250767707825,
+    "key_held_fraction_mae": {
+      "w": 0.09815718978643417,
+      "a": 0.3372448682785034,
+      "s": 0.008677829056978226,
+      "d": 0.3738900125026703
+    },
+    "key_target_mean": {
+      "w": 0.9648465514183044,
+      "a": 0.20055781304836273,
+      "s": 0.0,
+      "d": 0.32498377561569214
+    },
+    "key_prediction_mean": {
+      "w": 0.9310880303382874,
+      "a": 0.25235283374786377,
+      "s": 0.008677829056978226,
+      "d": 0.18356476724147797
+    },
+    "mouse_mae_raw_counts": {
+      "x": 19.08103370666504,
+      "y": 1.5651272535324097
+    },
+    "mouse_rmse_raw_counts": {
+      "x": 37.33991622924805,
+      "y": 3.199974536895752
+    },
+    "selection_score": 0.7935196459293365,
+    "mouse_sign": {
+      "x": {
+        "nonzero_targets": 1235,
+        "accuracy": 0.3198380470275879
+      },
+      "y": {
+        "nonzero_targets": 801,
+        "accuracy": 0.511860191822052
+      }
+    }
+  },
+  "shuffled_validation_images": {
+    "key_bce": 0.34235918521881104,
+    "key_held_fraction_mae": {
+      "w": 0.09867998957633972,
+      "a": 0.3376747965812683,
+      "s": 0.0086778299883008,
+      "d": 0.3740816116333008
+    },
+    "key_target_mean": {
+      "w": 0.9648465514183044,
+      "a": 0.20055781304836273,
+      "s": 0.0,
+      "d": 0.32498377561569214
+    },
+    "key_prediction_mean": {
+      "w": 0.9310880303382874,
+      "a": 0.25235283374786377,
+      "s": 0.0086778299883008,
+      "d": 0.18356476724147797
+    },
+    "mouse_mae_raw_counts": {
+      "x": 19.11446189880371,
+      "y": 1.5645524263381958
+    },
+    "mouse_rmse_raw_counts": {
+      "x": 37.35896301269531,
+      "y": 3.1990697383880615
+    },
+    "selection_score": 0.795235276222229,
+    "mouse_sign": {
+      "x": {
+        "nonzero_targets": 1235,
+        "accuracy": 0.31659919023513794
+      },
+      "y": {
+        "nonzero_targets": 801,
+        "accuracy": 0.511860191822052
+      }
+    }
+  },
+  "zero_validation_images": {
+    "key_bce": 0.5419203639030457,
+    "key_held_fraction_mae": {
+      "w": 0.38651448488235474,
+      "a": 0.4484849274158478,
+      "s": 0.3198237121105194,
+      "d": 0.4492339789867401
+    },
+    "key_target_mean": {
+      "w": 0.9648465514183044,
+      "a": 0.20055781304836273,
+      "s": 0.0,
+      "d": 0.32498377561569214
+    },
+    "key_prediction_mean": {
+      "w": 0.6197595596313477,
+      "a": 0.44496819376945496,
+      "s": 0.3198237121105194,
+      "d": 0.4297838509082794
+    },
+    "mouse_mae_raw_counts": {
+      "x": 21.66912078857422,
+      "y": 1.5320967435836792
+    },
+    "mouse_rmse_raw_counts": {
+      "x": 38.380462646484375,
+      "y": 3.1982054710388184
+    },
+    "selection_score": 1.0244579017162323,
+    "mouse_sign": {
+      "x": {
+        "nonzero_targets": 1235,
+        "accuracy": 0.31497976183891296
+      },
+      "y": {
+        "nonzero_targets": 801,
+        "accuracy": 0.511860191822052
+      }
+    }
+  },
+  "diagnostic_key_order": [
+    "w",
+    "a",
+    "s",
+    "d"
+  ],
+  "diagnostic_threshold": 0.5,
+  "diagnostic_key_on_fraction": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "cpu_inference_only_ms": {
+    "samples": 100,
+    "warmups": 3,
+    "median": 0.1847315,
+    "p95": 0.342949,
+    "max": 0.6998,
+    "includes_capture_or_preprocessing": false,
+    "threads": 4
+  },
+  "training_elapsed_seconds": 23.43469275999996,
+  "checkpoint_reload_matches": true,
+  "automated_tests": {
+    "Linux": {
+      "passed": 118
+    },
+    "Windows": {
+      "passed": 118
+    }
+  },
+  "source_split_check": {
+    "source_sessions": 2,
+    "session_split_overlap": false
+  },
+  "input_sent": false,
+  "visual_navigation_learning_established": false,
+  "deployment_ready": false,
+  "training_ready": false,
+  "mouse_unit_conversion_verified": false,
+  "unseen_map_evaluation": false,
+  "decision": "Keep this checkpoint offline. Improve task coverage before another model comparison."
+}

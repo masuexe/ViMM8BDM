@@ -29,6 +29,10 @@ The operator observed horizontal turning and primary attack.
 The model selected attack throughout that run.
 Target-game combat ability remains unverified.
 
+The first offline navigation experiment used separate training and validation recordings.
+It did not beat a constant baseline on the combined validation score.
+The checkpoint remains local and has no live control adapter.
+
 Read these documents:
 
 - [Existing projects and model evidence](docs/existing-projects-evaluation.md)
@@ -50,10 +54,11 @@ Read these documents:
 - [Dataset-to-action audit](docs/action-mapping.md)
 - [First navigation demonstration](docs/navigation-demo.md)
 - [Navigation validation collection](docs/navigation-validation.md)
+- [Offline navigation behavior cloning](docs/behavior-cloning.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
-The project does not contain upstream model code, model weights, or game assets.
+The public repository contains no upstream model code, model weights, or game assets.
 The upstream license remains unresolved for ContinuousDoom.
 The external source files serve this research experiment only.
 
