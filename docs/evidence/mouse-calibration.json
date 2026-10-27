@@ -131,7 +131,8 @@
     "Measurements apply to this scene, resolution, and mouse configuration.",
     "Signed image displacement is not an engine angle.",
     "The integer translation search limits subpixel precision.",
-    "This test did not establish combat or navigation ability."
+    "This test did not establish combat or navigation ability.",
+    "Some vertical matches differed by one pixel between directions or runs. Equal opposite counts do not establish exact view recovery."
   ],
   "automated_tests": {
     "linux": {
@@ -142,5 +143,102 @@
       "tests": 56,
       "result": "pass"
     }
+  },
+  "extended_test": {
+    "exit_reason": "complete",
+    "requested_trials": 112,
+    "completed_trials": 112,
+    "frames": 2465,
+    "accepted_actions": 2465,
+    "maximum_capture_gap_ms": 65.86650000008376,
+    "elapsed_after_first_enable_s": 124.02453929999956,
+    "units": "image pixels per injected mouse count",
+    "engine_angles_read": false,
+    "visible_game_response_latency_measured": false,
+    "axes": {
+      "x": {
+        "valid_trials": 56,
+        "median_image_pixels_per_count": -1.0
+      },
+      "y": {
+        "valid_trials": 56,
+        "median_image_pixels_per_count": -0.625
+      }
+    },
+    "nonzero_mouse_actions": 112,
+    "rejected_actions": 0,
+    "active_generations": 1,
+    "capture_ms": {
+      "p50": 6.966199999624223,
+      "p95": 10.054000000309316,
+      "max": 22.504399999888847
+    },
+    "operator_report": "The view moved repeatedly, then stopped. The background terminal indicator disappeared.",
+    "worker_trace": {
+      "final_event": "trace_end",
+      "dropped_events": 0,
+      "release_reason": "shutdown",
+      "final_held_keys": [],
+      "final_attack_held": false
+    },
+    "pulse_match_histograms": [
+      {
+        "axis": "x",
+        "counts": 4,
+        "image_shift_px_frequency": {
+          "-4": 14
+        }
+      },
+      {
+        "axis": "x",
+        "counts": -4,
+        "image_shift_px_frequency": {
+          "4": 14
+        }
+      },
+      {
+        "axis": "x",
+        "counts": 8,
+        "image_shift_px_frequency": {
+          "-8": 14
+        }
+      },
+      {
+        "axis": "x",
+        "counts": -8,
+        "image_shift_px_frequency": {
+          "8": 14
+        }
+      },
+      {
+        "axis": "y",
+        "counts": 4,
+        "image_shift_px_frequency": {
+          "-3": 14
+        }
+      },
+      {
+        "axis": "y",
+        "counts": -4,
+        "image_shift_px_frequency": {
+          "3": 1,
+          "2": 13
+        }
+      },
+      {
+        "axis": "y",
+        "counts": 8,
+        "image_shift_px_frequency": {
+          "-5": 14
+        }
+      },
+      {
+        "axis": "y",
+        "counts": -8,
+        "image_shift_px_frequency": {
+          "5": 14
+        }
+      }
+    ]
   }
 }

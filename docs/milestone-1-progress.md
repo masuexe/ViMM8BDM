@@ -172,4 +172,14 @@ These ratios do not measure engine angles or visible response latency.
 The calibration program now waits for the first F8 without a default timeout.
 A regression test covers initial waiting beyond 180 seconds.
 See the [mouse calibration report](mouse-calibration.md).
-Extended capture, held-input focus-loss timing, and model control remain incomplete.
+The extended repetition test then completed 112 pulses over 124.02 seconds.
+All 2465 frames produced accepted actions, with no active-run generation change.
+The maximum capture-completion interval was 65.87 ms.
+All 112 image measurements passed the match conditions.
+The input worker released input and exited normally with zero dropped audit events.
+The operator observed repeated movement followed by an automatic stop.
+The disappearing background terminal indicator was consistent with normal completion.
+
+The vertical image scale differed slightly between runs and pulse directions.
+The measurements do not establish exact angle conversion or exact view recovery.
+Held-input focus-loss timing and model control remain incomplete.

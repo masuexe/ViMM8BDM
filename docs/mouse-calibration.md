@@ -116,4 +116,24 @@ See the [sanitized measurement record](evidence/mouse-calibration.json).
 
 The first attempt expired before F8 and sent no input.
 Calibration now waits for F8 or F9 without a default initial timeout.
-The extended repetition test remains pending.
+## Windows extended-test result
+
+The extended test completed all 112 pulses in 124.02 seconds.
+All 2465 captured frames produced accepted actions.
+Exactly 112 accepted actions contained a nonzero mouse pulse.
+The maximum interval between capture completions was 65.87 ms.
+The active run used one action generation without a watchdog pause.
+The worker released input and exited normally with zero dropped audit events.
+The operator observed repeated view movement followed by a stop.
+The background terminal indicator then disappeared because the program finished.
+
+All 112 image measurements passed the match conditions.
+The horizontal median ratio remained -1.0 image pixels per count.
+The vertical median ratio was -0.625, compared with -0.6875 in the short test.
+Thirteen negative four-count vertical pulses matched a two-pixel displacement.
+The other such pulse matched three pixels.
+This difference limits the precision of the vertical scale.
+The result does not prove an exact return after opposite pulses.
+
+The extended test establishes repeated local image capture and mouse dispatch for this run.
+It does not establish held-key focus-loss timing, model control, or combat ability.
