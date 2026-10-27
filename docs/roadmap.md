@@ -206,7 +206,9 @@ Keep the checkpoint offline.
 The [direction-classification audit](steering-direction.md) reduced false turns but still missed most turn starts.
 The [bounded-memory experiment](temporal-steering.md) completed with no approved steering model.
 The [shadow runtime](temporal-shadow.md) passed offline checks and a native synthetic timing test.
-Check actual game capture and memory resets without model-controlled actions next.
+The shadow interface completed a 30-second attended check with normal manual control and empty model actions.
+The complete-loop 95th percentile was 14.54 milliseconds.
+No learned navigation controller passed its steering-quality conditions.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.

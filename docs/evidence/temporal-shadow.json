@@ -54,7 +54,7 @@
     "checkpoint_sha256": "9bc381ae6bd46477fe150dfe3abd9b076fa6951719b31624acbe8beca9ab0145",
     "gameplay_success_established": false
   },
-  "live_game_check": "pending",
+  "live_game_check": "attended_interface_and_latency_check_completed",
   "navigation_success_established": false,
   "native_recorded_game_replay": {
     "mode": "native_windows_recorded_game_replay",
@@ -93,5 +93,126 @@
     "unnecessary_grid_resets": 81,
     "full_context_frames": 1593,
     "replaced_by": "Causal reconstruction of missed feature anchors from already complete images. No old actions are dispatched."
+  },
+  "attended_live_result": {
+    "kind": "attended_native_windows_temporal_shadow_check",
+    "run_summary": {
+      "mode": "desktop",
+      "frames": 592,
+      "units": "milliseconds",
+      "timing_clock": "perf_counter",
+      "timing_resolution_ns": 100.0,
+      "policy": "temporal_shadow",
+      "exit_reason": "duration_limit",
+      "neural_inference_measured": true,
+      "accepted_actions": 592,
+      "inactive_or_rejected_frames": 0,
+      "input_stage": "input_process_roundtrip",
+      "capture_ms": {
+        "p50": 7.218249999999999,
+        "p95": 10.9036,
+        "max": 15.9597
+      },
+      "policy_ms": {
+        "p50": 3.0177,
+        "p95": 3.5607,
+        "max": 16.7174
+      },
+      "input_ms": {
+        "p50": 0.40545,
+        "p95": 0.556,
+        "max": 1.3348
+      },
+      "loop_ms": {
+        "p50": 10.59445,
+        "p95": 14.5357,
+        "max": 28.8927
+      },
+      "policy_actions_suppressed": true,
+      "dispatched_policy_actions": 0,
+      "accepted_action_latency": {
+        "capture_ms": {
+          "p50": 7.218249999999999,
+          "p95": 10.9036,
+          "max": 15.9597
+        },
+        "policy_ms": {
+          "p50": 3.0177,
+          "p95": 3.5607,
+          "max": 16.7174
+        },
+        "input_ms": {
+          "p50": 0.40545,
+          "p95": 0.556,
+          "max": 1.3348
+        },
+        "loop_ms": {
+          "p50": 10.59445,
+          "p95": 14.5357,
+          "max": 28.8927
+        }
+      }
+    },
+    "inference_frames": 579,
+    "full_context_frames": 550,
+    "class_counts": {
+      "positive": 52,
+      "zero": 391,
+      "negative": 136
+    },
+    "memory_reset_reasons": {},
+    "backfilled_feature_steps": 18,
+    "reconstructed_feature_steps": 597,
+    "causal_feature_histories_checked": true,
+    "all_policy_and_dispatched_actions_empty": true,
+    "owned_inputs_in_trace_always_empty": true,
+    "worker_trace_dropped_events": 0,
+    "worker_trace_events": {
+      "control": 4,
+      "action": 1,
+      "released": 1,
+      "worker_stopped": 1,
+      "trace_end": 1
+    },
+    "timing_ms_full_context": {
+      "preprocess_ms": {
+        "samples": 550,
+        "p50": 1.3164500000000001,
+        "p95": 1.52,
+        "maximum": 1.8579
+      },
+      "encoder_ms": {
+        "samples": 550,
+        "p50": 0.6869,
+        "p95": 1.001,
+        "maximum": 1.7779
+      },
+      "temporal_ms": {
+        "samples": 550,
+        "p50": 0.9007499999999999,
+        "p95": 1.0531,
+        "maximum": 1.6748
+      }
+    },
+    "timing_ms_full_context_policy": {
+      "samples": 550,
+      "p50": 3.02625,
+      "p95": 3.543,
+      "maximum": 4.7942
+    },
+    "checkpoint_sha256": "9bc381ae6bd46477fe150dfe3abd9b076fa6951719b31624acbe8beca9ab0145",
+    "operator_review": {
+      "operator_report": "The operator completed the attended shadow check and reported normal manual keyboard and mouse control without unintended movement, turning, or other anomalies.",
+      "operator_review_complete": true,
+      "source_files_changed": false,
+      "gameplay_success_established": false
+    },
+    "input_sent": false,
+    "training_data_generated": false,
+    "recorded_human_input_labels": false,
+    "navigation_success_established": false,
+    "captured_images_saved": false,
+    "direct_frame_visual_review": false,
+    "pause_reenable_exercised_during_inference": false
   }
 }

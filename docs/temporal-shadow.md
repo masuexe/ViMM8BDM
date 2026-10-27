@@ -76,7 +76,8 @@ It performed 97 inference steps, including 66 steps with full context.
 Full-context prediction took approximately 2.69 milliseconds at the median and 3.57 milliseconds at the 95th percentile.
 Every returned action was empty.
 Its result does not measure capture delay, engine response, or gameplay performance.
-The attended game check remains pending.
+The attended game check completed on the stock Windows client.
+The operator reported normal manual control without unintended movement or turning.
 The [evidence file](evidence/temporal-shadow.json) separates these results.
 
 
@@ -98,3 +99,42 @@ Causal feature reconstruction removed those unnecessary resets in the repeated r
 The updated replay performed 2314 inference steps and 82 additional feature steps.
 It reached full context for 2288 inference steps.
 No old action entered the worker.
+
+
+## Attended live result
+
+The process ended at its 30-second duration limit after the first F8 command.
+It captured 592 nonblank frames and completed 579 inference steps.
+Of those steps, 550 used the complete 32-feature context.
+It reconstructed 18 additional feature anchors without a memory reset.
+Every new feature history passed the causal timestamp checks.
+
+All logged policy actions and dispatched actions were empty.
+The worker trace contained no held keys or held attack button.
+The trace ended without dropped events.
+The operator reported normal manual keyboard and mouse control without unintended movement, turning, or other anomalies.
+This result supports the observation interface check.
+
+| Stage | Samples | Median ms | 95th percentile ms | Maximum ms |
+| --- | --- | --- | --- | --- |
+| Capture | 592 | 7.2183 | 10.9036 | 15.9597 |
+| Image preparation with full context | 550 | 1.3165 | 1.5200 | 1.8579 |
+| Image encoder with full context | 550 | 0.6869 | 1.0010 | 1.7779 |
+| Memory with full context | 550 | 0.9008 | 1.0531 | 1.6748 |
+| Complete policy with full context | 550 | 3.0263 | 3.5430 | 4.7942 |
+| Worker roundtrip with empty actions | 592 | 0.4055 | 0.5560 | 1.3348 |
+| Complete loop before its sleep | 592 | 10.5945 | 14.5357 | 28.8927 |
+
+The first history-collection frame took 16.7174 milliseconds in the policy stage.
+That frame performed no neural inference.
+The complete-loop values include this initial frame.
+The worker roundtrip values do not measure executed game input or visible response delay.
+No model-controlled game action occurred.
+
+This run stored prediction logs rather than screenshots or synchronized human input labels.
+It created no new imitation dataset and supplies no live prediction-accuracy estimate.
+The class counts were 136 negative, 391 zero, and 52 positive predictions.
+Those counts do not establish navigation success.
+Pause and re-enabling during active inference were not exercised in this attended run.
+The corresponding automated reset tests remain separate evidence.
+Keep the learned model outside game control until steering quality passes its separate conditions.

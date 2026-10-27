@@ -260,3 +260,13 @@ These ranges do not establish exact physical latency or a permanent timing corre
 The analysis preserved all original timestamps and kept both sessions outside the training set.
 See the [alignment comparison](input-alignment.md).
 Causal dataset construction and physical-input-to-actuator conversion remain separate work.
+
+
+## Own-model observation interface
+
+The [temporal shadow check](temporal-shadow.md) completed a 30-second attended Windows run.
+It captured 592 frames and completed 579 model predictions without model-controlled game actions.
+The operator reported normal manual control.
+The complete-loop median was 10.59 milliseconds, and its 95th percentile was 14.54 milliseconds.
+This result supports the own-model capture and inference interface.
+It does not approve the model for navigation or measure visible input response delay.
