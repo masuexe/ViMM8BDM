@@ -116,6 +116,14 @@ class WatchdogCheckPolicy(InputCheckPolicy):
              ("release", .5, Action()))
 
 
+class FocusCheckPolicy(InputCheckPolicy):
+    """Hold movement and attack briefly for an attended focus-loss check."""
+
+    STEPS = (("ready", .5, Action()),
+             ("hold_for_focus_switch", 8, Action(frozenset({"w"}), attack=True)),
+             ("release", .5, Action()))
+
+
 class InputLease:
     """Disarm on takeover, stale frames, lost focus, or an expired heartbeat.
 

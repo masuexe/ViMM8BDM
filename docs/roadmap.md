@@ -111,6 +111,7 @@ Set an initial target of 250 ms for focus loss and heartbeat expiry.
 Record the observed maximum, not only the mean.
 The independent-worker results appear in the [watchdog report](input-watchdog.md).
 They cover inference failure and do not establish recovery after an input-worker failure.
+The [focus test](focus-check.md) records held-input release and paused behavior after focus returns.
 
 ### Step 5: compare model and rule policies
 

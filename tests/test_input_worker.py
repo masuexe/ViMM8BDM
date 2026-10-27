@@ -48,6 +48,14 @@ class AuditFactory:
         return AuditSink(self.path), AuditFocus()
 
 
+class SharedFocusFactory:
+    def __init__(self, path, focused):
+        self.path, self.focused = path, focused
+
+    def __call__(self):
+        return AuditSink(self.path), self.focused.is_set
+
+
 def producer(path, ready, heartbeat):
     worker = InputWorker(backend_factory=AuditFactory(path))
     worker._request("test_key", key="f8")
@@ -86,6 +94,39 @@ class InputWorkerTests(unittest.TestCase):
                 return matches[-1]
             time.sleep(.01)
         self.fail(f"The audit did not record {kind}")
+
+    def test_focus_loss_releases_held_inputs_and_return_does_not_rearm(self):
+        focused = mp.get_context("spawn").Event()
+        focused.set()
+        trace = str(Path(self.directory.name) / "focus.jsonl")
+        with InputWorker(backend_factory=SharedFocusFactory(self.path, focused), trace_path=trace) as worker:
+            worker._request("test_key", key="f8")
+            action = Action(frozenset({"w"}), attack=True)
+            self.assertTrue(worker.submit(action, time.perf_counter_ns(), worker.generation))
+            old_generation = worker.generation
+            switched = time.perf_counter_ns()
+            focused.clear()
+            self.wait_event("release")
+            worker.refresh()
+            self.assertFalse(worker.armed)
+            self.assertGreater(worker.generation, old_generation)
+            focused.set()
+            worker.refresh()
+            self.assertFalse(worker.armed)
+            self.assertFalse(worker.submit(action, time.perf_counter_ns(), old_generation))
+            self.assertFalse(worker.submit(action, time.perf_counter_ns(), worker.generation))
+            worker._request("test_key", key="f8")
+            self.assertTrue(worker.submit(action, time.perf_counter_ns(), worker.generation))
+        events = [json.loads(line) for line in Path(trace).read_text().splitlines()]
+        lost = next(e for e in events if e["event"] == "focus_lost")
+        released = next(e for e in events if e["event"] == "released")
+        self.assertEqual(lost["held_keys"], ["w"])
+        self.assertTrue(lost["attack_held"])
+        self.assertLessEqual(lost["focus_observed_ns"], released["time_ns"])
+        self.assertLess((released["time_ns"] - switched) / 1e6, 500)
+        self.assertEqual(released["held_keys"], [])
+        self.assertFalse(released["attack_held"])
+        self.assertEqual(events[-1], {"event": "trace_end", "dropped_events": 0})
 
     def test_status_messages_do_not_extend_the_input_lease(self):
         with InputWorker(backend_factory=AuditFactory(self.path)) as worker:

@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 from .control import (InputLease, PixelProbe, Frame, synthetic_frame, InputCheckPolicy,
-                      WatchdogCheckPolicy, blank_frame, Action)
+                      WatchdogCheckPolicy, FocusCheckPolicy, blank_frame, Action)
 
 
 class DrySink:
@@ -142,6 +142,8 @@ def run(args):
             policy = ContinuousPolicy(args.continuous_source, args.checkpoint, args.yaw_scale)
         elif args.policy == "input_check":
             policy = InputCheckPolicy()
+        elif args.policy == "focus_check":
+            policy = FocusCheckPolicy()
         elif args.policy == "watchdog_check":
             policy = WatchdogCheckPolicy()
         else:
@@ -155,18 +157,19 @@ def run(args):
         if not args.live:
             lease.toggle()
         else:
-            print(f"Input worker ready. F8: enable/pause. Esc: pause. F9: exit. Waiting limit: {args.arm_timeout:g} seconds.", flush=True)
+            waiting_label = f"{args.arm_timeout:g} seconds" if args.arm_timeout else "none"
+            print(f"Input worker ready. F8: enable/pause. Esc: pause. F9: exit. Waiting limit: {waiting_label}.", flush=True)
             print(f"The {args.seconds:g}-second run limit starts after the first enable command.", flush=True)
         started = time.perf_counter()
         previously_armed = False
         previous_generation = None
         previous_phase = None
         fault_injected = False
-        sequence_policy = args.policy in ("input_check", "watchdog_check")
+        sequence_policy = args.policy in ("input_check", "watchdog_check", "focus_check")
         exit_reason = "frame_limit"
         frame_budget = args.frames
         if worker:
-            waiting_until = time.perf_counter() + args.arm_timeout
+            waiting_until = time.perf_counter() + args.arm_timeout if args.arm_timeout else None
             while True:
                 worker.refresh()
                 if worker.stopped:
@@ -175,7 +178,7 @@ def run(args):
                     break
                 if worker.armed:
                     break
-                if time.perf_counter() >= waiting_until:
+                if waiting_until is not None and time.perf_counter() >= waiting_until:
                     exit_reason = "arm_timeout"
                     frame_budget = 0
                     break
@@ -208,7 +211,10 @@ def run(args):
             previous_generation = generation
             invalid_frame = blank_frame(frame)
             if invalid_frame:
-                lease.pause("blank_frame")
+                if worker and args.policy == "focus_check":
+                    worker.refresh()
+                else:
+                    lease.pause("blank_frame")
                 action = Action()
             elif sequence_policy and not armed:
                 action = Action()
@@ -278,7 +284,7 @@ def main():
     diagnostics.add_argument("--check-window", action="store_true", help="Measure window focus without sending input")
     parser.add_argument("--all-windows", action="store_true", help="Include other visible windows in the local list")
     parser.add_argument("--include-window-titles", action="store_true", help="Include titles in local diagnostic output")
-    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check"), default="red_marker_probe")
+    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check"), default="red_marker_probe")
     parser.add_argument("--watchdog-fault", choices=("stall", "exit"), help="Explicit local fault test for the watchdog policy")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="External ContinuousDoom state_dict path")
@@ -289,7 +295,7 @@ def main():
     parser.add_argument("--region", type=int, nargs=4, metavar=("LEFT", "TOP", "WIDTH", "HEIGHT"))
     parser.add_argument("--frames", type=int, default=120)
     parser.add_argument("--seconds", type=float, default=10)
-    parser.add_argument("--arm-timeout", type=float, default=180, help="Maximum wait for the first user enable command")
+    parser.add_argument("--arm-timeout", type=float, default=180, help="Initial waiting limit in seconds. Zero waits until F8 or F9.")
     parser.add_argument("--hz", type=float, default=20)
     parser.add_argument("--output", help="New JSONL path; existing files are never overwritten")
     parser.add_argument("--input-trace", help="New local JSONL file for input-worker audit events")
@@ -299,8 +305,8 @@ def main():
             parser.error("A watchdog fault test requires --live, --policy watchdog_check, --watchdog-fault, --output, and --input-trace")
     if args.frames <= 0 or not math.isfinite(args.seconds) or args.seconds <= 0:
         parser.error("frames and seconds must be positive and finite")
-    if not math.isfinite(args.arm_timeout) or args.arm_timeout <= 0:
-        parser.error("arm-timeout must be positive and finite")
+    if not math.isfinite(args.arm_timeout) or args.arm_timeout < 0:
+        parser.error("arm-timeout must be nonnegative and finite")
     if not math.isfinite(args.hz) or not 1 <= args.hz <= 60:
         parser.error("hz must be finite and between 1 and 60")
     if args.yaw_scale is not None and (not math.isfinite(args.yaw_scale) or args.yaw_scale <= 0):

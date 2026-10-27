@@ -183,3 +183,24 @@ The disappearing background terminal indicator was consistent with normal comple
 The vertical image scale differed slightly between runs and pulse directions.
 The measurements do not establish exact angle conversion or exact view recovery.
 Held-input focus-loss timing and model control remain incomplete.
+
+
+## Held-input focus loss
+
+The stock Windows alpha run recorded two focus losses during held movement and attack.
+The two detection-to-release intervals were 3.56 and 6.63 milliseconds.
+
+Intervals from the previous successful query start were 20.15 and 22.45 milliseconds.
+These measurements do not timestamp the exact OS focus event or visible game-stop tick.
+Both releases left no owned movement key or attack button held.
+Nonblank frames after focus returned remained rejected until another user enable command.
+The operator reported a stopped player with no automatic recovery of control.
+The same run recorded two Esc pauses during held movement and attack.
+
+Linux and Windows each passed 58 automated tests.
+The tests include focus recovery without automatic enabling and unlimited initial waiting.
+See the [focus test report](focus-check.md).
+Model action conversion and target-game model control remain incomplete.
+
+The focus test reached its 120-second run limit and closed normally.
+The final worker audit recorded zero dropped events and no held inputs.

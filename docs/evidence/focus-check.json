@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-26",
+  "engine": "stock 3.3-alpha-r260925-2352",
+  "runtime": "Windows native Python 3.12.5",
+  "assets": [
+    "MM8BDM-v6a.pk3",
+    "classes-v9fh.pk3",
+    "gondolapatchv2.7h2.pk3"
+  ],
+  "policy": "focus_check",
+  "run_limit_s": 120,
+  "exit_reason": "duration_limit",
+  "frames": 2371,
+  "accepted_actions": 235,
+  "inactive_or_rejected_frames": 2136,
+  "focus_loss_events": [
+    {
+      "held_keys_before": [
+        "w"
+      ],
+      "attack_held_before": true,
+      "release_after_focus_observed_ms": 3.5623,
+      "release_after_previous_true_query_started_ms": 20.1525,
+      "held_keys_after": [],
+      "attack_held_after": false,
+      "nonblank_return_frames_before_next_user_enable": 151,
+      "accepted_return_frames_before_next_user_enable": 0
+    },
+    {
+      "held_keys_before": [
+        "w"
+      ],
+      "attack_held_before": true,
+      "release_after_focus_observed_ms": 6.6293,
+      "release_after_previous_true_query_started_ms": 22.4458,
+      "held_keys_after": [],
+      "attack_held_after": false,
+      "nonblank_return_frames_before_next_user_enable": 41,
+      "accepted_return_frames_before_next_user_enable": 0
+    }
+  ],
+  "escape_releases": [
+    {
+      "held_keys_before": [
+        "w"
+      ],
+      "attack_held_before": true,
+      "held_keys_after": [],
+      "attack_held_after": false
+    },
+    {
+      "held_keys_before": [
+        "w"
+      ],
+      "attack_held_before": true,
+      "held_keys_after": [],
+      "attack_held_after": false
+    }
+  ],
+  "operator_reports": [
+    "The player stopped after returning to the game and did not resume automatically.",
+    "Esc also stopped control."
+  ],
+  "audit": {
+    "last_event": "trace_end",
+    "dropped_events": 0,
+    "worker_stopped": true,
+    "final_held_keys": [],
+    "final_attack_held": false
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 58,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 58,
+      "result": "pass"
+    }
+  },
+  "timing_limits": [
+    "Release timestamps follow backend release-call completion.",
+    "The trace does not timestamp the OS focus-change notification or the visible game-stop tick.",
+    "The previous successful query start supplies an earlier reference for one focus transition.",
+    "These samples do not establish a worst-case or hard real-time guarantee."
+  ]
+}

@@ -52,17 +52,31 @@ class InputOwner:
 
     def __init__(self, sink, focused, trace=None):
         self.sink = sink
-        self.lease = InputLease(sink, focused)
+        self.focused = focused
+        self.last_focus_true_started_ns = None
+        self.lease = InputLease(sink, self.check_focus)
         self.stop = threading.Event()
         self.keys = ControlKeys(self.lease, self.stop)
         self.generation = 0
         self.trace = trace
         self.last_action = None
 
-    def note(self, event, deadline=None):
+    def check_focus(self):
+        started = time.perf_counter_ns()
+        focused = self.focused()
+        observed = time.perf_counter_ns()
+        if focused:
+            self.last_focus_true_started_ns = started
+        elif self.lease.armed:
+            self.note("focus_lost", self.lease.deadline,
+                      focus_check_started_ns=started, focus_observed_ns=observed,
+                      last_focus_true_started_ns=self.last_focus_true_started_ns)
+        return focused
+
+    def note(self, event, deadline=None, **details):
         if self.trace:
             self.trace({"event": event, "time_ns": time.perf_counter_ns(),
-                        "lease_deadline_ns": deadline, **self.state()})
+                        "lease_deadline_ns": deadline, **self.state(), **details})
 
     def state(self):
         with self.lease.lock:

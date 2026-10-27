@@ -80,6 +80,12 @@ class RunTimingTests(unittest.TestCase):
         self.assertEqual(capture.frames, 3)
         self.assertTrue(worker.closed)
 
+    def test_zero_waiting_limit_permits_late_user_enable(self):
+        worker, capture = self.execute(enable_at=181, waiting_limit=0)
+        self.assertEqual(len(worker.actions), 3)
+        self.assertEqual(capture.frames, 3)
+        self.assertTrue(worker.closed)
+
     def test_wait_timeout_closes_without_capture_or_input(self):
         worker, capture = self.execute(enable_at=10, waiting_limit=.1)
         self.assertEqual(worker.actions, [])
