@@ -90,6 +90,9 @@ class DesktopSink:
         if errors:
             raise RuntimeError("Some owned inputs could not be released") from errors[0]
 
+    def owned_state(self):
+        return {"held_keys": sorted(self.held), "attack_held": self.attacking}
+
 
 class X11WindowCapture:
     """Read displayed window pixels when a rootless X server has a black root."""

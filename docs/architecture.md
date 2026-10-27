@@ -62,8 +62,8 @@ flowchart LR
     A --> L
 ```
 
-Keep these functions in one Python application during M1.
-Use a separate input process before deployment.
+Capture and inference run in the parent process.
+Live input runs in a separate Python process.
 That process must release its inputs when the policy heartbeat expires.
 It must also accept the user's pause command without waiting for inference.
 
@@ -152,11 +152,13 @@ Focus loss, stale observations, and lease expiry disarm the controller.
 The user must explicitly enable it again.
 The process releases only the keys and mouse buttons it owns.
 
-The current watchdog runs in a Python thread.
-Offline tests cover its state logic.
-They do not prove recovery after an interpreter failure or forced process termination.
-The production input process must use an independent heartbeat.
-It must also distinguish human input from injected input before automatic mouse-based takeover becomes available.
+The input worker checks its lease independently from inference.
+Only accepted actions renew the lease.
+Status messages cannot keep a held input active.
+Generation checks reject actions computed before a pause and re-enabling.
+Process tests cover inference stalls and forced parent termination.
+See the [watchdog report](input-watchdog.md) for desktop acceptance and failure limits.
+Automatic takeover from physical mouse movement remains unimplemented.
 
 ## Training decision gates
 

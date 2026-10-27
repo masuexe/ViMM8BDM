@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-26",
+  "engine": "stock 3.3-alpha-r260925-2352",
+  "platform": "Windows native Python 3.12.5",
+  "server": "Stock loopback server, ordinary Player client",
+  "limits": {
+    "lease_ms": 200,
+    "maximum_image_age_ms": 150,
+    "release_timestamp_meaning": "After backend release calls returned. Not measured visible game-stop latency.",
+    "input_stage_meaning": "Local pipe round trip, including input validation and dispatch."
+  },
+  "automated_scope": [
+    "Real spawned processes with a simulated input receiver",
+    "Inference stall",
+    "Forced inference-parent termination",
+    "Old generation rejection after pause and re-enable",
+    "Status requests do not renew the lease",
+    "Input release on F9",
+    "Initial user wait does not consume the run budget"
+  ],
+  "stall_desktop": {
+    "injected_stall_ms": 750,
+    "accepted_actions": 162,
+    "release_reason": "watchdog_or_focus",
+    "release_after_last_accepted_action_ms": 217.3494,
+    "release_after_fault_marker_ms": 203.4907,
+    "held_keys_after_release": [],
+    "attack_held_after_release": false,
+    "trace_dropped_events": 0,
+    "operator_report": "The player stopped on its own and control could be enabled again.",
+    "accepted_action_timing": {
+      "capture_ms": {
+        "p50_ms": 16.1632,
+        "p95_ms": 23.4641,
+        "max_ms": 28.9194
+      },
+      "policy_ms": {
+        "p50_ms": 0.053,
+        "p95_ms": 0.1019,
+        "max_ms": 0.4361
+      },
+      "input_ms": {
+        "p50_ms": 0.54525,
+        "p95_ms": 2.6623,
+        "max_ms": 14.143
+      },
+      "loop_ms": {
+        "p50_ms": 17.2538,
+        "p95_ms": 24.347,
+        "max_ms": 37.8232
+      }
+    }
+  },
+  "exit_first_desktop_attempt": {
+    "accepted_actions": 0,
+    "fault_triggered": false,
+    "result": "not exercised",
+    "exit_reason": "duration_limit",
+    "operator_report": "No action observed. Cannot judge release."
+  },
+  "exit_desktop_retry": {
+    "parent_exit_code": 86,
+    "normal_parent_cleanup": false,
+    "accepted_actions": 11,
+    "release_reason": "parent_lost",
+    "release_after_fault_marker_ms": 12.7735,
+    "held_keys_after_release": [],
+    "attack_held_after_release": false,
+    "worker_stopped_event": true,
+    "trace_dropped_events": 0,
+    "operator_report": "One automatic primary attack was visible.",
+    "visual_movement_stop_measured": false
+  },
+  "waiting_correction": {
+    "run_duration_starts_after_first_enable": true,
+    "default_initial_wait_limit_s": 180,
+    "capture_before_first_enable": false
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 50,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 50,
+      "result": "pass"
+    }
+  }
+}

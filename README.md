@@ -37,6 +37,7 @@ Read these documents:
 - [Technical terms](docs/glossary.md)
 - [Public files and local records](docs/publication.md)
 - [Milestone 1 progress](docs/milestone-1-progress.md)
+- [Independent input watchdog](docs/input-watchdog.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
 The project does not contain upstream model code, model weights, or game assets.
@@ -162,7 +163,8 @@ Select the game window.
 Press F8 to enable or pause AI input.
 Press Esc to pause before using the game menu.
 Press F9 to exit.
-The default run limit is 10 seconds.
+The default run limit is 10 seconds after the first enable command.
+The separate initial waiting limit is 180 seconds.
 Ctrl+C also releases the inputs that this process holds.
 
 The controller pauses after focus loss, an old image, or an expired input lease.
@@ -216,8 +218,10 @@ Windows uses `zandronum-server.exe` if present, or the stock `zandronum.exe` ser
 The script records both process IDs in the excluded run directory.
 Stop both test processes after the experiment.
 
-The Python watchdog cannot guarantee release after a hard interpreter failure or forced process termination.
-A separate input process is a deployment requirement.
+Live control now uses a separate input process.
+Its input lease expires independently from capture and inference.
+Only the input worker owns the control hotkeys and desktop input.
+The [watchdog report](docs/input-watchdog.md) describes its failure tests and limits.
 Use the current code for local experiments only.
 
 ## Test the external pretrained model
@@ -247,6 +251,3 @@ It divides pixel values by 255.
 It repeats the first image to fill the initial history.
 It preserves the original six-choice action head.
 A live game test must check image scaling, mouse sensitivity, timing, and policy behavior.
-
-Project text follows ASD-STE100 structural rules and uses a technical glossary.
-The project did not check every word against the complete official ASD dictionary.

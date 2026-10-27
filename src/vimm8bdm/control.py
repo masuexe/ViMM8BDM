@@ -108,6 +108,14 @@ class InputCheckPolicy:
         return Action()
 
 
+class WatchdogCheckPolicy(InputCheckPolicy):
+    """Briefly hold movement and attack before an explicit fault test."""
+
+    STEPS = (("ready", .5, Action()),
+             ("hold", .5, Action(frozenset({"w"}), attack=True)),
+             ("release", .5, Action()))
+
+
 class InputLease:
     """Disarm on takeover, stale frames, lost focus, or an expired heartbeat.
 

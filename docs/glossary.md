@@ -1,9 +1,5 @@
 # Technical terms
 
-The project uses these technical terms consistently.
-The reports apply ASD-STE100 sentence structure.
-They do not certify compliance with the complete official ASD dictionary.
-
 | Term | Meaning |
 | --- | --- |
 | Adapter | Software that converts images and policy actions to the external client interface |

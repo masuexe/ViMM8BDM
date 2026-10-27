@@ -131,4 +131,29 @@ This is a clock property, not measured visible response latency.
 The summary separates accepted-action timing from inactive or rejected frames.
 
 The current Linux and Windows suites each passed 42 tests.
-Independent watchdog recovery, calibrated aim, and long-session acceptance remain incomplete.
+Those runs did not test independent watchdog recovery.
+Calibration and long-session acceptance remained incomplete.
+
+## Independent input ownership
+
+The input worker now owns desktop input, focus checks, hotkeys, and the action lease.
+The capture and policy process cannot enable live input through its command pipe.
+Generation checks reject results computed before a user pause and re-enabling.
+
+Real process tests cover a stalled or forcibly stopped inference parent.
+The stock Windows alpha test released input during a 750 ms parent stall.
+Release calls completed 217.35 ms after the last accepted action in that run.
+The operator reported that input stopped and could be enabled again.
+
+A later desktop test exited the parent without normal cleanup.
+The worker completed release calls 12.77 ms after the recorded fault marker and then exited.
+Its release record contains no held keys or attack button.
+The operator observed one automatic primary attack.
+No visible movement-stop latency measurement occurred.
+
+The first exit attempt sent no input and therefore supplied no release evidence.
+The controller now waits separately for initial user enabling before starting the run budget.
+This change also prevents idle waiting from consuming the frame budget.
+
+See the [input watchdog report](input-watchdog.md) for evidence and failure limits.
+Calibrated aim, held-input focus-loss timing, and long-session acceptance remain incomplete.

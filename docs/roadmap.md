@@ -88,7 +88,9 @@ Measure the relationship between mouse counts and visible camera movement.
 
 Acceptance: every action starts and stops as commanded.
 The player must not continue moving or firing after a stop command.
-The current source supports the first five action types, but the game-input test remains unverified.
+The operator observed movement, both aim axes, attack, and jump in the Windows alpha test.
+Weapon selection and mouse calibration remain unverified.
+See the [M1 progress record](milestone-1-progress.md) for the test evidence.
 
 ### Step 4: check human takeover
 
@@ -106,7 +108,8 @@ Check recovery after forced termination of the inference process.
 Acceptance: the input process releases owned inputs within the measured deadline.
 Set an initial target of 250 ms for focus loss and heartbeat expiry.
 Record the observed maximum, not only the mean.
-The threaded prototype is not sufficient evidence for hard-failure recovery.
+The independent-worker results appear in the [watchdog report](input-watchdog.md).
+They cover inference failure and do not establish recovery after an input-worker failure.
 
 ### Step 5: compare model and rule policies
 
