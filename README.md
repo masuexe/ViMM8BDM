@@ -281,3 +281,4 @@ It preserves the original six-choice action head.
 A live game test must check image scaling, mouse sensitivity, timing, and policy behavior.
 
 See the [action-window comparison](docs/action-horizons.md) for the latest offline model results.
+See the [wall recovery follow-up](docs/wall-recovery.md) for the new human recording and combined-source results.

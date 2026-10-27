@@ -10,7 +10,7 @@ import unittest
 try:
     import torch
     from vimm8bdm.behavior_cloning import (IMAGE_SIZE, KEYS, NavigationModel, image_features,
-                                         label_target, load_checkpoint, load_inputs, metrics,
+                                         label_target, load_checkpoint, load_inputs, load_training_inputs, metrics,
                                          normalization, predict, train)
 except ImportError:
     torch = None
@@ -142,6 +142,26 @@ class BehaviorCloningTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'causal source reconstruction'):
                 load_inputs(data, 'train')
 
+    def test_combined_training_keeps_all_sessions_and_rejects_duplicates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            a = fixture(root, 'first', 'train', 100)
+            b = fixture(root, 'second', 'train', 300)
+            images, labels, identities = load_training_inputs([a, b])
+            xa, ya, _ = load_inputs(a, 'train')
+            xb, yb, _ = load_inputs(b, 'train')
+            self.assertTrue(torch.equal(images, torch.cat((xa, xb))))
+            self.assertTrue(torch.equal(labels, torch.cat((ya, yb))))
+            self.assertEqual(len(identities), 2)
+            self.assertTrue(torch.equal(normalization(labels)[0], labels[:, 4:].mean(0)))
+            with self.assertRaisesRegex(ValueError, 'distinct sessions'):
+                load_training_inputs([a, a])
+            metadata = json.loads((b / 'dataset.json').read_text())
+            metadata['character'] = 'other'
+            (b / 'dataset.json').write_text(json.dumps(metadata))
+            with self.assertRaisesRegex(ValueError, 'same character'):
+                load_training_inputs([a, b])
+
     def test_long_window_preserves_causal_images_and_raw_action_units(self):
         with tempfile.TemporaryDirectory() as directory:
             data = fixture(Path(directory), 'train', 'train', 413, frames_count=15)
@@ -219,11 +239,13 @@ class BehaviorCloningTests(unittest.TestCase):
             validation_b = fixture(root, 'validation-b', 'validation', 1000000, frames_count=15)
             review = root / 'review.json'
             review.write_text(json.dumps({'operator_report': 'Synthetic unit fixture', 'source_files_changed': False}))
+            extra = fixture(root, 'extra', 'train', -50, frames_count=15)
             reports = []
             for i, validation in enumerate((validation_a, validation_b)):
                 args = SimpleNamespace(train=train_data, validation=validation, train_review=review,
                                        validation_review=review, output=root / f'run-{i}', experimental=True,
-                                       seed=0, epochs=1, batch_size=2, threads=1, learning_rate=.001, action_ms=200)
+                                       seed=0, epochs=1, batch_size=2, threads=1, learning_rate=.001, action_ms=200,
+                                       extra_train=[extra], extra_train_review=[review])
                 with contextlib.redirect_stdout(io.StringIO()):
                     reports.append(train(args))
             a, b = [torch.load(root / f'run-{i}' / 'model.pt', weights_only=True) for i in range(2)]
@@ -232,6 +254,18 @@ class BehaviorCloningTests(unittest.TestCase):
             self.assertEqual(reports[0]['mouse_scale_train_only'], reports[1]['mouse_scale_train_only'])
             self.assertTrue(all(report['checkpoint_reload_matches'] for report in reports))
             self.assertTrue(all(not report['input_sent'] for report in reports))
+            self.assertEqual(len(reports[0]['train_sources']), 2)
+            self.assertEqual(reports[0]['training_samples'], 4)
+            args.extra_train_review = []
+            args.output = root / 'missing-review'
+            with self.assertRaisesRegex(ValueError, 'one review'):
+                train(args)
+            args.extra_train_review = [review]
+            leaked = root / 'leaked-train'
+            build(root / 'validation-b-source', leaked, split='train')
+            args.extra_train = [leaked]
+            with self.assertRaisesRegex(ValueError, 'different splits'):
+                train(args)
             args.experimental = False
             with self.assertRaises(ValueError):
                 train(args)

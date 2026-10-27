@@ -122,6 +122,27 @@ def load_inputs(directory, expected_split, *, action_ms=50):
     return images, targets, identity
 
 
+def load_training_inputs(directories, *, action_ms=50):
+    """Combine checked training sessions without duplicate sources or image archives."""
+    parts, identities = [], []
+    sessions, archives = set(), set()
+    for directory in directories:
+        images, targets, identity = load_inputs(directory, 'train', action_ms=action_ms)
+        meta = json.loads((Path(directory) / 'dataset.json').read_text())
+        archive = meta['source_hashes']['frames.vrec']
+        if identity['source_session_id'] in sessions or archive in archives:
+            raise ValueError('Training sources must use distinct sessions and image archives')
+        sessions.add(identity['source_session_id'])
+        archives.add(archive)
+        if identities and any(identity[key] != identities[0][key] for key in ('character', 'map')):
+            raise ValueError('The combined training sources require the same character and map')
+        parts.append((images, targets))
+        identities.append(identity)
+    if not parts:
+        raise ValueError('Supply at least one training source')
+    return torch.cat([part[0] for part in parts]), torch.cat([part[1] for part in parts]), identities
+
+
 class NavigationModel(nn.Module):
     """Predict four held fractions and two raw mouse totals from past images."""
 
@@ -233,8 +254,14 @@ def train(args):
         raise ValueError('This candidate-data experiment requires --experimental')
     if args.output.exists():
         raise FileExistsError('The output directory already exists. Select a new directory')
-    reviews = {'train': read_review(args.train_review), 'validation': read_review(args.validation_review)}
-    split_result = check_splits([args.train, args.validation])
+    extras = getattr(args, 'extra_train', None) or []
+    extra_reviews = getattr(args, 'extra_train_review', None) or []
+    if len(extras) != len(extra_reviews):
+        raise ValueError('Supply one review for each additional training source')
+    training_directories = [args.train, *extras]
+    reviews = {'train': read_review(args.train_review), 'validation': read_review(args.validation_review),
+               'extra_train': [read_review(path) for path in extra_reviews]}
+    split_result = check_splits([*training_directories, args.validation])
     torch.set_num_threads(args.threads)
     torch.use_deterministic_algorithms(True)
     random.seed(args.seed)
@@ -242,7 +269,8 @@ def train(args):
     torch.manual_seed(args.seed)
     started = time.perf_counter()
     action_ms = getattr(args, 'action_ms', 50)
-    train_x, train_y, train_id = load_inputs(args.train, 'train', action_ms=action_ms)
+    train_x, train_y, train_ids = load_training_inputs(training_directories, action_ms=action_ms)
+    train_id = train_ids[0]
     validation_x, validation_y, validation_id = load_inputs(args.validation, 'validation', action_ms=action_ms)
     if train_id['character'] != validation_id['character'] or train_id['map'] != validation_id['map']:
         raise ValueError('This first experiment requires the same character and map in both splits')
@@ -289,7 +317,8 @@ def train(args):
     report = {
         'format': 'vimm8bdm-navigation-bc-v3', 'experimental': True, 'features': features,
         'action_window_ms': action_ms, 'anchor_spacing_ms': action_ms, 'history_spacing_ms': 50,
-        'train_source': train_id, 'validation_source': validation_id, 'operator_review_hashes': reviews,
+        'train_source': train_id, 'train_sources': train_ids, 'training_samples': len(train_y),
+        'validation_source': validation_id, 'operator_review_hashes': reviews,
         'source_split_check': split_result, 'seed': args.seed, 'epochs': args.epochs,
         'batch_size': args.batch_size, 'learning_rate': args.learning_rate, 'cpu_threads': args.threads,
         'torch_version': torch.__version__, 'device': 'cpu', 'image_size': list(IMAGE_SIZE),
@@ -330,6 +359,8 @@ def main():
     parser = argparse.ArgumentParser(description='Train an offline experimental navigation model')
     parser.add_argument('--train', type=Path, required=True)
     parser.add_argument('--validation', type=Path, required=True)
+    parser.add_argument('--extra-train', type=Path, action='append', default=[])
+    parser.add_argument('--extra-train-review', type=Path, action='append', default=[])
     parser.add_argument('--train-review', type=Path, required=True)
     parser.add_argument('--validation-review', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)

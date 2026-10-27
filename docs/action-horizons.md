@@ -113,3 +113,5 @@ Pause before menus, death, chat, or character changes.
 This collection targets the reported failure cases.
 It does not establish that missing data caused the model failures.
 Keep the new source separate from validation and record the operator's review before training.
+
+The [wall recovery follow-up](wall-recovery.md) records the completed collection and combined-source experiment.
