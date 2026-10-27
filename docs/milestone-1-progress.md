@@ -157,3 +157,19 @@ This change also prevents idle waiting from consuming the frame budget.
 
 See the [input watchdog report](input-watchdog.md) for evidence and failure limits.
 Calibrated aim, held-input focus-loss timing, and long-session acceptance remain incomplete.
+
+
+## Visual mouse measurement
+
+The stock Windows alpha short test completed 24 small pulses on both axes.
+The image matcher accepted all 24 pulse measurements.
+All 529 captured frames produced accepted actions over 26.62 seconds.
+The operator observed small horizontal and vertical view movements.
+The worker released input and closed with no dropped audit events.
+
+The local median ratios were -1.0 horizontal and -0.6875 vertical image pixels per mouse count.
+These ratios do not measure engine angles or visible response latency.
+The calibration program now waits for the first F8 without a default timeout.
+A regression test covers initial waiting beyond 180 seconds.
+See the [mouse calibration report](mouse-calibration.md).
+Extended capture, held-input focus-loss timing, and model control remain incomplete.

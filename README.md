@@ -38,6 +38,7 @@ Read these documents:
 - [Public files and local records](docs/publication.md)
 - [Milestone 1 progress](docs/milestone-1-progress.md)
 - [Independent input watchdog](docs/input-watchdog.md)
+- [Mouse calibration](docs/mouse-calibration.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
 The project does not contain upstream model code, model weights, or game assets.

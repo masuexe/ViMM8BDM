@@ -89,7 +89,8 @@ Measure the relationship between mouse counts and visible camera movement.
 Acceptance: every action starts and stops as commanded.
 The player must not continue moving or firing after a stop command.
 The operator observed movement, both aim axes, attack, and jump in the Windows alpha test.
-Weapon selection and mouse calibration remain unverified.
+The [short mouse test](mouse-calibration.md) measured local image displacement on both axes.
+Weapon selection and conversion from model actions to view angles remain unverified.
 See the [M1 progress record](milestone-1-progress.md) for the test evidence.
 
 ### Step 4: check human takeover

@@ -85,7 +85,8 @@ Keyboard and button events use pynput.
 Relative mouse movement uses normal Win32 `SendInput` events.
 The capture backend follows the client area and omits other foreground applications.
 The Windows alpha input test passed the operator's visual check without camera flicker.
-Mouse calibration and performance under network delay still require tests.
+The [mouse test](mouse-calibration.md) measured local image displacement for small pulses.
+Angle conversion and performance under network delay still require tests.
 Do not use engine hooks as a fallback.
 
 The optional local-server test uses a stock server bound to the loopback address.
