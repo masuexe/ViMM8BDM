@@ -1,0 +1,94 @@
+{
+  "recorded_at_utc": "2026-10-27T08:26:07.418937+00:00",
+  "format": "vimm8bdm-bc-v1",
+  "sample_contract": {
+    "history_frames": 4,
+    "history_target_spacing_ms": 50,
+    "future_action_ms": 50,
+    "max_history_target_deviation_ms": 75,
+    "max_capture_gap_ms": 100,
+    "all_observation_images_complete_by_anchor": true,
+    "action_interval": "start included, end excluded",
+    "raw_timestamps_shifted": false,
+    "mouse_actuator_conversion_applied": false
+  },
+  "diagnostic_builds": [
+    {
+      "samples": 756,
+      "split": "diagnostic",
+      "training_ready": false,
+      "source_hashes_match": true,
+      "all_histories_causal": true,
+      "all_event_offsets_valid": true,
+      "contiguous_future_windows": true,
+      "decoded_sample_indices": [
+        0,
+        378,
+        755
+      ],
+      "maximum_latest_image_age_ms": 20.3938,
+      "labelled_action_events": 1376,
+      "source_action_events": 1376,
+      "decoded_image_size_px": [
+        640,
+        480
+      ],
+      "decoded_images": 12
+    },
+    {
+      "samples": 756,
+      "split": "diagnostic",
+      "training_ready": false,
+      "source_hashes_match": true,
+      "all_histories_causal": true,
+      "all_event_offsets_valid": true,
+      "contiguous_future_windows": true,
+      "decoded_sample_indices": [
+        0,
+        378,
+        755
+      ],
+      "maximum_latest_image_age_ms": 26.0877,
+      "labelled_action_events": 698,
+      "source_action_events": 698,
+      "decoded_image_size_px": [
+        640,
+        480
+      ],
+      "decoded_images": 12
+    }
+  ],
+  "cross_platform": {
+    "linux_build_windows_read": "pass",
+    "windows_build_linux_read": "pass"
+  },
+  "automated_tests": {
+    "linux": {
+      "tests": 92,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 92,
+      "result": "pass"
+    }
+  },
+  "covered_cases": [
+    "Short tap within one window",
+    "Event exactly at an interval boundary",
+    "Held input across successive windows",
+    "Two physical modifiers with one virtual key",
+    "Capture jitter on a contiguous decision grid",
+    "Future-image rejection",
+    "Pause and character-change marker boundaries",
+    "Incomplete future capture and large gaps",
+    "Calibration data cannot become a training split",
+    "Source mutation",
+    "Shared source session or image archive across evaluation splits"
+  ],
+  "limits": [
+    "The real builds use mouse calibration recordings and remain diagnostic.",
+    "The current builder never sets training_ready to true.",
+    "Image-based detection of unmarked death, chat, menu, and character changes is not implemented.",
+    "Raw mouse labels require a separate physical-to-actuator conversion."
+  ]
+}

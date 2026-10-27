@@ -115,3 +115,7 @@ Do not let idle frames dominate the model without a task-based check.
 Evaluate closed-loop behavior after offline action prediction.
 A low prediction error does not prove stable gameplay.
 Use RL only after the policy and action timing work in the actual client.
+
+The [causal sample builder](causal-dataset.md) now retains four past images and future 50-millisecond action intervals.
+It preserves short transitions and raw mouse units.
+Diagnostic recordings remain outside the training split.

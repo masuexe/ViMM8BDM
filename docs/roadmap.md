@@ -165,6 +165,9 @@ Preserve character, skill bindings, and asset digests.
 Test one supplied demo against its exact engine and MOD versions.
 Implement a demo parser only if that test demonstrates useful recoverable labels.
 
+The [causal sample builder](causal-dataset.md) passed diagnostic archive and cross-platform loading checks.
+Human review and physical-to-actuator conversion remain necessary before training.
+
 Acceptance: replay a short recording with aligned images and actions.
 Create separate training and evaluation sessions.
 

@@ -296,7 +296,7 @@ def run(args):
                 'character': args.character, 'character_source': 'operator_report_at_start',
                 'class_selection': args.class_selection,
                 'character_stable': args.class_selection == 'fixed', 'map': args.map,
-                'purpose': 'interface_check', 'training_ready': False, 'protocol': args.protocol,
+                'purpose': args.purpose, 'task': args.task, 'training_ready': False, 'protocol': args.protocol,
                 'mouse_units': 'Windows Raw Input relative counts; actuator equivalence unverified',
                 'keyboard_identity': ['vk', 'scan', 'extended'],
                 'initial_snapshot_has_scan_codes': False,
@@ -416,6 +416,8 @@ def main():
     parser.add_argument('--run-dir', type=Path, required=True)
     parser.add_argument('--seconds', type=float, default=30)
     parser.add_argument('--hz', type=float, default=20)
+    parser.add_argument('--purpose', choices=('interface_check', 'demonstration'), default='interface_check')
+    parser.add_argument('--task', choices=('navigation', 'aim', 'combat', 'class_skill'))
     parser.add_argument('--protocol', choices=('free', 'mouse_alignment'), default='free')
     parser.add_argument('--character', default='unknown')
     parser.add_argument('--class-selection', choices=('random', 'fixed', 'unknown'), default='unknown')
@@ -432,6 +434,9 @@ def main():
         parser.error('The capture frequency must be between 1 and 60 Hz')
     if args.protocol == 'mouse_alignment' and args.seconds < 38:
         parser.error('The mouse alignment protocol requires a duration limit of at least 38 seconds')
+    if args.purpose == 'demonstration' and (args.protocol != 'free' or args.class_selection != 'fixed'
+            or args.character.strip().lower() in ('', 'unknown') or args.map.strip().lower() in ('', 'unknown') or args.task is None):
+        parser.error('A demonstration requires a free protocol, fixed character, known map, and task')
     run(args)
 
 

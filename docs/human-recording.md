@@ -197,3 +197,12 @@ See the [startup correction record](evidence/recorder-startup.json).
 The subsequent live timing run saved 2238 frames with no dropped items or cue errors.
 The operator reported that game audio and the cues were audible.
 The response estimates remain candidates pending repetition.
+
+
+## Task recording metadata
+
+Use `--purpose demonstration` and `--task navigation`, `aim`, `combat`, or `class_skill` for later task recordings.
+Demonstration mode requires a fixed known character, known map, and the free protocol.
+It does not mark the recording as reviewed or training-ready.
+End recording before changing the character or map.
+Use the [causal dataset builder](causal-dataset.md) to construct candidate samples after review.
