@@ -13,13 +13,23 @@
   "archive_integrity": "pass",
   "capture_ms_median": 8.2126,
   "same_segment_gap_ms_max": 52.1409,
-  "image_review": {"sampled_images": 6, "full_review": false},
-  "operator_report": {"jumping_exercised": false, "ladder_navigation_exercised": false},
+  "image_review": {
+    "agent_sampled_images": 10,
+    "agent_full_semantic_review": false,
+    "operator_full_session_report": "Normal navigation. No death, chat, menu, character change, or long wall obstruction was reported."
+  },
+  "operator_report": {
+    "jumping_exercised": false,
+    "ladder_navigation_exercised": false
+  },
   "candidate_samples": 2005,
   "source_action_events": 5892,
   "labelled_action_events": 5892,
   "source_hashes_match": true,
-  "candidate_mouse_scales": [1.06, 0.92],
+  "candidate_mouse_scales": [
+    1.06,
+    0.92
+  ],
   "representable_candidates": 1390,
   "blocked_samples": 615,
   "blocking_reason_counts_overlap": true,
@@ -33,5 +43,17 @@
   "mouse_unit_conversion_verified": false,
   "input_sent": false,
   "training_ready": false,
-  "blockers": ["human_review_required", "actuator_conversion_unverified", "timed_execution_required"]
+  "blockers": [
+    "human_review_required",
+    "actuator_conversion_unverified",
+    "timed_execution_required"
+  ],
+  "automatic_image_scan": {
+    "frames_scanned": 1997,
+    "near_black_frames": 0,
+    "low_texture_frames": 0,
+    "identical_successive_sampled_images": 19,
+    "automatic_menu_or_death_detection": false,
+    "semantic_full_review": false
+  }
 }

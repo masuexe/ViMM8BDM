@@ -24,10 +24,17 @@ It contains no attack or jump events.
 The operator reported no jumping or ladder navigation.
 This session does not establish support for those actions.
 
-Six image checks showed gameplay in different parts of the map.
+Ten image checks showed gameplay in different parts of the map.
 These checks did not cover every image.
-The recording contains no automatic annotation of deaths, menus, or other interruptions.
-The private preview supports further human review.
+The operator reported normal navigation throughout the session.
+The report excludes death, chat, menus, character changes, and long wall obstructions.
+This statement comes from the operator, not an automatic image classifier.
+
+A basic image scan covered all 1997 frames.
+It found no nearly black frames or frames with very low texture.
+Nineteen successive pairs had identical pixels on the sampled image grid.
+The scan did not remove these pairs or classify them as recording failures.
+These measurements do not detect every interruption or certify input alignment.
 
 ## Candidate samples
 
@@ -38,7 +45,9 @@ One final window lacked complete future coverage and produced no sample.
 The dataset has a provisional `train` split designation.
 No separate navigation validation or test session exists yet.
 The dataset retains `training_ready: false`.
-Human review and mouse-unit checks remain incomplete.
+The operator completed the session review.
+The separate review record does not change the original dataset or its default review blocker.
+Mouse-unit checks and independent validation data remain incomplete.
 
 ## Executor limits
 
@@ -71,7 +80,8 @@ Extend action execution before training on this session:
 Queued packets must not renew the lease after the parent stops sending valid actions.
 The [timed execution path](timed-actions.md) now passes offline checks for this session.
 The attended game check also completed with no problem reported by the operator.
-Human review of the full demonstration and mouse-unit checks remain incomplete.
+The operator reported normal navigation throughout the demonstration.
+Mouse-unit checks and independent validation data remain incomplete.
 Keep the original recording and labels for later checks.
 Do not clip fast turns or remove short taps to fit the current executor.
 

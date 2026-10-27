@@ -49,6 +49,7 @@ Read these documents:
 - [Causal behavior-cloning samples](docs/causal-dataset.md)
 - [Dataset-to-action audit](docs/action-mapping.md)
 - [First navigation demonstration](docs/navigation-demo.md)
+- [Navigation validation collection](docs/navigation-validation.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
