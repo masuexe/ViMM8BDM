@@ -69,7 +69,8 @@ Extend action execution before training on this session:
 5. Test timing and cancellation before an attended game check.
 
 Queued packets must not renew the lease after the parent stops sending valid actions.
-The current code does not implement this timed execution path.
+The [timed execution path](timed-actions.md) now passes offline checks for this session.
+The attended game check remains pending.
 Keep the original recording and labels for later checks.
 Do not clip fast turns or remove short taps to fit the current executor.
 

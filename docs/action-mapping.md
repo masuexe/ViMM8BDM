@@ -3,6 +3,8 @@
 The audit compares recorded labels with the current bounded `Action` interface.
 It does not replay samples or send game input.
 The existing live mouse test remains a separate attended experiment.
+The [timed execution path](timed-actions.md) provides a separate interface for transitions and larger mouse totals.
+This audit still checks the original single-action interface.
 
 ## Supported scope
 

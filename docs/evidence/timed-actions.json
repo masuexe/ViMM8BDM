@@ -1,0 +1,18 @@
+{
+  "offline_navigation_audit": {
+    "samples": 2005,
+    "packets": 10229,
+    "max_packets_per_window": 24,
+    "candidate_mouse_scales": [1.06, 0.92],
+    "source_hashes_match": true,
+    "all_samples_compiled": true,
+    "scaled_motion_totals_preserved": true,
+    "cumulative_integer_error_counts_approx": [0.22, 0.0],
+    "input_sent": false
+  },
+  "automated_tests": {"Linux": {"passed": 113}, "Windows": {"passed": 113}},
+  "live_game_check": "pending",
+  "visible_response_latency_measured": false,
+  "mouse_unit_conversion_verified": false,
+  "training_ready": false
+}

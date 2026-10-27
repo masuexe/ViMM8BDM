@@ -9,6 +9,7 @@ import threading
 import time
 
 from .control import ControlKeys, InputLease
+from .timed_actions import MouseRemainder
 
 
 class WorkerTrace:
@@ -50,16 +51,22 @@ class WorkerTrace:
 class InputOwner:
     """Serialize user commands and actions against a local input lease."""
 
-    def __init__(self, sink, focused, trace=None):
+    def __init__(self, sink, focused, trace=None, clock=time.perf_counter_ns):
         self.sink = sink
         self.focused = focused
         self.last_focus_true_started_ns = None
-        self.lease = InputLease(sink, self.check_focus)
+        self.lease = InputLease(sink, self.check_focus, clock=clock)
         self.stop = threading.Event()
         self.keys = ControlKeys(self.lease, self.stop)
         self.generation = 0
         self.trace = trace
         self.last_action = None
+        self.pending = None
+        self.mouse_remainder = MouseRemainder()
+
+    def cancel_pending(self):
+        self.pending = None
+        self.mouse_remainder = MouseRemainder()
 
     def check_focus(self):
         started = time.perf_counter_ns()
@@ -82,7 +89,8 @@ class InputOwner:
         with self.lease.lock:
             owned = self.sink.owned_state() if hasattr(self.sink, "owned_state") else {}
             return {"armed": self.lease.armed, "reason": self.lease.reason,
-                    "generation": self.generation, "stopped": self.stop.is_set(), **owned}
+                    "generation": self.generation, "stopped": self.stop.is_set(),
+                    "timed_pending": self.pending is not None, **owned}
 
     def press(self, name):
         with self.lease.lock:
@@ -90,6 +98,7 @@ class InputOwner:
             before = self.lease.armed
             reason = self.keys.press(name)
             if reason is not None:
+                self.cancel_pending()
                 self.generation += 1
                 self.note("released" if before and not self.lease.armed else "control", deadline)
             return reason
@@ -104,6 +113,7 @@ class InputOwner:
                 deadline = self.lease.deadline
                 before = self.lease.armed
                 self.lease.pause(reason)
+                self.cancel_pending()
                 self.generation += 1
                 self.note("released" if before else "control", deadline)
 
@@ -113,13 +123,65 @@ class InputOwner:
             deadline = self.lease.deadline
             self.lease.poll()
             if before and not self.lease.armed:
+                self.cancel_pending()
                 self.generation += 1
                 self.note("released", deadline)
+            if self.pending is not None and self.lease.armed:
+                window, started, index = self.pending
+                while index < len(window.packets):
+                    packet = window.packets[index]
+                    now = self.lease.clock()
+                    due = started + packet.offset_ns
+                    if now < due:
+                        break
+                    # Do not send a burst of old actions after a stalled worker.
+                    if now - due > 20_000_000:
+                        self.pause("timing_overrun")
+                        return
+                    self.lease.poll()
+                    if not self.lease.armed:
+                        self.cancel_pending()
+                        self.generation += 1
+                        self.note("released", deadline)
+                        return
+                    try:
+                        action = self.mouse_remainder.convert(packet.action)
+                        self.sink.apply(action)
+                    except BaseException:
+                        self.pause("input_error")
+                        raise
+                    self.note("timed_packet", self.lease.deadline,
+                              offset_ns=packet.offset_ns, lateness_ns=now - due,
+                              mouse_dx=action.mouse_dx, mouse_dy=action.mouse_dy)
+                    index += 1
+                self.pending = (window, started, index) if index < len(window.packets) else None
+
+    def submit_timed(self, window, captured_ns, generation):
+        window.validate()
+        with self.lease.lock:
+            if self.stop.is_set() or generation != self.generation or self.pending is not None:
+                return False
+            before = self.lease.armed
+            deadline = self.lease.deadline
+            first = window.packets[0]
+            # The start packet establishes held state. Motion starts in later packets.
+            if first.action.mouse_dx or first.action.mouse_dy:
+                raise ValueError("The start packet must contain no mouse motion")
+            accepted = self.lease.submit(first.action, captured_ns)
+            if before and not self.lease.armed:
+                self.cancel_pending()
+                self.generation += 1
+                self.note("released", deadline)
+            if accepted:
+                self.pending = (window, self.lease.clock(), 1)
+                self.note("timed_window", self.lease.deadline, packets=len(window.packets))
+            return accepted
 
     def submit(self, action, captured_ns, generation):
         with self.lease.lock:
             if self.stop.is_set() or generation != self.generation:
                 return False
+            self.cancel_pending()
             before = self.lease.armed
             deadline = self.lease.deadline
             accepted = self.lease.submit(action, captured_ns)
@@ -167,7 +229,7 @@ def _worker_main(connection, window_id, backend_factory, trace_path):
             if parent is not None and not parent.is_alive():
                 owner.pause("parent_lost")
                 break
-            if not connection.poll(.01):
+            if not connection.poll(.001 if owner.pending is not None else .01):
                 continue
             try:
                 request = connection.recv()
@@ -180,6 +242,8 @@ def _worker_main(connection, window_id, backend_factory, trace_path):
                 pass
             elif operation == "action":
                 accepted = owner.submit(request["action"], request["captured_ns"], request["generation"])
+            elif operation == "timed_action":
+                accepted = owner.submit_timed(request["window"], request["captured_ns"], request["generation"])
             elif operation == "pause":
                 owner.pause(request["reason"])
             elif operation == "shutdown":
@@ -321,6 +385,10 @@ class InputWorker:
 
     def submit(self, action, captured_ns, generation):
         return self._request("action", action=action.bounded(), captured_ns=captured_ns, generation=generation)
+
+    def submit_timed(self, window, captured_ns, generation):
+        window.validate()
+        return self._request("timed_action", window=window, captured_ns=captured_ns, generation=generation)
 
     def pause(self, reason="manual"):
         self._request("pause", reason=reason)
