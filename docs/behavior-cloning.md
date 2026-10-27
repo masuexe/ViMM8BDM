@@ -140,6 +140,10 @@ The [evidence file](evidence/behavior-cloning.json) contains the metrics and epo
 
 ## Next experiment
 
+The [directed follow-up experiment](corner-behavior-cloning.md) completed the collection protocol below.
+It also failed to beat the median-mouse constant baseline.
+Inspect temporal features and prediction targets with the existing recordings before requesting more data.
+
 Keep both current recordings and the first result as a reference.
 Do not add epochs until the model beats appropriate constant baselines.
 Collect short, task-specific navigation sessions before another model comparison.

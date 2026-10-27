@@ -29,9 +29,9 @@ The operator observed horizontal turning and primary attack.
 The model selected attack throughout that run.
 Target-game combat ability remains unverified.
 
-The first offline navigation experiment used separate training and validation recordings.
-It did not beat a constant baseline on the combined validation score.
-The checkpoint remains local and has no live control adapter.
+Two offline navigation experiments used separate training and validation recordings.
+Neither model beat its median-mouse constant baseline on the combined validation score.
+The checkpoints remain local and have no live control adapter.
 
 Read these documents:
 
@@ -56,6 +56,7 @@ Read these documents:
 - [Navigation validation collection](docs/navigation-validation.md)
 - [Offline navigation behavior cloning](docs/behavior-cloning.md)
 - [Navigation demonstrations near corners](docs/navigation-corners.md)
+- [Second offline navigation experiment](docs/corner-behavior-cloning.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.

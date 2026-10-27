@@ -186,7 +186,10 @@ Create separate training and evaluation sessions.
 The [first offline experiment](behavior-cloning.md) completed 12 epochs and checkpoint loading checks.
 Its visual model did not beat the constant median-mouse baseline on the selection score.
 The checkpoint remains offline.
-Improve task coverage and compare independent sessions before another model acceptance decision.
+The [directed follow-up](corner-behavior-cloning.md) also failed to beat the median-mouse constant baseline.
+A small-subset check established partial memorization.
+It did not establish independent navigation ability.
+Inspect temporal features and action targets with the current data before another collection request.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.
@@ -224,4 +227,4 @@ The target game assets are already available locally.
 A compatible user demo remains necessary for the demo feasibility test.
 ContinuousDoom reuse terms remain unresolved.
 The native Windows client passed attended input and timed-action checks.
-More task-specific navigation data remains necessary for the next offline comparison.
+The current recordings support the next offline model diagnosis.

@@ -1,0 +1,65 @@
+{
+  "frames": 1789,
+  "events": 2249,
+  "candidate_samples": 1796,
+  "image_span_seconds": 89.9680217,
+  "active_segment_seconds": 90.0392418,
+  "key_transition_counts": {
+    "87_down": 25,
+    "87_up": 25,
+    "83_down": 4,
+    "83_up": 4,
+    "65_down": 9,
+    "65_up": 9,
+    "68_down": 11,
+    "68_up": 11
+  },
+  "source_key_held_fraction": {
+    "w": 0.3675647144332128,
+    "a": 0.06596510789365621,
+    "s": 0.03189396359399375,
+    "d": 0.043925289917312475
+  },
+  "candidate_key_held_fraction": [
+    0.3685440123081207,
+    0.06614084541797638,
+    0.03197893500328064,
+    0.04404231533408165
+  ],
+  "keys": [
+    "w",
+    "a",
+    "s",
+    "d"
+  ],
+  "initial_held_keys": [],
+  "final_held_keys": [],
+  "source_action_events": 2246,
+  "labelled_action_events": 2246,
+  "unlabelled_event_types": {},
+  "timed_packets": 5928,
+  "image_scan": {
+    "frames_scanned": 1789,
+    "near_black_frames": 0,
+    "low_texture_frames": 0,
+    "identical_successive_sampled_images": 71,
+    "previous_notification_color_candidates": 0,
+    "automatic_notification_detection": false
+  },
+  "source_hashes_match": true,
+  "source_assets_match_corner_training": true,
+  "pointer_snapshot_matches_corner_training": true,
+  "input_sent": false,
+  "training_ready": false,
+  "archive_integrity": "pass",
+  "capture_ms_median": 7.3475,
+  "same_segment_gap_ms_max": 51.1673,
+  "agent_sampled_images": 5,
+  "operator_report": "The operator reported completion of the requested recording.",
+  "operator_full_session_confirmation": false,
+  "automatic_notification_detection": false,
+  "split_check": {
+    "source_sessions": 4,
+    "session_split_overlap": false
+  }
+}

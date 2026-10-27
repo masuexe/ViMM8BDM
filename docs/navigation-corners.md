@@ -110,6 +110,6 @@ The filtered copy remains in the training split and retains the same source iden
 The original validation data remains outside training.
 
 The new data changes action coverage, but it does not establish model improvement.
-Collect a separate validation session for this task before the next training run.
+A [separate validation session and second experiment](corner-behavior-cloning.md) now provide the follow-up comparison.
 Both original and derived manifests retain `training_ready: false`.
 The [evidence file](evidence/navigation-corners.json) contains public aggregate results.

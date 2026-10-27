@@ -83,7 +83,7 @@
     1.06,
     0.92
   ],
-  "independent_corner_validation_collected": false,
+  "independent_corner_validation_collected": true,
   "input_sent": false,
   "training_ready": false,
   "model_improvement_established": false,
@@ -94,5 +94,6 @@
     "Windows": {
       "passed": 121
     }
-  }
+  },
+  "validation_evidence": "navigation-corners-validation.json"
 }
