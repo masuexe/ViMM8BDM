@@ -55,6 +55,7 @@ Read these documents:
 - [First navigation demonstration](docs/navigation-demo.md)
 - [Navigation validation collection](docs/navigation-validation.md)
 - [Offline navigation behavior cloning](docs/behavior-cloning.md)
+- [Navigation demonstrations near corners](docs/navigation-corners.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.

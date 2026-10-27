@@ -142,7 +142,8 @@ The [evidence file](evidence/behavior-cloning.json) contains the metrics and epo
 
 Keep both current recordings and the first result as a reference.
 Do not add epochs until the model beats appropriate constant baselines.
-Collect short, task-specific navigation sessions before another model comparison:
+Collect short, task-specific navigation sessions before another model comparison.
+Use the [corner collection plan](navigation-corners.md) for the next training recording.
 
 1. Start at varied positions and headings near clear corridors and corners.
 2. Demonstrate forward movement, deliberate stops, and left and right turns.
