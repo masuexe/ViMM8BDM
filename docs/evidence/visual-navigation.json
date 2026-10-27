@@ -3,23 +3,23 @@
   "kind": "image_change_rule",
   "profile": "grenademan",
   "map": "MM1CUT",
-  "probe_seconds": 0.6,
+  "probe_seconds": 0.2,
   "settle_seconds": 0.3,
   "maximum_turn_counts_per_action": 8,
   "image_change_threshold": 2,
   "image_sample_points": 512,
   "automated_tests": {
     "Linux": {
-      "passed": 155
+      "passed": 157
     },
     "Windows": {
-      "passed": 155
+      "passed": 157
     }
   },
   "synthetic_cli_frames": 12,
   "synthetic_cli_mode": "synthetic_dry_run",
   "synthetic_cli_input_sent": false,
-  "live_game_check": "first_revision_failed_wall_escape; larger_turn_revision_pending",
+  "live_game_check": "larger_turn_revision_improved_by_operator_report; shorter_probe_revision_pending",
   "neural_checkpoint_used": false,
   "engine_state_read": false,
   "navigation_success_established": false,
@@ -27,7 +27,7 @@
   "repeat_turn_increment_counts": 256,
   "maximum_turn_counts": 1024,
   "nominal_turn_counts_per_second": 160,
-  "changed_probes_to_clear_escape_history": 3,
+  "changed_probes_to_clear_escape_history": 9,
   "first_live_check": {
     "revision_turn_counts": 64,
     "accepted_actions": 593,
@@ -38,5 +38,30 @@
     "exit_reason": "duration_limit",
     "operator_report": "Movement worked. A left turn followed wall contact. Forward movement then caused repeated wall contact.",
     "navigation_success": false
+  },
+  "second_live_check": {
+    "probe_seconds": 0.6,
+    "accepted_actions": 592,
+    "static_view_probes": 4,
+    "changed_view_probes": 26,
+    "capture_ms_p50": 7.24705,
+    "loop_ms_p50": 8.0964,
+    "loop_ms_p95": 11.039,
+    "decision_to_first_turn_packet_ms": [
+      50.4003,
+      50.4418,
+      50.7972,
+      50.7214
+    ],
+    "exit_reason": "duration_limit",
+    "operator_report": "Movement improved substantially. Turns still started after a delay at walls.",
+    "physical_collision_time_measured": false,
+    "navigation_success_established": false
+  },
+  "synthetic_stop_response": {
+    "sample_hz": 20,
+    "stop_phase_cases": 4,
+    "maximum_allowed_first_turn_delay_seconds": 0.45,
+    "scope": "Artificial images change during movement and stay constant after movement stops. This is not a game latency measurement."
   }
 }

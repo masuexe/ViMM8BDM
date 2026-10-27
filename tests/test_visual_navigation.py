@@ -30,9 +30,9 @@ class VisualNavigationTests(unittest.TestCase):
     def test_static_view_releases_forward_and_turns_by_exactly_256_counts(self):
         self.assertEqual(self.policy.predict(frame(0)), Action())
         self.assertEqual(self.advance(.3).keys, frozenset({'w'}))
-        self.assertEqual(self.advance(.9), Action())
+        self.assertEqual(self.advance(.5), Action())
         total = 0
-        for tick in range(19, 60):
+        for tick in range(11, 60):
             action = self.policy.predict(frame(tick / 20))
             total += action.mouse_dx
             self.assertFalse(action.keys)
@@ -61,27 +61,51 @@ class VisualNavigationTests(unittest.TestCase):
 
     def test_one_changed_probe_does_not_clear_escape_history(self):
         self.policy.predict(frame(0))
-        self.advance(2.85)
+        self.advance(2.45)
         self.assertEqual(self.policy.phase, 'forward')
-        self.advance(3.45, shade=100)
+        self.advance(2.65, shade=100)
         self.assertEqual(self.policy.changed_streak, 1)
         self.assertEqual(self.policy.escape_attempts, 1)
-        self.advance(4.1, shade=100)
+        self.advance(2.85, shade=100)
         self.assertEqual(self.policy.turn_budget, 512)
 
-    def test_three_changed_probes_clear_escape_history(self):
+    def test_sustained_changed_probes_clear_escape_history(self):
         self.policy.predict(frame(0))
-        self.advance(2.85)
-        self.advance(3.5, shade=100)
-        self.advance(4.15, shade=150)
-        self.advance(4.8, shade=200)
-        self.assertEqual(self.policy.changed_streak, 3)
+        self.advance(2.45)
+        for probe in range(9):
+            self.advance(2.65 + .2 * probe, shade=100 if probe % 2 == 0 else 200)
+        self.assertEqual(self.policy.changed_streak, 9)
         self.assertEqual(self.policy.escape_attempts, 0)
+
+    def test_forward_probe_waits_200_ms_before_deciding(self):
+        self.policy.predict(frame(0))
+        self.advance(.3)
+        self.assertEqual(self.advance(.45).keys, frozenset({'w'}))
+        self.assertEqual(self.policy.blocked_probes, 0)
+        self.assertEqual(self.advance(.5), Action())
+        self.assertEqual(self.policy.phase, 'turn')
+        self.assertGreater(self.advance(.55).mouse_dx, 0)
+
+    def test_static_view_after_movement_starts_turn_within_450_ms(self):
+        for stopped_at in [1.0, 1.05, 1.1, 1.15]:
+            policy = VisualNavigationPolicy()
+            turn_at = None
+            for tick in range(40):
+                now = tick / 20
+                # Each moving frame changes, then the displayed scene stays static.
+                shade = 20 + round(min(now, stopped_at) * 100)
+                action = policy.predict(frame(now, shade=shade))
+                if action.mouse_dx:
+                    turn_at = now
+                    break
+            self.assertIsNotNone(turn_at)
+            self.assertGreaterEqual(turn_at, stopped_at)
+            self.assertLessEqual(turn_at - stopped_at, .450001)
 
     def test_changed_view_keeps_forward_without_turning(self):
         self.policy.predict(frame(0))
         self.advance(.3)
-        action = self.advance(.9, shade=100)
+        action = self.advance(.5, shade=100)
         self.assertEqual(action.keys, frozenset({'w'}))
         self.assertEqual(action.mouse_dx, 0)
         self.assertEqual(self.policy.successful_probes, 1)
@@ -89,7 +113,7 @@ class VisualNavigationTests(unittest.TestCase):
     def test_hud_and_weapon_changes_do_not_count_as_world_movement(self):
         self.policy.predict(frame(0))
         self.advance(.3)
-        self.advance(.9, hud=True)
+        self.advance(.5, hud=True)
         self.assertEqual(self.policy.motion_score, 0)
         self.assertEqual(self.policy.phase, 'turn')
 
@@ -103,7 +127,7 @@ class VisualNavigationTests(unittest.TestCase):
 
     def test_manual_reenable_reset_discards_old_motion_reference(self):
         self.policy.predict(frame(0))
-        self.advance(.9)
+        self.advance(.5)
         self.policy.reset()
         self.assertEqual(self.policy.predict(frame(10)), Action())
         self.assertEqual(self.policy.phase, 'settle')

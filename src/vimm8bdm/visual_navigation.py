@@ -66,7 +66,7 @@ class VisualNavigationPolicy:
                 action = Action(frozenset({'w'}))
         elif self.phase == 'forward':
             action = Action(frozenset({'w'}))
-            if elapsed >= .6:
+            if now - self.since_ns >= 200_000_000:
                 self.motion_score = image_change(self.reference, view)
                 self.since_ns, self.reference = now, view
                 if self.motion_score < 2:
@@ -79,7 +79,7 @@ class VisualNavigationPolicy:
                 else:
                     self.successful_probes += 1
                     self.changed_streak += 1
-                    if self.changed_streak >= 3:
+                    if self.changed_streak >= 9:
                         self.escape_attempts = 0
         elif self.phase == 'turn':
             desired = min(self.turn_budget, int(elapsed * 160))
