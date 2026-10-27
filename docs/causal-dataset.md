@@ -152,3 +152,6 @@ Actual timestamps remain available for later model preprocessing.
 Linux and Windows each passed 92 automated tests.
 See the [sanitized dataset record](evidence/causal-dataset.json).
 These results establish slice construction and image loading, rather than learned gameplay.
+
+Use the [action audit](action-mapping.md) to identify labels that the current executor cannot represent.
+An offline candidate does not certify game bindings or mouse-unit equivalence.

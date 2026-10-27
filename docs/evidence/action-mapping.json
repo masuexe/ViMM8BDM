@@ -1,0 +1,137 @@
+{
+  "recorded_at_utc": "2026-10-27T08:46:16.557897+00:00",
+  "engine": "stock 3.3-alpha-r260925-2352",
+  "capture_size_px": [
+    640,
+    480
+  ],
+  "pointer_settings_snapshot": {
+    "threshold_1": 6,
+    "threshold_2": 10,
+    "acceleration": 1,
+    "pointer_speed": 5,
+    "settings_changed": false
+  },
+  "injected_test": {
+    "exit_reason": "complete",
+    "requested_trials": 24,
+    "completed_trials": 24,
+    "frames": 529,
+    "accepted_actions": 529,
+    "maximum_capture_gap_ms": 59.39360000002125,
+    "elapsed_after_first_enable_s": 26.633654399999614,
+    "units": "image pixels per injected mouse count",
+    "engine_angles_read": false,
+    "visible_game_response_latency_measured": false,
+    "axes": {
+      "x": {
+        "valid_trials": 12,
+        "median_image_pixels_per_count": -1.0
+      },
+      "y": {
+        "valid_trials": 12,
+        "median_image_pixels_per_count": -0.6875
+      }
+    }
+  },
+  "operator_report": "Both aim axes moved normally and the sequence stopped on its own.",
+  "worker_audit": {
+    "last_event": "trace_end",
+    "dropped_events": 0,
+    "held_keys_at_stop": [],
+    "attack_held_at_stop": false
+  },
+  "image_response_comparison": {
+    "injected_least_squares_px_per_count": {
+      "x": -1.0,
+      "y": -0.65
+    },
+    "earlier_physical_px_per_count": {
+      "x": [
+        -1.013607331296862,
+        -1.1007518796992481
+      ],
+      "y": [
+        -0.6083733974358975,
+        -0.587083236185591
+      ]
+    },
+    "candidate_scales": {
+      "x": 1.06,
+      "y": 0.92
+    },
+    "recipe": "Mean physical-input image slope divided by the injected-input image slope, rounded for an experimental starting profile.",
+    "mouse_unit_conversion_verified": false,
+    "older_physical_recordings_have_pointer_snapshot": false
+  },
+  "dataset_audits": [
+    {
+      "samples": 756,
+      "candidate_actions": 511,
+      "blocking_reason_counts": {
+        "mouse_scale_not_supplied": 245
+      },
+      "unsupported_virtual_keys": {},
+      "unsupported_mouse_buttons": {},
+      "source_hashes_match": true,
+      "candidate_mouse_scales": [
+        null,
+        null
+      ],
+      "mouse_unit_conversion_verified": false,
+      "game_binding_review_required": true,
+      "input_sent": false,
+      "training_ready": false
+    },
+    {
+      "samples": 756,
+      "candidate_actions": 756,
+      "blocking_reason_counts": {},
+      "unsupported_virtual_keys": {},
+      "unsupported_mouse_buttons": {},
+      "source_hashes_match": true,
+      "candidate_mouse_scales": [
+        1.0,
+        1.0
+      ],
+      "mouse_unit_conversion_verified": false,
+      "game_binding_review_required": true,
+      "input_sent": false,
+      "training_ready": false
+    },
+    {
+      "samples": 756,
+      "candidate_actions": 756,
+      "blocking_reason_counts": {},
+      "unsupported_virtual_keys": {},
+      "unsupported_mouse_buttons": {},
+      "source_hashes_match": true,
+      "candidate_mouse_scales": [
+        1.06,
+        0.92
+      ],
+      "mouse_unit_conversion_verified": false,
+      "game_binding_review_required": true,
+      "motion_rounded_to_zero_samples": 0,
+      "input_sent": false,
+      "training_ready": false
+    }
+  ],
+  "automated_tests": {
+    "linux": {
+      "tests": 100,
+      "result": "pass"
+    },
+    "windows": {
+      "tests": 100,
+      "result": "pass"
+    }
+  },
+  "limits": [
+    "The compared scenes and input patterns differ.",
+    "The image translation model and integer matching limit scale precision.",
+    "The supplied scales affect only the offline audit; no runtime profile was installed.",
+    "The current action interface lacks secondary mouse buttons, wheel output, and within-step timing.",
+    "The audit datasets contain calibration motion and idle periods rather than complete navigation actions."
+  ]
+}

@@ -2,7 +2,7 @@
 import ctypes
 import unittest
 
-from vimm8bdm.winmouse import InputEvent, WindowsRelativeMouse
+from vimm8bdm.winmouse import InputEvent, WindowsRelativeMouse, query_mouse_settings
 
 
 class WindowsMouseTests(unittest.TestCase):
@@ -23,6 +23,24 @@ class WindowsMouseTests(unittest.TestCase):
         def unexpected(*args):
             self.fail("Zero movement must not send an OS event")
         WindowsRelativeMouse(unexpected).move(0, 0)
+
+    def test_pointer_query_uses_only_get_operations(self):
+        calls = []
+        def query(action, parameter, pointer, flags):
+            calls.append((action, parameter, flags))
+            if action == 3:
+                pointer._obj[:] = (6, 10, 1)
+            else:
+                pointer._obj.value = 5
+            return 1
+        result = query_mouse_settings(query)
+        self.assertEqual(calls, [(3, 0, 0), (0x70, 0, 0)])
+        self.assertEqual(result['pointer_speed'], 5)
+        self.assertFalse(result['settings_changed'])
+
+    def test_pointer_query_failure_is_reported(self):
+        with self.assertRaises(OSError):
+            query_mouse_settings(lambda *args: 0)
 
     def test_rejected_event_is_reported(self):
         with self.assertRaises(OSError):

@@ -167,6 +167,7 @@ Implement a demo parser only if that test demonstrates useful recoverable labels
 
 The [causal sample builder](causal-dataset.md) passed diagnostic archive and cross-platform loading checks.
 Human review and physical-to-actuator conversion remain necessary before training.
+The [action audit](action-mapping.md) records unsupported labels and candidate mouse scales.
 
 Acceptance: replay a short recording with aligned images and actions.
 Create separate training and evaluation sessions.

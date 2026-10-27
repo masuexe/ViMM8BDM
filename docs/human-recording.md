@@ -206,3 +206,6 @@ Demonstration mode requires a fixed known character, known map, and the free pro
 It does not mark the recording as reviewed or training-ready.
 End recording before changing the character or map.
 Use the [causal dataset builder](causal-dataset.md) to construct candidate samples after review.
+
+New sessions also save a read-only Windows pointer-settings snapshot when available.
+This metadata does not change the system settings or prove raw-to-injected unit equivalence.

@@ -33,3 +33,21 @@ class WindowsRelativeMouse:
         if self.sender(1, ctypes.byref(event), ctypes.sizeof(event)) != 1:
             error = ctypes.get_last_error() if hasattr(ctypes, "get_last_error") else 0
             raise OSError(error, "Windows rejected the relative mouse event")
+
+
+def query_mouse_settings(query=None):
+    """Read pointer settings. Do not change the user's global input settings."""
+    if query is None:
+        library = ctypes.WinDLL('user32', use_last_error=True)
+        query = library.SystemParametersInfoW
+        query.argtypes = [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_uint32]
+        query.restype = ctypes.c_int
+    thresholds = (ctypes.c_int32 * 3)()
+    speed = ctypes.c_int32()
+    if not query(0x0003, 0, ctypes.byref(thresholds), 0):
+        raise OSError('Cannot read Windows mouse thresholds')
+    if not query(0x0070, 0, ctypes.byref(speed), 0):
+        raise OSError('Cannot read Windows pointer speed')
+    return {'threshold_1': thresholds[0], 'threshold_2': thresholds[1],
+            'acceleration': thresholds[2], 'pointer_speed': speed.value,
+            'settings_changed': False}

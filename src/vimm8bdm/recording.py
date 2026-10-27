@@ -302,6 +302,11 @@ def run(args):
                 'initial_snapshot_has_scan_codes': False,
                 'input_sent': False, 'menu_detection': 'Esc pauses; other menus require manual pause',
                 'assets': [], 'settings_verified': False}
+    from .winmouse import query_mouse_settings
+    try:
+        manifest['windows_pointer_settings'] = query_mouse_settings()
+    except OSError as exc:
+        manifest['windows_pointer_settings_error'] = str(exc)
     if args.launch_record:
         record = json.loads(args.launch_record.read_text())
         command = record['arguments']
