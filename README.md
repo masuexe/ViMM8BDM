@@ -282,3 +282,4 @@ A live game test must check image scaling, mouse sensitivity, timing, and policy
 
 See the [action-window comparison](docs/action-horizons.md) for the latest offline model results.
 See the [wall recovery follow-up](docs/wall-recovery.md) for the new human recording and combined-source results.
+See the [direction-classification audit](docs/steering-direction.md) for the current steering failure analysis.
