@@ -119,6 +119,7 @@ New tests cover short taps, state-history differences, gaps, segments, and motio
 
 Keep the original recordings, fractional targets, and existing checkpoints unchanged.
 Evaluate explicit key changes and their offsets before another live-control adapter.
+The [explicit target encoder](event-targets.md) now preserves keyboard changes and compiles them through the bounded timed path.
 The model may receive its own previous input state during deployment.
 That state must describe commands owned by the agent, not hidden engine state or actual human commands during autonomous evaluation.
 Separate teacher-forced tests from tests that feed earlier predictions into later decisions.

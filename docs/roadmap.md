@@ -195,6 +195,8 @@ Mouse prediction and the combined score still failed to beat the constant baseli
 Check action transitions and the agent's own action history next.
 The [transition audit](action-events.md) found low transition recall and a mismatch between occupancy thresholds and final key states.
 Evaluate explicit state changes and input timing before a live model check.
+The [explicit target representation](event-targets.md) passed keyboard and mouse-total reconstruction checks on 7474 samples.
+Train and evaluate event counts and offsets next.
 
 Train behavior cloning before RL.
 Measure navigation, aim, attack timing, and takeover frequency separately.

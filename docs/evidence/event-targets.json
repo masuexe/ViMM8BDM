@@ -1,0 +1,203 @@
+{
+  "experiment": "Explicit keyboard targets and bounded compilation",
+  "datasets": {
+    "corner-train": {
+      "samples": 1879,
+      "key_count_order": [
+        0,
+        1,
+        2
+      ],
+      "key_count_coverage": {
+        "w": [
+          1825,
+          54,
+          0
+        ],
+        "a": [
+          1842,
+          36,
+          1
+        ],
+        "s": [
+          1869,
+          10,
+          0
+        ],
+        "d": [
+          1867,
+          12,
+          0
+        ]
+      },
+      "key_events_retained": 114,
+      "two_change_key_windows_retained": 1,
+      "timed_packets": 4523,
+      "source_reconstruction": "pass",
+      "keyboard_round_trip": "pass",
+      "mouse_total_round_trip": "pass",
+      "windows_with_mouse_cancellation": 4,
+      "mouse_trajectory_preserved": false,
+      "mouse_placement": "One aggregate event at the window midpoint",
+      "candidate_mouse_scales": [
+        1.06,
+        0.92
+      ],
+      "input_sent": false,
+      "deployment_ready": false
+    },
+    "corner-validation": {
+      "samples": 1796,
+      "key_count_order": [
+        0,
+        1,
+        2
+      ],
+      "key_count_coverage": {
+        "w": [
+          1746,
+          50,
+          0
+        ],
+        "a": [
+          1778,
+          18,
+          0
+        ],
+        "s": [
+          1788,
+          8,
+          0
+        ],
+        "d": [
+          1774,
+          22,
+          0
+        ]
+      },
+      "key_events_retained": 98,
+      "two_change_key_windows_retained": 0,
+      "timed_packets": 4573,
+      "source_reconstruction": "pass",
+      "keyboard_round_trip": "pass",
+      "mouse_total_round_trip": "pass",
+      "windows_with_mouse_cancellation": 7,
+      "mouse_trajectory_preserved": false,
+      "mouse_placement": "One aggregate event at the window midpoint",
+      "candidate_mouse_scales": [
+        1.06,
+        0.92
+      ],
+      "input_sent": false,
+      "deployment_ready": false
+    },
+    "original-train": {
+      "samples": 2005,
+      "key_count_order": [
+        0,
+        1,
+        2
+      ],
+      "key_count_coverage": {
+        "w": [
+          1987,
+          18,
+          0
+        ],
+        "a": [
+          1877,
+          128,
+          0
+        ],
+        "s": [
+          1999,
+          6,
+          0
+        ],
+        "d": [
+          1924,
+          80,
+          1
+        ]
+      },
+      "key_events_retained": 234,
+      "two_change_key_windows_retained": 1,
+      "timed_packets": 6546,
+      "source_reconstruction": "pass",
+      "keyboard_round_trip": "pass",
+      "mouse_total_round_trip": "pass",
+      "windows_with_mouse_cancellation": 19,
+      "mouse_trajectory_preserved": false,
+      "mouse_placement": "One aggregate event at the window midpoint",
+      "candidate_mouse_scales": [
+        1.06,
+        0.92
+      ],
+      "input_sent": false,
+      "deployment_ready": false
+    },
+    "original-validation": {
+      "samples": 1794,
+      "key_count_order": [
+        0,
+        1,
+        2
+      ],
+      "key_count_coverage": {
+        "w": [
+          1773,
+          21,
+          0
+        ],
+        "a": [
+          1656,
+          138,
+          0
+        ],
+        "s": [
+          1794,
+          0,
+          0
+        ],
+        "d": [
+          1610,
+          183,
+          1
+        ]
+      },
+      "key_events_retained": 344,
+      "two_change_key_windows_retained": 1,
+      "timed_packets": 6215,
+      "source_reconstruction": "pass",
+      "keyboard_round_trip": "pass",
+      "mouse_total_round_trip": "pass",
+      "windows_with_mouse_cancellation": 31,
+      "mouse_trajectory_preserved": false,
+      "mouse_placement": "One aggregate event at the window midpoint",
+      "candidate_mouse_scales": [
+        1.06,
+        0.92
+      ],
+      "input_sent": false,
+      "deployment_ready": false
+    }
+  },
+  "total_samples": 7474,
+  "total_key_events_retained": 790,
+  "total_two_change_key_windows_retained": 3,
+  "keyboard_offsets_preserved": true,
+  "mouse_totals_preserved": true,
+  "mouse_trajectory_preserved": false,
+  "source_files_changed": false,
+  "new_model_trained": false,
+  "automated_tests": {
+    "Linux": {
+      "passed": 138
+    },
+    "Windows": {
+      "passed": 138
+    }
+  },
+  "input_sent": false,
+  "deployment_ready": false
+}

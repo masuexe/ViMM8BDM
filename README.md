@@ -60,6 +60,7 @@ Read these documents:
 - [Second offline navigation experiment](docs/corner-behavior-cloning.md)
 - [Temporal image features](docs/temporal-features.md)
 - [Action transition audit](docs/action-events.md)
+- [Explicit navigation targets](docs/event-targets.md)
 - [Timed action execution](docs/timed-actions.md)
 
 The code includes a visual control probe and an experimental ContinuousDoom adapter.
