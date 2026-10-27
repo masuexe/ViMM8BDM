@@ -159,7 +159,9 @@ Keep the reports and per-frame logs.
 The [first Windows recorder](human-recording.md) passed a short image-and-input collection check.
 The session remains interface-check data.
 Check the raw mouse units and label timing before building training samples.
-Start with one character and two maps.
+The [first navigation session](navigation-demo.md) produced 2005 candidate slices.
+It covers one character and one map, with no jumping or ladder navigation.
+Extend collection to a second map after updating action execution support.
 Check press/release timing and relative mouse labels.
 Preserve character, skill bindings, and asset digests.
 Test one supplied demo against its exact engine and MOD versions.

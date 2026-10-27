@@ -155,3 +155,6 @@ These results establish slice construction and image loading, rather than learne
 
 Use the [action audit](action-mapping.md) to identify labels that the current executor cannot represent.
 An offline candidate does not certify game bindings or mouse-unit equivalence.
+
+The [first navigation demonstration](navigation-demo.md) also produced 2005 causal candidate slices.
+Its action audit exposes fast-turn and within-window timing limits in the current executor.
