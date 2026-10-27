@@ -70,7 +70,8 @@ Extend action execution before training on this session:
 
 Queued packets must not renew the lease after the parent stops sending valid actions.
 The [timed execution path](timed-actions.md) now passes offline checks for this session.
-The attended game check remains pending.
+The attended game check also completed with no problem reported by the operator.
+Human review of the full demonstration and mouse-unit checks remain incomplete.
 Keep the original recording and labels for later checks.
 Do not clip fast turns or remove short taps to fit the current executor.
 

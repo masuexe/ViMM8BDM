@@ -65,6 +65,21 @@ They check short taps, fractional remainders, stale images, focus loss, lease ex
 They also check overload rejection and cancellation after a scheduling stall.
 These tests do not establish game movement accuracy or training readiness.
 
+## First game result
+
+The official Windows alpha client completed all 52 requested windows in approximately 3.59 seconds after activation.
+The input worker executed 76 later packets.
+The operator reported no problem with the short strafes, turns, or final stop.
+The worker ended with no held keys, attack button, or pending packets.
+The trace contained zero dropped events.
+
+The median scheduling delay for later packets was 2.97 milliseconds.
+The maximum scheduling delay was 13.40 milliseconds.
+These values compare requested packet times with worker checks before desktop input calls.
+They do not measure visible game response latency.
+This short check does not establish learned navigation accuracy or mouse-unit equivalence.
+The [evidence file](evidence/timed-actions.json) contains the aggregate results.
+
 ## Attended game check
 
 Start the official Windows client with the original packages.

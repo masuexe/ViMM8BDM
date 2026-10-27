@@ -3,15 +3,43 @@
     "samples": 2005,
     "packets": 10229,
     "max_packets_per_window": 24,
-    "candidate_mouse_scales": [1.06, 0.92],
+    "candidate_mouse_scales": [
+      1.06,
+      0.92
+    ],
     "source_hashes_match": true,
     "all_samples_compiled": true,
     "scaled_motion_totals_preserved": true,
-    "cumulative_integer_error_counts_approx": [0.22, 0.0],
+    "cumulative_integer_error_counts_approx": [
+      0.22,
+      0.0
+    ],
     "input_sent": false
   },
-  "automated_tests": {"Linux": {"passed": 113}, "Windows": {"passed": 113}},
-  "live_game_check": "pending",
+  "automated_tests": {
+    "Linux": {
+      "passed": 113
+    },
+    "Windows": {
+      "passed": 113
+    }
+  },
+  "live_game_check": {
+    "exit_reason": "complete",
+    "requested_windows": 52,
+    "accepted_windows": 52,
+    "executed_later_packets": 76,
+    "frames": 176,
+    "elapsed_after_enable_s": 3.5949558999998317,
+    "packet_scheduling_lateness_ms_median": 2.9654,
+    "packet_scheduling_lateness_ms_max": 13.3985,
+    "dropped_trace_events": 0,
+    "held_keys_at_shutdown": [],
+    "attack_held_at_shutdown": false,
+    "pending_at_shutdown": false,
+    "operator_report": "Short strafes and turns completed without a reported problem.",
+    "gameplay_skill_verified": false
+  },
   "visible_response_latency_measured": false,
   "mouse_unit_conversion_verified": false,
   "training_ready": false
