@@ -232,6 +232,8 @@ The [targeted projectile follow-up](projectile-transfer.md) retains eight of nin
 Other foreground and projectile failures remain.
 The [body observation runtime](body-shadow.md) adds current-image detection with empty actions.
 Its first attended test completed 298 images with empty actions and normal operator control.
+The [mouse-only tracking prototype](aim-only.md) now supports candidate checks and bounded turn proposals.
+Its first attended aim test remains pending.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

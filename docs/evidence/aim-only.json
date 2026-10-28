@@ -1,0 +1,338 @@
+{
+  "format": "vimm8bdm-mouse-only-aim-preflight-v1",
+  "replay_protocol": {
+    "format": "vimm8bdm-offline-aim-probe-v1",
+    "source_session_id": "dbdee9198c0afa234f5058f649bc5c578a4a5155a0eebf5c1d8d147bfbebfd17",
+    "source_hashes": {
+      "session.json": "53c14f91a1cc601a64186a93067522407a742090257bd13867e6085da5b87f45",
+      "summary.json": "9b3bd1ea469b0824f28dd109a0cb7ef02328abda9864c1b6c2f7edc5e656fbfd",
+      "events.jsonl": "1b11ac71c6b4b1a264f4cec68565e71895b410d22f787527033f9651c2fbff90",
+      "frames.jsonl": "224d86bcf9c73cdaac031cff6e1cad2123ddae517849a60dd3fead3349b8ca1b",
+      "frames.vrec": "9aed5f1fc8004e600b409aea0a8593dd78741139c9816e560b7ec5204f29b6e3"
+    },
+    "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+    "aim_code_sha256": "17bc2bf192c255c593240182558c7dbb31e8bd9bb9cf05c858bf9d3f61c626c2",
+    "score_threshold": 0.8,
+    "magenta_fraction": 0.03,
+    "magenta_vertical_extent": 0.45,
+    "confirmation_frames": 3,
+    "minimum_aspect_ratio": 0.2,
+    "maximum_aspect_ratio": 1.1,
+    "source_frame_step": 2,
+    "independent_test": false,
+    "closed_loop_simulation": false,
+    "input_sent": false
+  },
+  "replay_summary": {
+    "frames": 596,
+    "mouse_proposals": 55,
+    "eligible_frames": 195,
+    "reasons": {
+      "missing_target": 401,
+      "confirm_target": 140,
+      "track_target": 55
+    },
+    "positive_validation_locations": 8,
+    "positive_validation_images": 9,
+    "negative_validation_candidates": 0,
+    "maximum_mouse_counts": [
+      6.0,
+      4.0
+    ],
+    "appearance_filter_median_ms": 0.002986000254168175,
+    "appearance_filter_maximum_ms": 4.498321000028227
+  },
+  "known_failure_cases": {
+    "447": {
+      "eligible": [
+        {
+          "box": [
+            277.36962890625,
+            32.33030319213867,
+            75.4482421875,
+            147.01613235473633
+          ],
+          "score": 0.856804609298706,
+          "category": "cutman_body_candidate",
+          "enemy_identification_verified": false
+        }
+      ],
+      "rejected": [
+        {
+          "box": [
+            266.32891845703125,
+            29.487979888916016,
+            155.63775634765625,
+            292.555965423584
+          ],
+          "reason": "cutman_appearance"
+        }
+      ]
+    },
+    "677": {
+      "eligible": [],
+      "rejected": [
+        {
+          "box": [
+            403.19879150390625,
+            295.55517578125,
+            236.80120849609375,
+            184.44482421875
+          ],
+          "reason": "box_extent"
+        },
+        {
+          "box": [
+            397.2864074707031,
+            112.34443664550781,
+            242.71359252929688,
+            361.1488494873047
+          ],
+          "reason": "low_aim_score"
+        }
+      ]
+    },
+    "808": {
+      "eligible": [],
+      "rejected": [
+        {
+          "box": [
+            179.6101837158203,
+            13.46649169921875,
+            411.28404235839844,
+            446.83465576171875
+          ],
+          "reason": "box_extent"
+        },
+        {
+          "box": [
+            224.62667846679688,
+            6.276958465576172,
+            395.8812561035156,
+            280.8881721496582
+          ],
+          "reason": "box_extent"
+        }
+      ]
+    },
+    "965": {
+      "eligible": [],
+      "rejected": [
+        {
+          "box": [
+            308.48284912109375,
+            115.19817352294922,
+            66.1370849609375,
+            85.71253204345703
+          ],
+          "reason": "low_aim_score"
+        }
+      ]
+    }
+  },
+  "input_sent": false,
+  "source_unchanged": true,
+  "closed_loop_test_completed": false,
+  "actor_identity_or_life_state_verified": false,
+  "appearance_only_version_retained": true,
+  "appearance_only_version_accepted_death_foreground": true,
+  "verification": {
+    "linux": {
+      "tests": 241,
+      "skipped": 0,
+      "seconds": 3.522
+    },
+    "windows": {
+      "tests": 241,
+      "skipped": 0,
+      "seconds": 11.485
+    },
+    "ste_lint_findings": 0
+  },
+  "native_recorded_image_smoke": {
+    "platform": "win32",
+    "live_capture": false,
+    "input_sent": false,
+    "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+    "cases": [
+      {
+        "frame": 620,
+        "mouse_proposal": [
+          0,
+          0
+        ],
+        "aim": {
+          "reason": "confirm_target",
+          "matches": 1,
+          "selected_box": [
+            243.24496459960938,
+            73.8526611328125,
+            140.60675048828125,
+            206.88092041015625
+          ],
+          "eligible_candidates": [
+            {
+              "box": [
+                243.24496459960938,
+                73.8526611328125,
+                140.60675048828125,
+                206.88092041015625
+              ],
+              "score": 0.9991255402565002,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "rejected": [],
+          "movement_keys_enabled": false,
+          "attack_enabled": false
+        }
+      },
+      {
+        "frame": 622,
+        "mouse_proposal": [
+          0,
+          0
+        ],
+        "aim": {
+          "reason": "confirm_target",
+          "matches": 2,
+          "selected_box": [
+            186.50045776367188,
+            70.04120635986328,
+            152.64129638671875,
+            248.99065399169922
+          ],
+          "eligible_candidates": [
+            {
+              "box": [
+                186.50045776367188,
+                70.04120635986328,
+                152.64129638671875,
+                248.99065399169922
+              ],
+              "score": 0.9999845027923584,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "rejected": [],
+          "movement_keys_enabled": false,
+          "attack_enabled": false
+        }
+      },
+      {
+        "frame": 624,
+        "mouse_proposal": [
+          -6.0,
+          -4.0
+        ],
+        "aim": {
+          "reason": "track_target",
+          "matches": 3,
+          "selected_box": [
+            156.0941162109375,
+            9.983379364013672,
+            143.67059326171875,
+            295.3098945617676
+          ],
+          "error_pixels": [
+            -92.07058715820312,
+            -82.36167335510254
+          ],
+          "eligible_candidates": [
+            {
+              "box": [
+                156.0941162109375,
+                9.983379364013672,
+                143.67059326171875,
+                295.3098945617676
+              ],
+              "score": 0.9999942779541016,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "rejected": [],
+          "movement_keys_enabled": false,
+          "attack_enabled": false
+        }
+      },
+      {
+        "frame": 626,
+        "mouse_proposal": [
+          -6.0,
+          -4.0
+        ],
+        "aim": {
+          "reason": "track_target",
+          "matches": 4,
+          "selected_box": [
+            187.4791259765625,
+            50.3642578125,
+            108.67828369140625,
+            196.43026733398438
+          ],
+          "error_pixels": [
+            -78.18173217773438,
+            -91.42060852050781
+          ],
+          "eligible_candidates": [
+            {
+              "box": [
+                187.4791259765625,
+                50.3642578125,
+                108.67828369140625,
+                196.43026733398438
+              ],
+              "score": 0.9985882639884949,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "rejected": [],
+          "movement_keys_enabled": false,
+          "attack_enabled": false
+        }
+      },
+      {
+        "frame": 628,
+        "mouse_proposal": [
+          -6.0,
+          -4.0
+        ],
+        "aim": {
+          "reason": "track_target",
+          "matches": 5,
+          "selected_box": [
+            148.53236389160156,
+            51.08366394042969,
+            104.14208984375,
+            174.95457458496094
+          ],
+          "error_pixels": [
+            -119.39659118652344,
+            -101.43904876708984
+          ],
+          "eligible_candidates": [
+            {
+              "box": [
+                148.53236389160156,
+                51.08366394042969,
+                104.14208984375,
+                174.95457458496094
+              ],
+              "score": 0.999995231628418,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "rejected": [],
+          "movement_keys_enabled": false,
+          "attack_enabled": false
+        }
+      }
+    ]
+  },
+  "automatic_attack_enabled": false
+}

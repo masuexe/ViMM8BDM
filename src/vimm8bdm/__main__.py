@@ -87,7 +87,7 @@ def summarize(rows, mode, policy_name, exit_reason):
                "policy": policy_name,
                "exit_reason": exit_reason,
                "neural_inference_measured": policy_name == "continuousdoom" or
-                    (policy_name in ("temporal_shadow", "body_shadow") and any((row.get("model_output") or {}).get("inference_performed") for row in rows)),
+                    (policy_name in ("temporal_shadow", "body_shadow", "body_aim") and any((row.get("model_output") or {}).get("inference_performed") for row in rows)),
                "accepted_actions": sum(row["applied"] for row in rows),
                "inactive_or_rejected_frames": sum(not row["applied"] for row in rows),
                "input_stage": ("input_process_roundtrip" if mode == "desktop" else "lease_and_sink")
@@ -116,6 +116,8 @@ def run(args):
     if args.policy in ("temporal_shadow", "body_shadow") and (not args.live or not getattr(args, "observe_only", False)
                                             or not getattr(args, "checkpoint", None)):
         raise ValueError("A shadow policy requires --live, --observe-only, and --checkpoint")
+    if args.policy == "body_aim" and (not args.live or not getattr(args, "checkpoint", None)):
+        raise ValueError("Body aim requires --live and --checkpoint")
     sink = capture = worker = None
     rows = []
     output = None
@@ -156,6 +158,10 @@ def run(args):
         elif args.policy == "visual_navigation":
             from .visual_navigation import VisualNavigationPolicy
             policy = VisualNavigationPolicy()
+        elif args.policy == "body_aim":
+            from .body_aim import BodyAimPolicy
+            policy = BodyAimPolicy(args.checkpoint)
+            print("Body aim model ready. Movement keys and attack are disabled.", flush=True)
         elif args.policy == "body_shadow":
             from .body_shadow import BodyShadowPolicy
             policy = BodyShadowPolicy(args.checkpoint)
@@ -186,7 +192,7 @@ def run(args):
         previous_phase = None
         fault_injected = False
         sequence_policy = args.policy in ("input_check", "watchdog_check", "focus_check")
-        stateful_policy = sequence_policy or args.policy in ("visual_navigation", "temporal_shadow", "body_shadow")
+        stateful_policy = sequence_policy or args.policy in ("visual_navigation", "temporal_shadow", "body_shadow", "body_aim")
         exit_reason = "frame_limit"
         frame_budget = args.frames
         if worker:
@@ -311,7 +317,7 @@ def main():
     diagnostics.add_argument("--check-window", action="store_true", help="Measure window focus without sending input")
     parser.add_argument("--all-windows", action="store_true", help="Include other visible windows in the local list")
     parser.add_argument("--include-window-titles", action="store_true", help="Include titles in local diagnostic output")
-    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check", "visual_navigation", "temporal_shadow", "body_shadow"), default="red_marker_probe")
+    parser.add_argument("--policy", choices=("red_marker_probe", "continuousdoom", "input_check", "watchdog_check", "focus_check", "visual_navigation", "temporal_shadow", "body_shadow", "body_aim"), default="red_marker_probe")
     parser.add_argument("--watchdog-fault", choices=("stall", "exit"), help="Explicit local fault test for the watchdog policy")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="Trusted local model checkpoint path")
