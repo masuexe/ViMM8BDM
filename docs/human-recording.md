@@ -78,6 +78,12 @@ The session does not guarantee that this character persists after respawn.
 Use a fixed character for the first training dataset.
 Record later character changes as new sessions until explicit character markers exist.
 
+Use `--character-source launch_configuration` when the name comes from a supplied client configuration.
+This option requires `--launch-record`.
+It identifies a configured value and does not establish the character currently visible in the client.
+The default source remains `operator_report_at_start` for an actual operator report.
+Review the visible character before treating a configured value as verified session identity.
+
 ## Saved files
 
 | File | Content |

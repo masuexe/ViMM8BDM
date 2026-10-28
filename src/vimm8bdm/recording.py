@@ -293,7 +293,7 @@ def run(args):
     manifest = {'format': 'vimm8bdm-human-v1', 'clock': 'perf_counter_ns',
                 'input_time_meaning': 'Raw Input callback receipt, not hardware event time',
                 'target_hz': args.hz, 'engine_version': args.engine_version,
-                'character': args.character, 'character_source': 'operator_report_at_start',
+                'character': args.character, 'character_source': getattr(args, 'character_source', 'operator_report_at_start'),
                 'class_selection': args.class_selection,
                 'character_stable': args.class_selection == 'fixed', 'map': args.map,
                 'purpose': args.purpose, 'task': args.task, 'training_ready': False, 'protocol': args.protocol,
@@ -425,6 +425,8 @@ def main():
     parser.add_argument('--task', choices=('navigation', 'aim', 'combat', 'class_skill'))
     parser.add_argument('--protocol', choices=('free', 'mouse_alignment'), default='free')
     parser.add_argument('--character', default='unknown')
+    parser.add_argument('--character-source', choices=('operator_report_at_start', 'launch_configuration', 'unknown'),
+                        default='operator_report_at_start')
     parser.add_argument('--class-selection', choices=('random', 'fixed', 'unknown'), default='unknown')
     parser.add_argument('--map', default='unknown')
     parser.add_argument('--engine-version', required=True)
@@ -439,6 +441,8 @@ def main():
         parser.error('The capture frequency must be between 1 and 60 Hz')
     if args.protocol == 'mouse_alignment' and args.seconds < 38:
         parser.error('The mouse alignment protocol requires a duration limit of at least 38 seconds')
+    if args.character_source == 'launch_configuration' and args.launch_record is None:
+        parser.error('A configured character requires a launch record')
     if args.purpose == 'demonstration' and (args.protocol != 'free' or args.class_selection != 'fixed'
             or args.character.strip().lower() in ('', 'unknown') or args.map.strip().lower() in ('', 'unknown') or args.task is None):
         parser.error('A demonstration requires a free protocol, fixed character, known map, and task')

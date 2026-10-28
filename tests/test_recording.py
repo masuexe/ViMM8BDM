@@ -5,6 +5,7 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 from vimm8bdm.control import Frame
 from vimm8bdm.recording import RecordingSession, RecordingWriter, MAGIC, alignment_phase
 
@@ -33,6 +34,23 @@ class RecordingTests(unittest.TestCase):
     def toggle(self):
         self.key(0x77)
         self.key(0x77, False)
+
+    def test_character_source_distinguishes_configured_identity_from_operator_report(self):
+        from vimm8bdm.recording import main
+        base = ['recording', '--window-id', '0x123', '--run-dir', 'unused-session', '--engine-version', 'example']
+        for extra, expected in (([], 'operator_report_at_start'),
+                                (['--character-source', 'launch_configuration', '--launch-record', 'launch.json'],
+                                 'launch_configuration')):
+            with patch('sys.argv', base + extra), patch('sys.platform', 'win32'), patch('vimm8bdm.recording.run') as run:
+                main()
+                self.assertEqual(run.call_args.args[0].character_source, expected)
+
+    def test_configured_character_requires_a_launch_record(self):
+        from vimm8bdm.recording import main
+        args = ['recording', '--window-id', '0x123', '--run-dir', 'unused-session', '--engine-version', 'example',
+                '--character-source', 'launch_configuration']
+        with patch('sys.argv', args), patch('sys.platform', 'win32'), patch('sys.stderr', io.StringIO()), self.assertRaises(SystemExit):
+            main()
 
     def test_alignment_phase_cues_and_end_are_bounded(self):
         self.assertEqual(alignment_phase(0), ('ready', None, 0))
