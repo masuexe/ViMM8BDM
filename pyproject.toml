@@ -13,6 +13,7 @@ dependencies = []
 desktop = ["mss", "pynput"]
 record = ["mss", "Pillow"]
 train = ["torch", "numpy", "Pillow"]
+detector = ["torch==2.14.1", "torchvision==0.29.1", "Pillow"]
 vision = ["opencv-python-headless==4.13.0.92", "numpy", "Pillow"]
 
 [project.scripts]

@@ -1,0 +1,80 @@
+{
+  "kind": "pretrained_ssdlite_calibration_diagnostic",
+  "independent_test": false,
+  "torch": "2.14.1+cpu",
+  "torchvision": "0.29.1+cpu",
+  "device": "cpu",
+  "threads": 4,
+  "checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+  "checkpoint_bytes": 14069355,
+  "model": "ssdlite320_mobilenet_v3_large",
+  "weights": "COCO_V1",
+  "class_id": 1,
+  "score_threshold": 0.5,
+  "minimum_iou": 0.5,
+  "warmup_calls": 5,
+  "human_box_reviewed": false,
+  "input_sent": false,
+  "training_performed": false,
+  "summary": {
+    "positive_images": 9,
+    "negative_images": 11,
+    "localized_positives": 0,
+    "negative_images_with_predictions": 0,
+    "total_predictions": 0,
+    "processing_ms": {
+      "p50": 39.09233250124089,
+      "p95": 48.188357999606524,
+      "maximum": 48.633192000124836
+    }
+  },
+  "conditions": {
+    "recall_at_least_0_8": false,
+    "zero_negative_candidates": true,
+    "median_processing_ms_at_most_50": true
+  },
+  "conditions_passed": false,
+  "format": "vimm8bdm-pretrained-detection-evidence-v1",
+  "weight_source": "https://download.pytorch.org/models/ssdlite320_mobilenet_v3_large_coco-a79551df.pth",
+  "native_windows_inference": {
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 11,
+      "localized_positives": 0,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 0,
+      "processing_ms": {
+        "p50": 55.6002500015893,
+        "p95": 60.5857000045944,
+        "maximum": 72.32379999913974
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": false
+    },
+    "conditions_passed": false,
+    "checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+    "input_sent": false
+  },
+  "source_images_public": false,
+  "verification": {
+    "linux": {
+      "tests": 203,
+      "skipped": 0,
+      "seconds": 3.75
+    },
+    "windows": {
+      "tests": 203,
+      "skipped": 0,
+      "seconds": 26.356
+    },
+    "source_recording_hashes_unchanged": true,
+    "ste_lint_findings": 0
+  }
+}

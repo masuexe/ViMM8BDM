@@ -106,3 +106,6 @@ Treat a proposal as a possible body region only.
 A color match cannot establish an enemy, a living actor, or permission to attack.
 Use a separate recording for any later independent quality test.
 Do not split nearby frames from this recording across training and test sets.
+
+The [official SSDLite transfer check](pretrained-detection.md) completed the next pretrained-model experiment.
+The unchanged COCO model did not identify the reviewed bodies.

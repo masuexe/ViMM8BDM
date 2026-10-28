@@ -213,6 +213,8 @@ The [sprite perception baseline](sprite-perception.md) also failed scale, render
 A stock local Cutman Bot scene supplied the first real combat recording.
 The [candidate body review](visible-body-calibration.md) exported 20 private calibration images.
 Both standing-template masks located zero of nine positive images.
+The [pretrained detector check](pretrained-detection.md) loaded official SSDLite320 COCO weights.
+The unchanged model also located zero of nine positive images.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

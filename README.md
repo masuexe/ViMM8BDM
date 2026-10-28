@@ -287,3 +287,5 @@ See the [bounded-memory experiment](docs/temporal-steering.md) and [shadow runti
 See the [sprite perception baseline](docs/sprite-perception.md) for the first combat-perception comparison and real-image collection plan.
 
 See the [visible Cutman calibration](docs/visible-body-calibration.md) for the first real combat image review and rejected matcher results.
+
+The [pretrained detector check](docs/pretrained-detection.md) records official SSDLite weight loading and real-image inference.
