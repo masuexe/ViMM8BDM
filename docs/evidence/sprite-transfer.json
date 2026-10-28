@@ -1,0 +1,286 @@
+{
+  "format": "vimm8bdm-synthetic-sprite-transfer-evidence-v1",
+  "bank": {
+    "poses": 17,
+    "views": 136,
+    "sources": [
+      {
+        "name": "MM8BDM-v6a.pk3",
+        "sha256": "a39c670536b945724fb7a6aec1b9e60ed669d39a0e9e98a999f34d93da656076"
+      },
+      {
+        "name": "classes-v9fh.pk3",
+        "sha256": "420d7077dd81a28c8a43cef2a10e369b3e459a923a06ca38c3081391e5894d23"
+      },
+      {
+        "name": "gondolapatchv2.7h2.pk3",
+        "sha256": "f108214fa71c39403c536b0e3092da2eec02632618770c181d80819c687f035b"
+      }
+    ],
+    "actor_source_sha256": "1a5e0eabfc9f4fa00d328399168d525eecbb0d2605f34262dfce0da5e56ab207",
+    "translation_pairs": [
+      [
+        192,
+        4
+      ],
+      [
+        198,
+        41
+      ],
+      [
+        202,
+        96
+      ]
+    ],
+    "actual_game_render_verified": false
+  },
+  "dataset": {
+    "counts": {
+      "train": 512,
+      "validation": 128
+    },
+    "train_background_frames": 24,
+    "validation_background_frames": 8,
+    "same_source_recording_for_synthetic_splits": true,
+    "background_frames_disjoint": true,
+    "real_calibration_source_different": true,
+    "real_calibration_used_for_gradients": false,
+    "seed": 7,
+    "source_files_changed": false
+  },
+  "training": {
+    "protocol": {
+      "format": "vimm8bdm-ssdlite-sprite-transfer-v1",
+      "epochs": 8,
+      "batch_size": 4,
+      "seed": 0,
+      "threads": 4,
+      "device": "cpu",
+      "learning_rate": 0.002,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "gradient_clip": 10,
+      "selection": "fixed_final_epoch",
+      "train_images": 512,
+      "validation_images": 128,
+      "initial_checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "synthetic_dataset_sha256": "509055c0060b6ac0a917a6f12080d1d282e58cb081e5286a399dbf45ee8bda99",
+      "input_sent": false,
+      "real_calibration_images_used_for_gradients": false,
+      "independent_validation": false
+    },
+    "epochs": [
+      {
+        "epoch": 1,
+        "mean_loss": 2.4481175052933395,
+        "steps": 128,
+        "validation": {
+          "images": 128,
+          "localized": 75,
+          "recall": 0.5859375,
+          "unmatched_predictions": 4,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 36.111399907000305
+      },
+      {
+        "epoch": 2,
+        "mean_loss": 1.4837206937372684,
+        "steps": 256,
+        "validation": {
+          "images": 128,
+          "localized": 82,
+          "recall": 0.640625,
+          "unmatched_predictions": 1,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 71.10622934800267
+      },
+      {
+        "epoch": 3,
+        "mean_loss": 1.0802258364856243,
+        "steps": 384,
+        "validation": {
+          "images": 128,
+          "localized": 90,
+          "recall": 0.703125,
+          "unmatched_predictions": 0,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 110.79610822800169
+      },
+      {
+        "epoch": 4,
+        "mean_loss": 0.993622264591977,
+        "steps": 512,
+        "validation": {
+          "images": 128,
+          "localized": 88,
+          "recall": 0.6875,
+          "unmatched_predictions": 2,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 148.10784435700043
+      },
+      {
+        "epoch": 5,
+        "mean_loss": 0.8395908554084599,
+        "steps": 640,
+        "validation": {
+          "images": 128,
+          "localized": 84,
+          "recall": 0.65625,
+          "unmatched_predictions": 0,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 187.40686486699997
+      },
+      {
+        "epoch": 6,
+        "mean_loss": 0.7873035266529769,
+        "steps": 768,
+        "validation": {
+          "images": 128,
+          "localized": 95,
+          "recall": 0.7421875,
+          "unmatched_predictions": 5,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 224.8437753290018
+      },
+      {
+        "epoch": 7,
+        "mean_loss": 0.6378290979191661,
+        "steps": 896,
+        "validation": {
+          "images": 128,
+          "localized": 83,
+          "recall": 0.6484375,
+          "unmatched_predictions": 2,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 262.4015432870001
+      },
+      {
+        "epoch": 8,
+        "mean_loss": 0.55034763016738,
+        "steps": 1024,
+        "validation": {
+          "images": 128,
+          "localized": 94,
+          "recall": 0.734375,
+          "unmatched_predictions": 0,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 298.9523737820018
+      }
+    ],
+    "seconds": 298.97589602300286,
+    "checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+    "input_sent": false
+  },
+  "real_calibration": {
+    "linux": {
+      "kind": "ssdlite_sprite_transfer_calibration_diagnostic",
+      "independent_test": false,
+      "torch": "2.14.1+cpu",
+      "torchvision": "0.29.1+cpu",
+      "device": "cpu",
+      "threads": 4,
+      "checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+      "checkpoint_bytes": 14059719,
+      "model": "ssdlite320_mobilenet_v3_large",
+      "weights": "local_sprite_transfer",
+      "class_id": 1,
+      "score_threshold": 0.5,
+      "minimum_iou": 0.5,
+      "warmup_calls": 5,
+      "human_box_reviewed": false,
+      "input_sent": false,
+      "training_performed": true,
+      "summary": {
+        "positive_images": 9,
+        "negative_images": 11,
+        "localized_positives": 6,
+        "negative_images_with_predictions": 0,
+        "total_predictions": 6,
+        "processing_ms": {
+          "p50": 30.053819000386284,
+          "p95": 41.898764997313265,
+          "maximum": 42.82041899932665
+        }
+      },
+      "conditions": {
+        "recall_at_least_0_8": false,
+        "zero_negative_candidates": true,
+        "median_processing_ms_at_most_50": true
+      },
+      "conditions_passed": false
+    },
+    "windows": {
+      "kind": "ssdlite_sprite_transfer_calibration_diagnostic",
+      "independent_test": false,
+      "torch": "2.14.1+cpu",
+      "torchvision": "0.29.1+cpu",
+      "device": "cpu",
+      "threads": 4,
+      "checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+      "checkpoint_bytes": 14059719,
+      "model": "ssdlite320_mobilenet_v3_large",
+      "weights": "local_sprite_transfer",
+      "class_id": 1,
+      "score_threshold": 0.5,
+      "minimum_iou": 0.5,
+      "warmup_calls": 5,
+      "human_box_reviewed": false,
+      "input_sent": false,
+      "training_performed": true,
+      "summary": {
+        "positive_images": 9,
+        "negative_images": 11,
+        "localized_positives": 6,
+        "negative_images_with_predictions": 0,
+        "total_predictions": 6,
+        "processing_ms": {
+          "p50": 32.5605500038364,
+          "p95": 36.126300001342315,
+          "maximum": 43.65680000046268
+        }
+      },
+      "conditions": {
+        "recall_at_least_0_8": false,
+        "zero_negative_candidates": true,
+        "median_processing_ms_at_most_50": true
+      },
+      "conditions_passed": false
+    }
+  },
+  "automatic_combat_enabled": false,
+  "independent_real_test": false,
+  "verification": {
+    "linux": {
+      "tests": 208,
+      "skipped": 0,
+      "seconds": 3.545
+    },
+    "windows": {
+      "tests": 208,
+      "skipped": 0,
+      "seconds": 9.619
+    },
+    "source_checks": {
+      "background_recording_unchanged": true,
+      "real_recording_unchanged": true,
+      "original_packages_unchanged": true
+    },
+    "ste_lint_findings": 0
+  }
+}

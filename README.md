@@ -289,3 +289,6 @@ See the [sprite perception baseline](docs/sprite-perception.md) for the first co
 See the [visible Cutman calibration](docs/visible-body-calibration.md) for the first real combat image review and rejected matcher results.
 
 The [pretrained detector check](docs/pretrained-detection.md) records official SSDLite weight loading and real-image inference.
+
+The [synthetic sprite transfer](docs/sprite-transfer.md) improves Cutman calibration locations to six of nine.
+The model remains outside the live controller because it did not pass the recall condition.

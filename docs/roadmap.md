@@ -215,6 +215,8 @@ The [candidate body review](visible-body-calibration.md) exported 20 private cal
 Both standing-template masks located zero of nine positive images.
 The [pretrained detector check](pretrained-detection.md) loaded official SSDLite320 COCO weights.
 The unchanged model also located zero of nine positive images.
+The [synthetic sprite transfer](sprite-transfer.md) improved real calibration locations to six of nine.
+Recall remains below the required 0.8, so the detector remains offline.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

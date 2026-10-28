@@ -135,3 +135,6 @@ Keep the real calibration images outside that synthetic training set.
 Then measure whether transfer improves body location without excessive false candidates.
 A later independent session remains necessary before a live recognition test.
 Automatic aim and attack remain disabled.
+
+The [synthetic transfer experiment](sprite-transfer.md) completed this next step.
+It improved real calibration locations from zero to six of nine but did not pass the recall condition.
