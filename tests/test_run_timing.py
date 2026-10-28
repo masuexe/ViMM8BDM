@@ -154,6 +154,17 @@ class RunTimingTests(unittest.TestCase):
         policy.predict.assert_not_called()
         self.assertEqual(worker.actions, [])
 
+    def test_idle_warmup_runs_during_the_user_wait_without_consuming_frames(self):
+        from vimm8bdm.control import Action
+        warm = Mock()
+        policy = SimpleNamespace(predict=lambda frame: Action(), keep_ready=warm)
+        with patch("vimm8bdm.__main__.PixelProbe", return_value=policy):
+            worker, capture = self.execute(enable_at=2, waiting_limit=5)
+        self.assertGreater(warm.call_count, 0)
+        self.assertEqual(capture.frames, 3)
+        self.assertEqual(len(worker.actions), 3)
+        self.assertTrue(all(action == Action() for action in worker.actions))
+
 
 if __name__ == "__main__":
     unittest.main()

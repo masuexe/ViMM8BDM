@@ -23,7 +23,19 @@ class BodyShadowPolicy:
         with torch.inference_mode():
             for _ in range(5):
                 self.model([torch.zeros(3, 480, 640)])
+        self.idle_warmup_calls = 0
+        self.last_ready_ns = self.clock()
         self.reset()
+
+    def keep_ready(self):
+        """Warm idle inference at most once per two seconds without input."""
+        if self.clock() - self.last_ready_ns < 2_000_000_000:
+            return False
+        with torch.inference_mode():
+            self.model([torch.zeros(3, 480, 640)])
+        self.last_ready_ns = self.clock()
+        self.idle_warmup_calls += 1
+        return True
 
     def reset(self):
         self.last_capture_ns = None
@@ -40,6 +52,7 @@ class BodyShadowPolicy:
             reason = 'capture_timestamp_invalid'
         self.last_prediction = dict(checkpoint_sha256=self.checkpoint_sha256,
                                     input_sent=False, candidates=[], stale=True,
+                                    idle_warmup_calls=self.idle_warmup_calls,
                                     inference_performed=False, reset_reason=reason,
                                     capture_age_at_entry_ms=age / 1e6,
                                     enemy_or_life_state_verified=False)
@@ -51,6 +64,7 @@ class BodyShadowPolicy:
             prediction = self.model([pil_to_tensor(image).float() / 255])[0]
             boxes, window = refine_with_local_zoom(self.model, image, prediction)
         finished = self.clock()
+        self.last_ready_ns = finished
         stale = not 0 <= finished - frame.captured_ns <= 150_000_000
         for box in boxes:
             box['category'] = 'cutman_body_candidate'

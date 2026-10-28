@@ -127,6 +127,8 @@ def run(args):
     try:
         if getattr(args, "image_output", None):
             from PIL import Image
+            import io
+            Image.new("RGB", (1, 1)).save(io.BytesIO(), format="PNG")
             image_directory = Path(args.image_output)
             image_directory.mkdir(parents=True, exist_ok=False)
         if args.output:
@@ -210,6 +212,8 @@ def run(args):
                     break
                 if worker.armed:
                     break
+                if hasattr(policy, "keep_ready"):
+                    policy.keep_ready()
                 if waiting_until is not None and time.perf_counter() >= waiting_until:
                     exit_reason = "arm_timeout"
                     frame_budget = 0
@@ -225,6 +229,8 @@ def run(args):
             if time.perf_counter() - started >= args.seconds:
                 exit_reason = "duration_limit"
                 break
+            if worker and not worker.armed and hasattr(policy, "keep_ready"):
+                policy.keep_ready()
             begin = time.perf_counter_ns()
             if args.live:
                 if args.capture in ("x11-window", "window"):

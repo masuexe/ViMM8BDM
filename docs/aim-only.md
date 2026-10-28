@@ -149,3 +149,6 @@ These checks sent no desktop input.
 Both platforms also passed all 241 regression tests without skips.
 The [practice preflight evidence](evidence/aim-practice-preflight.json) records the operator report and diagnostic checks.
 The next attended aim result remains pending.
+
+The [practice aim result](aim-practice-result.md) records sixteen visible-body motion examples and an initial stale-frame pause.
+The body policies now retain idle model readiness without changing the safety age limit.

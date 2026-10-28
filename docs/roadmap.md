@@ -275,3 +275,7 @@ A compatible user demo remains necessary for the demo feasibility test.
 ContinuousDoom reuse terms remain unresolved.
 The native Windows client passed attended input and timed-action checks.
 The current recordings support the next offline model diagnosis.
+
+The [practice aim result](aim-practice-result.md) records sixteen mouse dispatches after the operator enabled control again.
+The first stale result paused control.
+Idle model warmup and PNG initialization now precede the next attended startup check.

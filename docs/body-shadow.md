@@ -94,3 +94,7 @@ The original runtime records remain unchanged.
 The [attended evidence](evidence/body-shadow-attended.json) retains the observed results and the summary error.
 
 After the summary fix, Linux and native Windows each passed all 232 tests without skips.
+
+The [practice startup review](aim-practice-result.md) adds idle model warmup during inactive control.
+This warmup sends no input and creates no target observation.
+The existing stale-result limit remains unchanged.

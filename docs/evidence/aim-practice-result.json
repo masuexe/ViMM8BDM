@@ -1,0 +1,215 @@
+{
+  "format": "vimm8bdm-attended-aim-practice-result-v1",
+  "operator_report": "The operator observed some automatic following.",
+  "frames": 297,
+  "inference_frames": 72,
+  "accepted_action_messages": 71,
+  "nonzero_mouse_dispatches": 16,
+  "longest_consecutive_motion_frames": 13,
+  "paired_private_images": 72,
+  "motion_images_visually_reviewed": 16,
+  "visual_review": "The selected boxes cover visible Cutman bodies in the sixteen motion images.",
+  "complete_visual_ground_truth": false,
+  "actor_life_state_verified": false,
+  "god_mode_continuously_verified": false,
+  "practice_god_check_source": "Earlier operator report; protection was not measured continuously during this run.",
+  "initial_stale_frame": true,
+  "initial_frame_policy_ms": 157.6549,
+  "initial_frame_result_age_ms": 172.1331,
+  "initial_frame_image_write_ms": 58.1867,
+  "stale_or_inactive_frames": 226,
+  "later_manual_reenable_observed": true,
+  "stale_limit_ms": 150,
+  "stale_limit_changed": false,
+  "accepted_timing_ms": {
+    "capture_ms": {
+      "p50": 7.2763,
+      "p95": 9.9777,
+      "maximum": 10.2497
+    },
+    "policy_ms": {
+      "p50": 43.5637,
+      "p95": 78.5326,
+      "maximum": 80.1057
+    },
+    "input_ms": {
+      "p50": 0.4405,
+      "p95": 1.1292,
+      "maximum": 2.0189
+    },
+    "image_write_ms": {
+      "p50": 10.2278,
+      "p95": 11.0647,
+      "maximum": 11.3049
+    },
+    "loop_ms": {
+      "p50": 61.7561,
+      "p95": 94.9848,
+      "maximum": 100.5762
+    }
+  },
+  "inference_policy_ms": {
+    "p50": 43.60665,
+    "p95": 79.6698,
+    "maximum": 157.6549
+  },
+  "movement_key_messages": 0,
+  "attack_messages": 0,
+  "input_worker_stopped": true,
+  "trace_dropped_events": 0,
+  "exit_reason": "duration_limit",
+  "image_manifest_sha256": "57c53c06c1f41843986bc4de7bda36cded84283d051451c2481bccac23bace5f",
+  "effective_full_duration_tracking_proved": false,
+  "readiness_smoke": {
+    "format": "vimm8bdm-idle-readiness-smoke-v1",
+    "platform": "win32",
+    "live_capture": false,
+    "input_sent": false,
+    "reproduces_full_attended_wait": false,
+    "cases": [
+      {
+        "periodic_idle_warmup": false,
+        "idle_seconds": 10.076515500000824,
+        "extra_warmup_calls": 0,
+        "model_result": {
+          "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+          "candidates": [
+            {
+              "box": [
+                347.32318115234375,
+                84.54052734375,
+                121.5897216796875,
+                236.7081298828125
+              ],
+              "score": 0.999990701675415,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "stale": false,
+          "idle_warmup_calls": 0,
+          "inference_performed": true,
+          "reset_reason": null,
+          "capture_age_at_entry_ms": 0.0222,
+          "enemy_or_life_state_verified": false,
+          "discarded_candidates": 0,
+          "local_zoom_crop": null,
+          "capture_age_at_result_ms": 39.9569,
+          "processing_ms": 39.9347,
+          "aim": {
+            "reason": "confirm_target",
+            "matches": 1,
+            "selected_box": [
+              347.32318115234375,
+              84.54052734375,
+              121.5897216796875,
+              236.7081298828125
+            ],
+            "eligible_candidates": [
+              {
+                "box": [
+                  347.32318115234375,
+                  84.54052734375,
+                  121.5897216796875,
+                  236.7081298828125
+                ],
+                "score": 0.999990701675415,
+                "category": "cutman_body_candidate",
+                "enemy_identification_verified": false
+              }
+            ],
+            "rejected": [],
+            "movement_keys_enabled": false,
+            "attack_enabled": false
+          }
+        },
+        "mouse_proposal": [
+          0,
+          0
+        ]
+      },
+      {
+        "periodic_idle_warmup": true,
+        "idle_seconds": 10.114058300001489,
+        "extra_warmup_calls": 4,
+        "model_result": {
+          "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+          "candidates": [
+            {
+              "box": [
+                347.32318115234375,
+                84.54052734375,
+                121.5897216796875,
+                236.7081298828125
+              ],
+              "score": 0.999990701675415,
+              "category": "cutman_body_candidate",
+              "enemy_identification_verified": false
+            }
+          ],
+          "stale": false,
+          "idle_warmup_calls": 4,
+          "inference_performed": true,
+          "reset_reason": null,
+          "capture_age_at_entry_ms": 0.0207,
+          "enemy_or_life_state_verified": false,
+          "discarded_candidates": 0,
+          "local_zoom_crop": null,
+          "capture_age_at_result_ms": 32.4963,
+          "processing_ms": 32.4756,
+          "aim": {
+            "reason": "confirm_target",
+            "matches": 1,
+            "selected_box": [
+              347.32318115234375,
+              84.54052734375,
+              121.5897216796875,
+              236.7081298828125
+            ],
+            "eligible_candidates": [
+              {
+                "box": [
+                  347.32318115234375,
+                  84.54052734375,
+                  121.5897216796875,
+                  236.7081298828125
+                ],
+                "score": 0.999990701675415,
+                "category": "cutman_body_candidate",
+                "enemy_identification_verified": false
+              }
+            ],
+            "rejected": [],
+            "movement_keys_enabled": false,
+            "attack_enabled": false
+          }
+        },
+        "mouse_proposal": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "verification": {
+    "linux": {
+      "tests": 243,
+      "skipped": 0,
+      "seconds": 4.041
+    },
+    "windows": {
+      "tests": 243,
+      "skipped": 0,
+      "seconds": 13.066
+    },
+    "png_initialization": {
+      "platform": "native_windows",
+      "images": 3,
+      "exact_rgb_match": true,
+      "existing_directory_rejected": true,
+      "existing_images_unchanged": true,
+      "input_sent": false
+    },
+    "ste_lint_findings": 0
+  }
+}

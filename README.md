@@ -320,3 +320,6 @@ Its first attended aim test produced one small turn that the operator did not ob
 The operator reported god mode against ordinary attacks in the local practice profile.
 The next aim test will retain private diagnostic images.
 Attack stays disabled.
+
+The [practice aim result](docs/aim-practice-result.md) records partial following and an initial stale-frame pause.
+Idle warmup now aims to reduce startup delay.

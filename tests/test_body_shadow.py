@@ -105,3 +105,14 @@ class BodyShadowTests(unittest.TestCase):
             result = json.loads(output.getvalue())
             self.assertEqual(result['neural_inference_measured'], performed)
             self.assertEqual(result['dispatched_policy_actions'], 0)
+
+    def test_idle_warmup_is_rate_limited_and_does_not_create_a_prediction(self):
+        self.assertFalse(self.policy.keep_ready())
+        self.assertEqual(self.inputs, [])
+        self.clock.now += 2_000_000_000
+        self.assertTrue(self.policy.keep_ready())
+        self.assertEqual(len(self.inputs), 1)
+        self.assertIsNone(self.policy.last_prediction)
+        self.assertEqual(self.policy.idle_warmup_calls, 1)
+        self.assertFalse(self.policy.keep_ready())
+        self.assertEqual(len(self.inputs), 1)
