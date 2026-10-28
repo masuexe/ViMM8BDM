@@ -1,0 +1,255 @@
+{
+  "format": "vimm8bdm-expanded-annotation-experiment-v1",
+  "new_review": {
+    "sampled_images": 95,
+    "positive_images": 30,
+    "negative_images": 41,
+    "excluded_images": 24,
+    "proposal_model": "frozen_synthetic_baseline",
+    "proposal_assisted_positive_images": 28,
+    "positive_images_without_proposal": 2,
+    "coordinate_overrides": 11,
+    "human_box_reviewed": false
+  },
+  "correction": {
+    "source_files_changed": false,
+    "validation_annotations_changed": false,
+    "corrections": [
+      {
+        "frame": 1011,
+        "old": "negative",
+        "new": "positive",
+        "reason": "A magnified review shows a small Cutman body behind the arrow sign."
+      },
+      {
+        "frame": 1037,
+        "old": "negative",
+        "new": "excluded",
+        "reason": "A tiny magenta sprite strip has uncertain body extent."
+      }
+    ],
+    "old_reviews_retained": true,
+    "model_assisted_new_samples": 95,
+    "human_box_reviewed": false
+  },
+  "combined_review": {
+    "sampled_images": 142,
+    "positive_images": 44,
+    "negative_images": 63,
+    "excluded_images": 35,
+    "real_recordings": 1
+  },
+  "mixture": {
+    "train_images": 1720,
+    "synthetic_monitor_images": 128,
+    "existing_synthetic_images": 512,
+    "real_positive_variants": 704,
+    "negative_background_composites": 504,
+    "real_images_independent_of_each_other": false,
+    "validation_recording_used_for_gradients": false
+  },
+  "training": {
+    "protocol": {
+      "format": "vimm8bdm-ssdlite-sprite-transfer-v1",
+      "epochs": 4,
+      "batch_size": 4,
+      "seed": 0,
+      "threads": 4,
+      "device": "cpu",
+      "learning_rate": 0.0005,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "gradient_clip": 10,
+      "selection": "fixed_final_epoch",
+      "train_images": 1720,
+      "validation_images": 128,
+      "initial_checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "synthetic_dataset_sha256": "08fed8a03d0860daafc641dd58e0db73fc072912796f8b4040cafdfa85c6d810",
+      "starting_checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+      "starting_from_transfer": true,
+      "training_source_session_ids": [
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70"
+      ],
+      "training_source_archives": {
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70": "f77ed4fc4791554ee9a3e512f77348ec5bbc061e0d49b05c5599ed04cbad0c4b",
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c": "5955c774335446e21c21daccd7aeaf2160838e73d470ae8ef61d4242f81af7f2"
+      },
+      "training_source_session_id": "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+      "input_sent": false,
+      "real_calibration_images_used_for_gradients": true,
+      "independent_validation": false
+    },
+    "epochs": [
+      {
+        "epoch": 1,
+        "mean_loss": 0.8306288793683052,
+        "steps": 430,
+        "validation": {
+          "images": 128,
+          "localized": 86,
+          "recall": 0.671875,
+          "unmatched_predictions": 2,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 102.62577259200043
+      },
+      {
+        "epoch": 2,
+        "mean_loss": 0.5369988272356433,
+        "steps": 860,
+        "validation": {
+          "images": 128,
+          "localized": 100,
+          "recall": 0.78125,
+          "unmatched_predictions": 6,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 203.18630404400028
+      },
+      {
+        "epoch": 3,
+        "mean_loss": 0.4341332572837209,
+        "steps": 1290,
+        "validation": {
+          "images": 128,
+          "localized": 96,
+          "recall": 0.75,
+          "unmatched_predictions": 4,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 301.4015540420005
+      },
+      {
+        "epoch": 4,
+        "mean_loss": 0.3992593739441661,
+        "steps": 1720,
+        "validation": {
+          "images": 128,
+          "localized": 96,
+          "recall": 0.75,
+          "unmatched_predictions": 6,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 397.81482328399943
+      }
+    ],
+    "seconds": 397.8447828570006,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "input_sent": false
+  },
+  "reused_validation_linux": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": false,
+    "independent_session_validation": true,
+    "validation_reused_after_prior_result": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "checkpoint_bytes": 14060359,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 7,
+      "processing_ms": {
+        "p50": 23.007011999652605,
+        "p95": 33.51854199900117,
+        "maximum": 33.51854199900117
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "reused_validation_windows": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": false,
+    "independent_session_validation": true,
+    "validation_reused_after_prior_result": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "checkpoint_bytes": 14060359,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 7,
+      "processing_ms": {
+        "p50": 38.6413000014727,
+        "p95": 47.65380000026198,
+        "maximum": 47.65380000026198
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "decision": "More reviewed labels and a corrected missed body did not increase accepted locations on the reused validation samples. Retain the result and test image-scale handling next.",
+  "source_checks": {
+    "first_recording_unchanged": true,
+    "reserved_recording_unchanged": true,
+    "reserved_annotations_unchanged": true,
+    "reserved_export_unchanged": true,
+    "reserved_source_not_in_training": true,
+    "reserved_archive_not_in_training": true,
+    "original_reviews_unchanged": true
+  },
+  "automatic_aim_enabled": false,
+  "verification": {
+    "linux": {
+      "tests": 222,
+      "skipped": 0,
+      "seconds": 4.492
+    },
+    "windows": {
+      "tests": 222,
+      "skipped": 0,
+      "seconds": 16.057
+    },
+    "ste_lint_findings": 0
+  }
+}

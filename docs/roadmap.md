@@ -222,6 +222,9 @@ Neither synthetic model passed the expanded conditions.
 A [separate visual validation recording](visual-validation-session.md) is complete and reserved outside training.
 The [first real-image transfer](real-body-transfer.md) tested a fixed checkpoint on those seventeen reviewed images.
 It located seven of nine candidate bodies and did not pass the recall condition.
+The [expanded annotation review](annotation-expansion.md) increased real positive training images to 44.
+It also fixed one earlier missed-body label.
+Repeated validation remained at seven of nine locations.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

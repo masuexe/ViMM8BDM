@@ -299,3 +299,6 @@ A [separate visual validation session](docs/visual-validation-session.md) is com
 
 The [first real-image transfer](docs/real-body-transfer.md) completed separate-session validation.
 It located seven of nine candidate bodies and did not pass the recall condition.
+
+The [expanded annotation review](docs/annotation-expansion.md) repairs an earlier missed-body label and adds more training examples.
+Repeated validation remains at seven of nine locations.

@@ -16,10 +16,12 @@ from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transf
 from vimm8bdm.recording import file_digest
 
 
-def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None):
+def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None, validation_reuse=False):
     if output.exists():
         raise FileExistsError('The evaluation directory already exists')
     metadata = json.loads((dataset / 'dataset.json').read_text())
+    if validation_reuse and not validation:
+        raise ValueError('Declare validation reuse only with an explicit reserved validation run')
     expected_split = 'validation' if validation else 'calibration'
     if metadata['format'] != 'vimm8bdm-visible-coco-v1' or metadata['split'] != expected_split:
         raise ValueError('Select the intended calibration or reserved validation export')
@@ -73,7 +75,8 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
                       median_processing_ms_at_most_50=statistics.median(times) <= 50)
     kind = ('ssdlite_separate_session_visual_validation' if validation else
             'ssdlite_sprite_transfer_calibration_diagnostic' if transfer else 'pretrained_ssdlite_calibration_diagnostic')
-    result = dict(kind=kind,independent_test=validation,independent_session_validation=validation,
+    result = dict(kind=kind,independent_test=validation and not validation_reuse,independent_session_validation=validation,
+                  validation_reused_after_prior_result=validation_reuse,
                   unseen_map_test=False,evaluation_split=expected_split,
                   annotations_sha256=file_digest(dataset/'annotations.coco.json'),
                   export_metadata_sha256=file_digest(dataset/'dataset.json'),
@@ -104,6 +107,7 @@ if __name__ == '__main__':
     parser.add_argument('--transfer',action='store_true')
     parser.add_argument('--validation',action='store_true')
     parser.add_argument('--provenance-dataset',type=Path)
+    parser.add_argument('--validation-reuse',action='store_true')
     args = parser.parse_args()
     evaluate(args.dataset,args.checkpoint,args.output,transfer=args.transfer,validation=args.validation,
-             provenance_dataset=args.provenance_dataset)
+             provenance_dataset=args.provenance_dataset,validation_reuse=args.validation_reuse)

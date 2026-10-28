@@ -142,3 +142,7 @@ python scripts/evaluate_pretrained_detection.py \
 For the original synthetic baseline, also supply its exact metadata with `--provenance-dataset data/cutman-synthetic-1/dataset.json`.
 Use new directories for all outputs.
 Do not transfer any reserved validation export into the training mixture.
+
+A later [annotation review](annotation-expansion.md) identified a missed body in the first recording and excluded one uncertain strip.
+New exports contain the revised training labels.
+The earlier tables retain their original candidate annotations and results.

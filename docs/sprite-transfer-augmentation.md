@@ -128,3 +128,7 @@ Keep game art, model weights, screenshots, labels, and complete local reports pr
 The [separate-session intake](visual-validation-session.md) completed the new recording requirement.
 The recording remains outside gradient training.
 The later [real-image transfer](real-body-transfer.md) completed the first fixed-checkpoint validation on its reviewed images.
+
+A later [annotation review](annotation-expansion.md) identified a missed body in the first recording and excluded one uncertain strip.
+New exports contain the revised training labels.
+The earlier tables retain their original candidate annotations and results.
