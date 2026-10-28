@@ -14,7 +14,7 @@ try:
     import torch
     from torchvision.models.detection.ssd import SSD
     from torchvision.models.detection._utils import BoxCoder
-    from vimm8bdm.sprite_synthesis import POSES, build_bank, build_dataset, composite
+    from vimm8bdm.sprite_synthesis import POSES, build_bank, build_dataset, composite, augment_scene
     from vimm8bdm.sprite_transfer import SyntheticImages, load_checkpoint
 except ImportError:
     torch = None
@@ -58,12 +58,28 @@ class SpriteTransferTests(unittest.TestCase):
         background = Image.new('RGB',(320,240),(35,55,75))
         sprite = Image.new('RGBA',(20,30),(200,10,80,255))
         rng = random.Random(7)
-        for _ in range(100):
-            image, expected = composite(background,sprite,rng)
+        for number in range(100):
+            image, expected = composite(background,sprite,rng,profile="baseline" if number % 2 else "combat")
             changed = np.any(np.asarray(image) != np.asarray(background),axis=2)
             ys,xs = np.nonzero(changed)
             self.assertEqual(expected,[int(xs.min()),int(ys.min()),int(xs.max()-xs.min()+1),int(ys.max()-ys.min()+1)])
             self.assertLessEqual(expected[1]+expected[3],200)
+
+    def test_scene_augmentation_keeps_geometry_and_is_reproducible(self):
+        image = Image.new('RGB', (320, 240), (20, 60, 90))
+        image.paste((230, 0, 80), (100, 50, 140, 110))
+        first = augment_scene(image, random.Random(7))
+        second = augment_scene(image, random.Random(7))
+        self.assertTrue(np.array_equal(np.asarray(first), np.asarray(second)))
+        pixels = np.asarray(first)
+        changed = np.any(pixels != pixels[0, 0], axis=2)
+        ys, xs = np.nonzero(changed)
+        self.assertEqual([int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())], [100, 50, 139, 109])
+        self.assertEqual(first.size, image.size)
+
+    def test_unknown_generation_profile_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'profile is unsupported'):
+            composite(Image.new('RGB',(320,240)), Image.new('RGBA',(20,30)), random.Random(0), profile='other')
 
     def test_dataset_reproduces_images_and_keeps_source_and_splits_separate(self):
         with tempfile.TemporaryDirectory() as directory:

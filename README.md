@@ -292,3 +292,5 @@ The [pretrained detector check](docs/pretrained-detection.md) records official S
 
 The [synthetic sprite transfer](docs/sprite-transfer.md) improves Cutman calibration locations to six of nine.
 The model remains outside the live controller because it did not pass the recall condition.
+
+The [appearance follow-up](docs/sprite-transfer-augmentation.md) found additional false candidates and rejected the second synthetic model.

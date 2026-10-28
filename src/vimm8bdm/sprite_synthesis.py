@@ -82,10 +82,16 @@ def build_bank(packages, output):
     return metadata
 
 
-def composite(background, sprite, rng):
+def composite(background, sprite, rng, profile="baseline"):
     """Return one RGB image and the visible xywh box after clipping and optional occlusion."""
+    if profile not in ('baseline', 'combat'):
+        raise ValueError('The synthetic generation profile is unsupported')
     image = background.convert('RGB').resize((320, 240), Image.Resampling.BILINEAR)
-    height = round(2 ** rng.uniform(3.6, 7.65))
+    if profile == 'combat':
+        lower, upper = (4.32, 6.) if rng.random() < .7 else (6., 7.65)
+        height = round(2 ** rng.uniform(lower, upper))
+    else:
+        height = round(2 ** rng.uniform(3.6, 7.65))
     width = max(2, round(sprite.width * height / sprite.height * rng.uniform(.9, 1.1)))
     sprite = sprite.resize((width, height), rng.choice((Image.Resampling.NEAREST, Image.Resampling.BILINEAR)))
     sprite = ImageEnhance.Brightness(sprite).enhance(rng.uniform(.65, 1.1))
@@ -112,11 +118,24 @@ def composite(background, sprite, rng):
     return image, [x0, y0, x1 - x0, y1 - y0]
 
 
-def build_dataset(bank, recording, reviewed_frames, output, seed=7, train_count=512, validation_count=128):
+def augment_scene(image, rng):
+    """Change RGB appearance without changing image coordinates."""
+    image = ImageEnhance.Color(image).enhance(rng.uniform(.6, 1.3))
+    image = ImageEnhance.Contrast(image).enhance(rng.uniform(.75, 1.2))
+    image = ImageEnhance.Brightness(image).enhance(rng.uniform(.75, 1.15))
+    if rng.random() < .5:
+        color = rng.choice(((255, 0, 0), (255, 220, 0), (255, 255, 255)))
+        image = Image.blend(image, Image.new('RGB', image.size, color), rng.uniform(.08, .35))
+    return image
+
+
+def build_dataset(bank, recording, reviewed_frames, output, seed=7, train_count=512, validation_count=128, profile="baseline"):
     if output.exists():
         raise FileExistsError('The synthetic image directory already exists')
     if recording.resolve() in output.resolve().parents:
         raise ValueError('Create synthetic images outside the original recording directory')
+    if profile not in ('baseline', 'combat'):
+        raise ValueError('The synthetic generation profile is unsupported')
     if min(train_count, validation_count) < 1:
         raise ValueError('Both synthetic splits require images')
     metadata = json.loads((bank / 'bank.json').read_text())
@@ -154,7 +173,9 @@ def build_dataset(bank, recording, reviewed_frames, output, seed=7, train_count=
         images, annotations = [], []
         for number in range(count):
             background, sprite = rng.choice(available), rng.randrange(len(sprites))
-            image, box = composite(backgrounds[background], sprites[sprite], rng)
+            image, box = composite(backgrounds[background], sprites[sprite], rng, profile=profile)
+            if profile == 'combat':
+                image = augment_scene(image, rng)
             filename = f'{split}/{number:06d}.png'
             image.save(output / filename)
             image_hashes[filename] = file_digest(output / filename)
@@ -168,7 +189,7 @@ def build_dataset(bank, recording, reviewed_frames, output, seed=7, train_count=
         counts[split] = count
     if source_identity(recording) != (session, source_hashes):
         raise ValueError('The background recording changed during image generation')
-    result = dict(format=DATA_FORMAT, seed=seed, counts=counts, image_sha256=image_hashes,
+    result = dict(format=DATA_FORMAT, seed=seed, generation_profile=profile, counts=counts, image_sha256=image_hashes,
                   annotation_sha256={split:file_digest(output / f'{split}.coco.json') for split in counts},
                   bank_sha256=file_digest(bank / 'bank.json'), source_session_id=session,
                   source_hashes=source_hashes, source_integrity=integrity, background_frames=reviewed_frames,
@@ -190,12 +211,16 @@ def main():
     dataset.add_argument('--recording', type=Path, required=True)
     dataset.add_argument('--frames', type=int, nargs='+', required=True)
     dataset.add_argument('--output', type=Path, required=True)
+    dataset.add_argument('--profile', choices=('baseline', 'combat'), default='baseline')
+    dataset.add_argument('--train-count', type=int, default=512)
+    dataset.add_argument('--validation-count', type=int, default=128)
     args = parser.parse_args()
     if args.command == 'bank':
         result = build_bank(args.packages, args.output)
         print(json.dumps(dict(views=len(result['templates']), poses=len(result['upright_frames']))))
     else:
-        result = build_dataset(args.bank, args.recording, args.frames, args.output)
+        result = build_dataset(args.bank, args.recording, args.frames, args.output,
+                               profile=args.profile, train_count=args.train_count, validation_count=args.validation_count)
         print(json.dumps(result['counts']))
 
 

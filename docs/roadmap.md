@@ -217,6 +217,9 @@ The [pretrained detector check](pretrained-detection.md) loaded official SSDLite
 The unchanged model also located zero of nine positive images.
 The [synthetic sprite transfer](sprite-transfer.md) improved real calibration locations to six of nine.
 Recall remains below the required 0.8, so the detector remains offline.
+The [appearance follow-up](sprite-transfer-augmentation.md) reviewed 37 real calibration images in total.
+Neither synthetic model passed the expanded conditions.
+A separate real recording is necessary before supervised transfer to real images.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

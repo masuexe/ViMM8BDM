@@ -153,3 +153,6 @@ python scripts/evaluate_pretrained_detection.py \
 The short frame list illustrates the interface and does not reproduce the 32-background experiment.
 All output directories must be new.
 Keep model weights, sprite art, screenshots, complete labels, and local generation plans outside the public repository.
+
+The [appearance augmentation experiment](sprite-transfer-augmentation.md) expanded the real-image review.
+It exposed additional false candidates and did not establish a better replacement model.
