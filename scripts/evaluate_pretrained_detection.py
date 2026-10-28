@@ -16,12 +16,14 @@ from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transf
 from vimm8bdm.recording import file_digest
 
 
-def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None, validation_reuse=False):
+def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None, validation_reuse=False, local_zoom=False):
     if output.exists():
         raise FileExistsError('The evaluation directory already exists')
     metadata = json.loads((dataset / 'dataset.json').read_text())
     if validation_reuse and not validation:
         raise ValueError('Declare validation reuse only with an explicit reserved validation run')
+    if local_zoom and not transfer:
+        raise ValueError('Local zoom requires a project body-transfer checkpoint')
     expected_split = 'validation' if validation else 'calibration'
     if metadata['format'] != 'vimm8bdm-visible-coco-v1' or metadata['split'] != expected_split:
         raise ValueError('Select the intended calibration or reserved validation export')
@@ -55,6 +57,10 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
             tensor = pil_to_tensor(rgb).to(dtype=torch.float32) / 255
             prediction = model([tensor])[0]
             boxes = person_boxes(prediction, rgb.width, rgb.height, threshold)
+            window = None
+            if local_zoom:
+                from vimm8bdm.local_zoom import refine_with_local_zoom
+                boxes, window = refine_with_local_zoom(model, rgb, prediction)
             if transfer:
                 for box in boxes:
                     box['category'] = 'cutman_body_candidate'
@@ -64,7 +70,8 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
             all_person_scores = prediction['scores'][prediction['labels'] == 1].tolist()
             cases.append(dict(frame=row['id'],positive=bool(targets),predictions=boxes,
                               best_iou=iou,maximum_person_score=max(all_person_scores,default=0),
-                              processing_ms=elapsed))
+                              processing_ms=elapsed,local_zoom_crop=window,
+                              local_zoom_extra_passes=int(window is not None)))
     positives = [row for row in cases if row['positive']]
     negatives = [row for row in cases if not row['positive']]
     times = sorted(row['processing_ms'] for row in cases)
@@ -78,6 +85,8 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
     result = dict(kind=kind,independent_test=validation and not validation_reuse,independent_session_validation=validation,
                   validation_reused_after_prior_result=validation_reuse,
                   unseen_map_test=False,evaluation_split=expected_split,
+                  local_zoom_enabled=local_zoom,local_zoom_crop_pixels=320 if local_zoom else None,
+                  local_zoom_trigger_minimum_score=.2 if local_zoom else None,
                   annotations_sha256=file_digest(dataset/'annotations.coco.json'),
                   export_metadata_sha256=file_digest(dataset/'dataset.json'),
                   torch=torch.__version__,torchvision=torchvision.__version__,device='cpu',threads=4,
@@ -89,6 +98,7 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
                   summary=dict(positive_images=len(positives),negative_images=len(negatives),
                                localized_positives=located,negative_images_with_predictions=false_positive,
                                total_predictions=sum(len(row['predictions']) for row in cases),
+                               local_zoom_extra_passes=sum(row['local_zoom_extra_passes'] for row in cases),
                                processing_ms=dict(p50=statistics.median(times),
                                                   p95=times[math.ceil(.95*len(times))-1],maximum=times[-1])),
                   conditions=conditions,conditions_passed=all(conditions.values()),cases=cases)
@@ -108,6 +118,7 @@ if __name__ == '__main__':
     parser.add_argument('--validation',action='store_true')
     parser.add_argument('--provenance-dataset',type=Path)
     parser.add_argument('--validation-reuse',action='store_true')
+    parser.add_argument('--local-zoom',action='store_true')
     args = parser.parse_args()
     evaluate(args.dataset,args.checkpoint,args.output,transfer=args.transfer,validation=args.validation,
-             provenance_dataset=args.provenance_dataset,validation_reuse=args.validation_reuse)
+             provenance_dataset=args.provenance_dataset,validation_reuse=args.validation_reuse,local_zoom=args.local_zoom)

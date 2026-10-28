@@ -225,6 +225,9 @@ It located seven of nine candidate bodies and did not pass the recall condition.
 The [expanded annotation review](annotation-expansion.md) increased real positive training images to 44.
 It also fixed one earlier missed-body label.
 Repeated validation remained at seven of nine locations.
+The [conditional local zoom experiment](local-zoom.md) reaches eight of nine locations on reused validation images.
+Native Windows maximum processing reaches 106.58 milliseconds.
+The next step checks continuous images without game input.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

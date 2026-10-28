@@ -1,0 +1,125 @@
+{
+  "format": "vimm8bdm-conditional-local-zoom-experiment-v1",
+  "method": {
+    "crop_pixels": 320,
+    "weak_trigger_score": 0.2,
+    "accepted_score": 0.5,
+    "maximum_extra_calls": 1,
+    "skip_extra_call_if_full_frame_has_candidate": true,
+    "model_weights_changed": false
+  },
+  "training_resubstitution": {
+    "independent_test": false,
+    "validation_used": false,
+    "summary": {
+      "images": 107,
+      "positives": 44,
+      "negatives": 63,
+      "base_located": 42,
+      "zoom_located": 42,
+      "base_negative_candidates": 0,
+      "zoom_negative_candidates": 0,
+      "extra_passes": 6,
+      "p50_ms": 26.834473999770125,
+      "maximum_ms": 68.21581300027901
+    }
+  },
+  "linux": {
+    "independent_test": false,
+    "independent_session_validation": true,
+    "validation_reused_after_prior_result": true,
+    "unseen_map_test": false,
+    "local_zoom_enabled": true,
+    "local_zoom_crop_pixels": 320,
+    "local_zoom_trigger_minimum_score": 0.2,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "threads": 4,
+    "warmup_calls": 5,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 8,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 8,
+      "local_zoom_extra_passes": 4,
+      "processing_ms": {
+        "p50": 23.662947000048007,
+        "p95": 57.527755001501646,
+        "maximum": 57.527755001501646
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": true,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": true,
+    "input_sent": false
+  },
+  "windows": {
+    "independent_test": false,
+    "independent_session_validation": true,
+    "validation_reused_after_prior_result": true,
+    "unseen_map_test": false,
+    "local_zoom_enabled": true,
+    "local_zoom_crop_pixels": 320,
+    "local_zoom_trigger_minimum_score": 0.2,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "threads": 4,
+    "warmup_calls": 5,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 8,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 8,
+      "local_zoom_extra_passes": 4,
+      "processing_ms": {
+        "p50": 38.0237000008492,
+        "p95": 106.57700000047043,
+        "maximum": 106.57700000047043
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": true,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": true,
+    "input_sent": false
+  },
+  "protocol_sha256": "8a48a4a6c08db53eba595c70242de2f94a5a84cd5be29f142e149411520cb2d0",
+  "implementation_sha256": "cd1fa5f4a4593b1c69712faecfcab2a2916930db64940b6ed88b317d2cbff508",
+  "new_independent_test": false,
+  "human_box_reviewed": false,
+  "automatic_aim_enabled": false,
+  "automatic_attack_enabled": false,
+  "decision": "Proceed to observation-only continuous-image checks. Retain the slow conditional frames and the remaining missed small body as limitations.",
+  "verification": {
+    "linux": {
+      "tests": 226,
+      "skipped": 0,
+      "seconds": 3.695
+    },
+    "windows": {
+      "tests": 226,
+      "skipped": 0,
+      "seconds": 13.029
+    },
+    "ste_lint_findings": 0,
+    "cross_platform_comparison": {
+      "same_frame_decisions": true,
+      "same_crop_windows": true,
+      "maximum_allowed_box_difference_pixels": 0.0001,
+      "maximum_allowed_score_difference": 1e-06
+    }
+  }
+}

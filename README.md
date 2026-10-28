@@ -302,3 +302,6 @@ It located seven of nine candidate bodies and did not pass the recall condition.
 
 The [expanded annotation review](docs/annotation-expansion.md) repairs an earlier missed-body label and adds more training examples.
 Repeated validation remains at seven of nine locations.
+
+The [conditional local zoom experiment](docs/local-zoom.md) locates eight of nine bodies on reused validation images.
+Automatic combat remains disabled.
