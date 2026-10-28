@@ -1,0 +1,121 @@
+{
+  "format": "vimm8bdm-continuous-body-scan-evidence-v1",
+  "frames": 1192,
+  "model_weights_changed": false,
+  "independent_test": false,
+  "ground_truth_complete": false,
+  "human_box_reviewed": false,
+  "recall_measured": false,
+  "false_positive_rate_measured": false,
+  "live_capture_measured": false,
+  "automatic_input_sent": false,
+  "linux": {
+    "summary": {
+      "frames": 1192,
+      "frames_with_candidates": 557,
+      "total_candidates": 568,
+      "frames_with_multiple_candidates": 11,
+      "extra_model_calls": 333,
+      "candidate_presence_changes": 181,
+      "adjacent_candidate_pairs": 466,
+      "adjacent_top_boxes_iou_below_point_one": 33,
+      "processing_ms": {
+        "p50": 29.371123499913665,
+        "p95": 61.3625719997799,
+        "maximum": 78.00089000011212
+      },
+      "archive_to_result_ms": {
+        "p50": 32.04595850002079,
+        "p95": 64.13929199879931,
+        "maximum": 80.29564800017397
+      },
+      "estimated_capture_plus_processing_ms": {
+        "p50": 37.23200450062867,
+        "p95": 68.84451999948224,
+        "maximum": 87.40949000011213
+      },
+      "measured_processing_over_50_ms": 271,
+      "measured_processing_over_100_ms": 0,
+      "scan_seconds": 45.18712024600063
+    },
+    "source_unchanged": true,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "source_session_id": "dbdee9198c0afa234f5058f649bc5c578a4a5155a0eebf5c1d8d147bfbebfd17"
+  },
+  "windows": {
+    "summary": {
+      "frames": 1192,
+      "frames_with_candidates": 557,
+      "total_candidates": 568,
+      "frames_with_multiple_candidates": 11,
+      "extra_model_calls": 333,
+      "candidate_presence_changes": 181,
+      "adjacent_candidate_pairs": 466,
+      "adjacent_top_boxes_iou_below_point_one": 33,
+      "processing_ms": {
+        "p50": 39.15280000001076,
+        "p95": 80.64030000059574,
+        "maximum": 97.44120000141265
+      },
+      "archive_to_result_ms": {
+        "p50": 42.80964999998105,
+        "p95": 84.33920000061335,
+        "maximum": 101.08310000032361
+      },
+      "estimated_capture_plus_processing_ms": {
+        "p50": 47.05289999968785,
+        "p95": 88.6965000008573,
+        "maximum": 101.85590000141265
+      },
+      "measured_processing_over_50_ms": 338,
+      "measured_processing_over_100_ms": 0,
+      "scan_seconds": 60.32405169999947
+    },
+    "source_unchanged": true,
+    "checkpoint_sha256": "07000ea9875118f3fbc6ad2b96cd310336fab033355cdc8f36564239b325746a",
+    "source_session_id": "dbdee9198c0afa234f5058f649bc5c578a4a5155a0eebf5c1d8d147bfbebfd17"
+  },
+  "diagnostics": {
+    "reviewed_images": 43,
+    "selection": "Sparse crop acceptances, all multiple-box frames, and sparse adjacent box jumps.",
+    "model_assisted_selection": true,
+    "crop_accepted_frames": 136,
+    "full_frame_accepted_frames": 421,
+    "cross_platform_same_frame_decisions": true,
+    "maximum_coordinate_difference_pixels": 0.000274658203125,
+    "maximum_score_difference": 2.6226043701171875e-06
+  },
+  "observed_failure_examples": [
+    {
+      "frame": 965,
+      "prediction": 0,
+      "score": 0.866775393486023,
+      "finding": "A separate black-and-white round projectile receives the body label."
+    },
+    {
+      "frame": 447,
+      "prediction": 0,
+      "score": 0.9995187520980835,
+      "finding": "The larger box covers both the visible body and the foreground projectile."
+    },
+    {
+      "frame": 677,
+      "predictions": 2,
+      "finding": "Large foreground sprites receive body boxes while the visible HUD shows local player death. Actor identity is not established."
+    }
+  ],
+  "decision": "Keep automatic aim and attack disabled. Review projectile negatives from the training recording before an observation-only live test.",
+  "verification": {
+    "linux": {
+      "tests": 226,
+      "skipped": 0,
+      "seconds": 3.837
+    },
+    "windows": {
+      "tests": 226,
+      "skipped": 0,
+      "seconds": 12.46
+    },
+    "ste_lint_findings": 0
+  }
+}

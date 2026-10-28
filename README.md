@@ -305,3 +305,6 @@ Repeated validation remains at seven of nine locations.
 
 The [conditional local zoom experiment](docs/local-zoom.md) locates eight of nine bodies on reused validation images.
 Automatic combat remains disabled.
+
+The [continuous scan](docs/continuous-body-scan.md) found projectile confusion outside the earlier reviewed samples.
+The detector remains outside automatic combat.

@@ -227,7 +227,8 @@ It also fixed one earlier missed-body label.
 Repeated validation remained at seven of nine locations.
 The [conditional local zoom experiment](local-zoom.md) reaches eight of nine locations on reused validation images.
 Native Windows maximum processing reaches 106.58 milliseconds.
-The next step checks continuous images without game input.
+The [continuous scan](continuous-body-scan.md) found projectile confusion beyond the earlier negative samples.
+The next step reviews projectile negatives from the training recording.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.
