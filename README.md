@@ -316,4 +316,6 @@ The [body observation runtime](docs/body-shadow.md) adds live capture and detect
 Its first attended test completed 298 images with empty actions and normal operator control.
 
 The [mouse-only tracking prototype](docs/aim-only.md) adds candidate checks, confirmation, and small mouse proposals.
-Its first attended aim test remains pending, and attack stays disabled.
+Its first attended aim test produced one small turn that the operator did not observe.
+A separate local practice profile requests cheat permission for a god-mode check.
+Attack stays disabled.

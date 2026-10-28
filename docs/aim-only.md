@@ -3,7 +3,8 @@
 The `body_aim` policy proposes small mouse movements toward a visible Cutman candidate.
 It never proposes movement keys or attack.
 The existing pause, focus, result-age, and input-watchdog checks remain active.
-The first attended aim test remains pending.
+The first attended aim test produced one small mouse dispatch.
+The operator did not observe automatic turning.
 
 ## Candidate checks
 
@@ -86,3 +87,40 @@ Linux and native Windows each passed all 241 tests without skips.
 A native Windows check also processed five archived images through the actual model and aim policy.
 It produced three nonzero mouse proposals and sent no input.
 This check does not measure live feedback.
+
+
+## First attended aim result
+
+The native Windows run completed 298 images in approximately thirty seconds.
+The input worker accepted all action messages and stopped normally.
+Only 31 images supplied an eligible target.
+Thirty images requested further confirmation, and one image reached the tracking condition.
+That image produced six horizontal counts and minus four vertical counts after input conversion.
+The other messages contained no mouse movement.
+No message contained movement keys or attack.
+
+The operator did not observe automatic turning and reported frequent deaths from Cutman attacks.
+The result does not establish useful aim feedback.
+Most images failed to supply an eligible target, so this test produced little motion to observe.
+The runtime did not save image ground truth for these frames.
+The report cannot assign all missing targets to death, occlusion, or model error.
+The [attended evidence](evidence/aim-first-attended.json) retains the sparse-motion result.
+
+## Local practice conditions
+
+A separate private loopback server now requests `sv_cheats 1` at startup.
+Its client uses a new copy of the saved configuration and binds F7 to `god`.
+These settings belong to a local interface test.
+They must not become a deployment requirement or evidence of normal combat survival.
+The game executable and original packages remain unchanged.
+
+The engine repository's [inherited console reference](https://github.com/doomtech/zandronum/blob/master/docs/console.html) describes network cheat permission and the god-mode toggle.
+Permission alone does not enable god mode.
+The reference describes protection against normal attacks and notes that telefragging can still kill the player.
+The supplied alpha and loaded MODs still require an attended activation check.
+The current practice profile records god mode as unverified.
+
+After joining as a living player, press F7 once and inspect the game message.
+Do not repeatedly press F7 because it toggles the mode.
+Check ordinary Cutman damage before the next aim run.
+The next comparison keeps the detector and aim thresholds unchanged.

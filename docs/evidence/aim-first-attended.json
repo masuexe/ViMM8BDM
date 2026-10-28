@@ -1,0 +1,51 @@
+{
+  "format": "vimm8bdm-first-attended-aim-result-v1",
+  "operator_report": "The operator did not observe automatic turning and reported frequent deaths from Cutman attacks.",
+  "frames": 298,
+  "inference_frames": 298,
+  "eligible_frames": 31,
+  "aim_reasons": {
+    "missing_target": 267,
+    "confirm_target": 30,
+    "track_target": 1
+  },
+  "rejection_reasons": {
+    "low_aim_score": 10,
+    "cutman_appearance": 6,
+    "box_extent": 4
+  },
+  "mouse_proposals": 1,
+  "nonzero_mouse_dispatches": 1,
+  "dispatched_counts": [
+    [
+      6,
+      -4
+    ]
+  ],
+  "movement_key_proposals": 0,
+  "attack_proposals": 0,
+  "worker_stopped": true,
+  "input_trace_dropped_events": 0,
+  "exit_reason": "duration_limit",
+  "effective_aim_observed": false,
+  "detector_quality_measured": false,
+  "stale_results": 0,
+  "timing_ms": {
+    "capture_ms": {
+      "p50": 7.4496,
+      "p95": 10.4723,
+      "maximum": 22.7063
+    },
+    "policy_ms": {
+      "p50": 44.0069,
+      "p95": 79.8668,
+      "maximum": 91.4314
+    },
+    "loop_ms": {
+      "p50": 51.8346,
+      "p95": 88.1826,
+      "maximum": 99.891
+    }
+  },
+  "decision": "Retain the sparse-motion failure. Enable cheat permission in a separate local practice server and confirm god mode before another aim test. Keep model and aim thresholds unchanged."
+}
