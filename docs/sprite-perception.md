@@ -116,7 +116,7 @@ Do not commit game art or original packages.
 
 ## Real appearance collection
 
-The existing map recordings supply no reviewed positive examples of another player.
+The earlier map recordings supply no reviewed positive examples of another player.
 A new stock local server loads the original target stack and one original Cutman Bot.
 The normal client joins as an ordinary Player with fixed Grenade Man.
 A client combat message established that Cutman was active after startup.
@@ -133,3 +133,7 @@ The primary purpose is real player-appearance data for visual box review.
 Input labels remain provisional until a separate combat review.
 This is not an automated bot match or a successful aiming policy.
 The recording remains pending.
+
+The first collection is complete.
+The [visible-body review](visible-body-calibration.md) supplies candidate COCO boxes and real-image matcher results.
+Both masks located zero of nine reviewed positive images.

@@ -1,0 +1,93 @@
+{
+  "format": "vimm8bdm-visible-calibration-evidence-v1",
+  "recording": {
+    "frames": 1193,
+    "events": 5116,
+    "dropped_items": 0,
+    "archive_integrity": "pass",
+    "input_sent": false,
+    "operator_reported_cutman": true,
+    "operator_reported_interruptions": true
+  },
+  "annotation": {
+    "reviewed_images": 24,
+    "accepted_images": 20,
+    "positive_images": 9,
+    "negative_images": 11,
+    "excluded_images": 4,
+    "boxes": 9,
+    "annotator": "development_agent_visual_review",
+    "human_box_reviewed": false,
+    "independent_test": false,
+    "action_training_eligible": false,
+    "training_ready": false,
+    "source_files_changed": false
+  },
+  "evaluation": {
+    "kind": "real_image_calibration_diagnostic",
+    "independent_test": false,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "threshold": 0.97,
+    "minimum_iou": 0.5
+  },
+  "variants": {
+    "neutral": {
+      "positive_images": 9,
+      "negative_images": 11,
+      "localized_positives": 0,
+      "negative_candidates": 0,
+      "median_processing_ms": 144.8356410000997
+    },
+    "opaque": {
+      "positive_images": 9,
+      "negative_images": 11,
+      "localized_positives": 0,
+      "negative_candidates": 0,
+      "median_processing_ms": 135.36648149965913
+    }
+  },
+  "automated_combat_enabled": false,
+  "color_proposal_experiment": {
+    "kind": "fixed_color_calibration_diagnostic",
+    "independent_test": false,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "parameters": {
+      "red_minimum": 90,
+      "red_green_ratio_minimum": 1.7,
+      "blue_red_ratio_range": [
+        0.15,
+        0.85
+      ],
+      "closing_kernel": 5,
+      "minimum_area": 6,
+      "minimum_width": 2,
+      "minimum_height": 3,
+      "scene_bottom": 200,
+      "horizontal_expansion": 0.3,
+      "vertical_expansion": 0.2
+    },
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 11,
+      "localized_positives": 7,
+      "negative_images_with_proposals": 11,
+      "total_proposals": 892,
+      "median_processing_ms": 2.7094650013168575
+    }
+  },
+  "verification": {
+    "linux": {
+      "tests": 199,
+      "skipped": 0,
+      "seconds": 3.933
+    },
+    "windows": {
+      "tests": 199,
+      "skipped": 0,
+      "seconds": 30.15
+    },
+    "ste_lint_findings": 0
+  }
+}

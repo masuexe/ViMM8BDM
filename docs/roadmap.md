@@ -210,7 +210,9 @@ The shadow interface completed a 30-second attended check with normal manual con
 The complete-loop 95th percentile was 14.54 milliseconds.
 No learned navigation controller passed its steering-quality conditions.
 The [sprite perception baseline](sprite-perception.md) also failed scale, rendering, and processing conditions.
-A stock local Cutman Bot scene now supports human-controlled appearance collection.
+A stock local Cutman Bot scene supplied the first real combat recording.
+The [candidate body review](visible-body-calibration.md) exported 20 private calibration images.
+Both standing-template masks located zero of nine positive images.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.
