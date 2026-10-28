@@ -119,7 +119,7 @@ class SpriteTransferTests(unittest.TestCase):
             review = root / 'review.json'
             review.write_text(json.dumps(rows))
             export(source, review, root / 'validation')
-            with self.assertRaisesRegex(ValueError, 'synthetic body dataset'):
+            with self.assertRaisesRegex(ValueError, 'body training dataset'):
                 SyntheticImages(root / 'validation', 'train')
 
     def test_transfer_checkpoint_rejects_an_unknown_training_identity(self):

@@ -220,7 +220,8 @@ Recall remains below the required 0.8, so the detector remains offline.
 The [appearance follow-up](sprite-transfer-augmentation.md) reviewed 37 real calibration images in total.
 Neither synthetic model passed the expanded conditions.
 A [separate visual validation recording](visual-validation-session.md) is complete and reserved outside training.
-Its seventeen reviewed images have no detector predictions yet.
+The [first real-image transfer](real-body-transfer.md) tested a fixed checkpoint on those seventeen reviewed images.
+It located seven of nine candidate bodies and did not pass the recall condition.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

@@ -1,10 +1,11 @@
 """Check detector output filtering without downloads or game state."""
 from pathlib import Path
 import tempfile
+import copy
 import unittest
 from types import SimpleNamespace
 
-from vimm8bdm.pretrained_detection import load_model, person_boxes
+from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transfer_evaluation, complete_synthetic_provenance
 from vimm8bdm.visual_metrics import box_iou
 
 
@@ -34,6 +35,41 @@ class PretrainedDetectionTests(unittest.TestCase):
             checkpoint.write_bytes(b'not the official weights')
             with self.assertRaisesRegex(ValueError, 'expected hash'):
                 load_model(checkpoint)
+
+    def test_reserved_evaluation_checks_both_recording_identity_and_archive(self):
+        metadata = dict(format='vimm8bdm-visible-coco-v1',split='validation',reserved_for_validation=True,
+                        source_session_id='validation_recording',source_hashes={'frames.vrec':'validation_archive'})
+        checkpoint = dict(training_source_session_id='real_training',
+                          training_source_session_ids=['real_training','synthetic_background'],
+                          training_source_archives={'real_training':'real_archive','synthetic_background':'background_archive'})
+        check_transfer_evaluation(metadata,checkpoint,validation=True)
+        for source,archive in [('real_training','validation_archive'),
+                               ('validation_recording','background_archive')]:
+            changed = copy.deepcopy(metadata)
+            changed.update(source_session_id=source,source_hashes={'frames.vrec':archive})
+            with self.assertRaisesRegex(ValueError,'supplied training data'):
+                check_transfer_evaluation(changed,checkpoint,validation=True)
+
+    def test_reserved_evaluation_rejects_missing_history_and_implicit_split_selection(self):
+        metadata = dict(format='vimm8bdm-visible-coco-v1',split='validation',reserved_for_validation=True,
+                        source_session_id='validation_recording',source_hashes={'frames.vrec':'validation_archive'})
+        checkpoint = dict(training_source_session_id='real_training')
+        with self.assertRaisesRegex(ValueError,'complete project recording provenance'):
+            check_transfer_evaluation(metadata,checkpoint,validation=True)
+        with self.assertRaisesRegex(ValueError,'split explicitly'):
+            check_transfer_evaluation(metadata,checkpoint)
+
+    def test_legacy_provenance_requires_the_exact_original_synthetic_metadata(self):
+        checkpoint = dict(synthetic_dataset_sha256='recorded_digest',training_source_session_id='background')
+        dataset = dict(format='vimm8bdm-synthetic-body-coco-v1',source_session_id='background',
+                       source_hashes={'frames.vrec':'background_archive'})
+        full = complete_synthetic_provenance(checkpoint,dataset,'recorded_digest')
+        self.assertEqual(full['training_source_archives'],{'background':'background_archive'})
+        self.assertNotIn('training_source_archives',checkpoint)
+        with self.assertRaisesRegex(ValueError,'does not match'):
+            complete_synthetic_provenance(checkpoint,dataset,'changed_digest')
+        with self.assertRaisesRegex(ValueError,'does not match'):
+            complete_synthetic_provenance(checkpoint,{**dataset,'source_session_id':'other'},'recorded_digest')
 
     def test_iou_distinguishes_partial_overlap_from_point_contact(self):
         self.assertAlmostEqual(box_iou([0, 0, 4, 4], [2, 0, 4, 4]), 1/3)

@@ -70,5 +70,6 @@
       "seconds": 11.48
     },
     "ste_lint_findings": 0
-  }
+  },
+  "stage": "Intake before the first detector prediction run; later results are separate evidence."
 }

@@ -38,3 +38,33 @@ def load_model(checkpoint):
     model.load_state_dict(torch.load(checkpoint, map_location='cpu', weights_only=True), strict=True)
     model.eval()
     return model
+
+
+def check_transfer_evaluation(metadata, checkpoint, validation=False):
+    """Reject training recordings and require complete provenance for reserved validation."""
+    expected = 'validation' if validation else 'calibration'
+    if metadata.get('format') != 'vimm8bdm-visible-coco-v1' or metadata.get('split') != expected:
+        raise ValueError('Select the intended calibration or reserved validation split explicitly')
+    primary = checkpoint.get('training_source_session_id')
+    sources = set(checkpoint.get('training_source_session_ids', [primary]))
+    archives = checkpoint.get('training_source_archives', {})
+    if (metadata.get('source_session_id') in sources
+            or metadata.get('source_hashes', {}).get('frames.vrec') in archives.values()):
+        raise ValueError('The evaluation recording or image archive supplied training data')
+    if validation and (metadata.get('reserved_for_validation') is not True
+                       or not primary or primary not in sources or not sources
+                       or set(archives) != sources or not all(archives.values())):
+        raise ValueError('Reserved validation requires complete project recording provenance')
+
+
+def complete_synthetic_provenance(checkpoint, dataset, dataset_sha256):
+    """Recover legacy recording provenance only from the checkpoint-bound synthetic dataset."""
+    if (dataset_sha256 != checkpoint.get('synthetic_dataset_sha256')
+            or dataset.get('format') != 'vimm8bdm-synthetic-body-coco-v1'
+            or dataset.get('source_session_id') != checkpoint.get('training_source_session_id')
+            or not dataset.get('source_hashes', {}).get('frames.vrec')):
+        raise ValueError('The provenance dataset does not match the legacy synthetic checkpoint')
+    source = dataset['source_session_id']
+    return {**checkpoint, 'training_source_session_ids': [source],
+            'training_source_archives': {source: dataset['source_hashes']['frames.vrec']},
+            'provenance_companion_sha256': dataset_sha256}

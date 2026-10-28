@@ -3,7 +3,8 @@
 The second human combat recording is complete.
 It supplies a separate session for later visual validation.
 The source remains outside gradient training.
-No detector prediction run used this reserved recording or its image export.
+The intake review used no detector predictions.
+The later [real-image transfer](real-body-transfer.md) tested a fixed final checkpoint on the reserved export.
 
 ## Recording result
 
@@ -64,7 +65,7 @@ The review does not label every frame in the complete recording.
 
 The image exporter now preserves both `calibration` and `validation` review splits.
 The current synthetic training loader rejects the real validation export.
-The current calibration evaluator also requires a calibration split.
+The evaluator requires an explicit `--validation` option and complete project training provenance for this reserved split.
 These checks prevent accidental use through those existing commands.
 They do not replace a provenance check in any future real-image training loader.
 

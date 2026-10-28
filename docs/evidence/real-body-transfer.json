@@ -1,0 +1,335 @@
+{
+  "format": "vimm8bdm-real-body-transfer-evidence-v1",
+  "dataset": {
+    "train_images": 912,
+    "synthetic_monitoring_images": 128,
+    "real_positive_frames": 13,
+    "real_negative_frames": 24,
+    "positive_variants": 208,
+    "negative_background_composites": 192,
+    "existing_synthetic_train_images": 512,
+    "project_training_recordings": 2,
+    "reserved_validation_used_for_gradients": false,
+    "human_box_reviewed": false,
+    "action_training_eligible": false
+  },
+  "training": {
+    "protocol": {
+      "format": "vimm8bdm-ssdlite-sprite-transfer-v1",
+      "epochs": 4,
+      "batch_size": 4,
+      "seed": 0,
+      "threads": 4,
+      "device": "cpu",
+      "learning_rate": 0.0005,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "gradient_clip": 10,
+      "selection": "fixed_final_epoch",
+      "train_images": 912,
+      "validation_images": 128,
+      "initial_checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "synthetic_dataset_sha256": "f1993feaf216124fecaf629ffae0b0e93dbf2a451340029d8cdd317bdb1172d7",
+      "starting_checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+      "starting_from_transfer": true,
+      "training_source_session_ids": [
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70"
+      ],
+      "training_source_archives": {
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70": "f77ed4fc4791554ee9a3e512f77348ec5bbc061e0d49b05c5599ed04cbad0c4b",
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c": "5955c774335446e21c21daccd7aeaf2160838e73d470ae8ef61d4242f81af7f2"
+      },
+      "training_source_session_id": "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+      "input_sent": false,
+      "real_calibration_images_used_for_gradients": true,
+      "independent_validation": false
+    },
+    "epochs": [
+      {
+        "epoch": 1,
+        "mean_loss": 0.7628011297630636,
+        "steps": 228,
+        "validation": {
+          "images": 128,
+          "localized": 94,
+          "recall": 0.734375,
+          "unmatched_predictions": 3,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 55.96335907899993
+      },
+      {
+        "epoch": 2,
+        "mean_loss": 0.5502540748893169,
+        "steps": 456,
+        "validation": {
+          "images": 128,
+          "localized": 97,
+          "recall": 0.7578125,
+          "unmatched_predictions": 3,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 111.66770229299982
+      },
+      {
+        "epoch": 3,
+        "mean_loss": 0.44780558654875086,
+        "steps": 684,
+        "validation": {
+          "images": 128,
+          "localized": 97,
+          "recall": 0.7578125,
+          "unmatched_predictions": 4,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 165.13807538100082
+      },
+      {
+        "epoch": 4,
+        "mean_loss": 0.4222309576314792,
+        "steps": 912,
+        "validation": {
+          "images": 128,
+          "localized": 95,
+          "recall": 0.7421875,
+          "unmatched_predictions": 4,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 215.29460052499962
+      }
+    ],
+    "seconds": 215.32087515899912,
+    "checkpoint_sha256": "acf601b5753574c7f8b8eb128415370ef4f885b2f0e80198635a13dc634cc1d3",
+    "input_sent": false
+  },
+  "baseline_validation": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": true,
+    "independent_session_validation": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+    "checkpoint_bytes": 14059719,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 7,
+      "processing_ms": {
+        "p50": 25.769067000510404,
+        "p95": 34.774686999298865,
+        "maximum": 34.774686999298865
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "mixed_validation_linux": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": true,
+    "independent_session_validation": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "acf601b5753574c7f8b8eb128415370ef4f885b2f0e80198635a13dc634cc1d3",
+    "checkpoint_bytes": 14060359,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 8,
+      "processing_ms": {
+        "p50": 26.330941000196617,
+        "p95": 35.07087300022249,
+        "maximum": 35.07087300022249
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "mixed_validation_windows_first_check": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": true,
+    "independent_session_validation": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "acf601b5753574c7f8b8eb128415370ef4f885b2f0e80198635a13dc634cc1d3",
+    "checkpoint_bytes": 14060359,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 8,
+      "processing_ms": {
+        "p50": 39.692799999102135,
+        "p95": 55.3089999993972,
+        "maximum": 55.3089999993972
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "mixed_validation_windows_isolated": {
+    "kind": "ssdlite_separate_session_visual_validation",
+    "independent_test": true,
+    "independent_session_validation": true,
+    "unseen_map_test": false,
+    "evaluation_split": "validation",
+    "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+    "export_metadata_sha256": "e4b30a17cb3c98e263899e612772df0b595bc5fd8d5754dc15688e32aec39243",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.1+cpu",
+    "device": "cpu",
+    "threads": 4,
+    "checkpoint_sha256": "acf601b5753574c7f8b8eb128415370ef4f885b2f0e80198635a13dc634cc1d3",
+    "checkpoint_bytes": 14060359,
+    "model": "ssdlite320_mobilenet_v3_large",
+    "weights": "local_sprite_transfer",
+    "class_id": 1,
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5,
+    "warmup_calls": 5,
+    "human_box_reviewed": false,
+    "input_sent": false,
+    "training_performed": true,
+    "summary": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 7,
+      "negative_images_with_predictions": 0,
+      "total_predictions": 8,
+      "processing_ms": {
+        "p50": 37.83359999943059,
+        "p95": 54.46929999925487,
+        "maximum": 54.46929999925487
+      }
+    },
+    "conditions": {
+      "recall_at_least_0_8": false,
+      "zero_negative_candidates": true,
+      "median_processing_ms_at_most_50": true
+    },
+    "conditions_passed": false
+  },
+  "windows_first_check_may_overlap_test_startup": true,
+  "validation_reservation_check": {
+    "reservation_unchanged": true,
+    "annotations_unchanged": true,
+    "source_recording_unchanged": true,
+    "checkpoint_selection": "fixed_final_epoch_4",
+    "score_threshold": 0.5,
+    "minimum_iou": 0.5
+  },
+  "representative_case_changes": [
+    {
+      "frame": 259,
+      "baseline_iou": 0,
+      "mixed_iou": 0.8537531968018821,
+      "baseline_maximum_score": 0.30493152141571045,
+      "mixed_maximum_score": 0.5976400375366211
+    },
+    {
+      "frame": 362,
+      "baseline_iou": 0,
+      "mixed_iou": 0,
+      "baseline_maximum_score": 0.44831767678260803,
+      "mixed_maximum_score": 0.2040766030550003
+    },
+    {
+      "frame": 1191,
+      "baseline_iou": 0.5077202200345429,
+      "mixed_iou": 0.4923318652428857,
+      "baseline_maximum_score": 0.7961825728416443,
+      "mixed_maximum_score": 0.8845178484916687
+    }
+  ],
+  "decision": "The mixed model did not increase accepted body locations or pass the recall condition. Keep both models offline and retain the frozen synthetic comparison baseline.",
+  "automatic_player_input": false,
+  "unseen_map_test": false,
+  "annotation_coordinates_changed_after_predictions": false,
+  "verification": {
+    "linux": {
+      "tests": 222,
+      "skipped": 0,
+      "seconds": 3.691
+    },
+    "windows": {
+      "tests": 222,
+      "skipped": 0,
+      "seconds": 12.014
+    },
+    "ste_lint_findings": 0,
+    "source_checks": {
+      "first_recording_unchanged": true,
+      "background_recording_unchanged": true,
+      "reserved_recording_unchanged": true,
+      "reserved_annotations_unchanged": true,
+      "reserved_images_unchanged": true,
+      "mixed_dataset_metadata_unchanged": true,
+      "baseline_checkpoint_unchanged": true,
+      "final_checkpoint_matches_report": true
+    }
+  }
+}

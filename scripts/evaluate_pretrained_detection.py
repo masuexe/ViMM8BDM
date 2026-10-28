@@ -12,16 +12,19 @@ import torchvision
 from torchvision.transforms.functional import pil_to_tensor
 
 from vimm8bdm.visual_metrics import box_iou as overlap
-from vimm8bdm.pretrained_detection import load_model, person_boxes
+from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transfer_evaluation
 from vimm8bdm.recording import file_digest
 
 
-def evaluate(dataset, checkpoint, output, transfer=False):
+def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None):
     if output.exists():
         raise FileExistsError('The evaluation directory already exists')
     metadata = json.loads((dataset / 'dataset.json').read_text())
-    if metadata['format'] != 'vimm8bdm-visible-coco-v1' or metadata['split'] != 'calibration':
-        raise ValueError('Supply a visible-body calibration export')
+    expected_split = 'validation' if validation else 'calibration'
+    if metadata['format'] != 'vimm8bdm-visible-coco-v1' or metadata['split'] != expected_split:
+        raise ValueError('Select the intended calibration or reserved validation export')
+    if validation and not transfer:
+        raise ValueError('Reserved validation requires a transfer checkpoint with project provenance')
     coco = json.loads((dataset / 'annotations.coco.json').read_text())
     expected = {}
     for annotation in coco['annotations']:
@@ -30,9 +33,8 @@ def evaluate(dataset, checkpoint, output, transfer=False):
     torch.manual_seed(0)
     if transfer:
         from vimm8bdm.sprite_transfer import load_checkpoint
-        model, training = load_checkpoint(checkpoint)
-        if training["training_source_session_id"] == metadata["source_session_id"]:
-            raise ValueError("The real calibration recording supplied synthetic training backgrounds")
+        model, training = load_checkpoint(checkpoint, provenance_dataset=provenance_dataset)
+        check_transfer_evaluation(metadata, training, validation=validation)
     else:
         model = load_model(checkpoint)
     threshold = .5
@@ -69,7 +71,12 @@ def evaluate(dataset, checkpoint, output, transfer=False):
     conditions = dict(recall_at_least_0_8=located / len(positives) >= .8,
                       zero_negative_candidates=false_positive == 0,
                       median_processing_ms_at_most_50=statistics.median(times) <= 50)
-    result = dict(kind='ssdlite_sprite_transfer_calibration_diagnostic' if transfer else 'pretrained_ssdlite_calibration_diagnostic',independent_test=False,
+    kind = ('ssdlite_separate_session_visual_validation' if validation else
+            'ssdlite_sprite_transfer_calibration_diagnostic' if transfer else 'pretrained_ssdlite_calibration_diagnostic')
+    result = dict(kind=kind,independent_test=validation,independent_session_validation=validation,
+                  unseen_map_test=False,evaluation_split=expected_split,
+                  annotations_sha256=file_digest(dataset/'annotations.coco.json'),
+                  export_metadata_sha256=file_digest(dataset/'dataset.json'),
                   torch=torch.__version__,torchvision=torchvision.__version__,device='cpu',threads=4,
                   checkpoint_sha256=file_digest(checkpoint),checkpoint_bytes=checkpoint.stat().st_size,
                   model='ssdlite320_mobilenet_v3_large',weights='local_sprite_transfer' if transfer else 'COCO_V1',class_id=1,
@@ -95,5 +102,8 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--transfer',action='store_true')
+    parser.add_argument('--validation',action='store_true')
+    parser.add_argument('--provenance-dataset',type=Path)
     args = parser.parse_args()
-    evaluate(args.dataset,args.checkpoint,args.output,transfer=args.transfer)
+    evaluate(args.dataset,args.checkpoint,args.output,transfer=args.transfer,validation=args.validation,
+             provenance_dataset=args.provenance_dataset)

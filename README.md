@@ -296,3 +296,6 @@ The model remains outside the live controller because it did not pass the recall
 The [appearance follow-up](docs/sprite-transfer-augmentation.md) found additional false candidates and rejected the second synthetic model.
 
 A [separate visual validation session](docs/visual-validation-session.md) is complete and reserved outside training.
+
+The [first real-image transfer](docs/real-body-transfer.md) completed separate-session validation.
+It located seven of nine candidate bodies and did not pass the recall condition.
