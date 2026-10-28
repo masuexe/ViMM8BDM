@@ -234,7 +234,8 @@ The [body observation runtime](body-shadow.md) adds current-image detection with
 Its first attended test completed 298 images with empty actions and normal operator control.
 The [mouse-only tracking prototype](aim-only.md) now supports candidate checks and bounded turn proposals.
 Its first attended aim test produced one small turn that the operator did not observe.
-The next local practice check requests god mode to reduce deaths.
+The operator reported god mode against ordinary attacks in the local practice profile.
+The next aim run keeps the same thresholds and retains private diagnostic images.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

@@ -121,9 +121,14 @@ def run(args):
     sink = capture = worker = None
     rows = []
     output = None
+    image_directory = None
     lease = None
     exit_reason = "error"
     try:
+        if getattr(args, "image_output", None):
+            from PIL import Image
+            image_directory = Path(args.image_output)
+            image_directory.mkdir(parents=True, exist_ok=False)
         if args.output:
             output = Path(args.output).open("x", encoding="utf-8")
         if args.live:
@@ -260,11 +265,18 @@ def run(args):
             dispatched = Action() if observe_only else action
             applied = (worker.submit(dispatched, frame.captured_ns, generation) if worker
                        else lease.submit(dispatched, frame.captured_ns))
+            input_finished = time.perf_counter_ns()
+            image_file = None
+            if image_directory is not None and armed and not invalid_frame:
+                image_file = f"{index:06d}.png"
+                image = Image.frombytes("RGB", (frame.width, frame.height), frame.bgra, "raw", "BGRX")
+                image.save(image_directory / image_file)
             end = time.perf_counter_ns()
             row = {"frame": index, "capture_started_ns": begin,
                    "capture_ms": (captured - begin) / 1e6,
                    "policy_ms": (predicted - captured) / 1e6,
-                   "input_ms": (end - predicted) / 1e6, "loop_ms": (end - begin) / 1e6,
+                   "input_ms": (input_finished - predicted) / 1e6, "loop_ms": (end - begin) / 1e6,
+                   "image_write_ms": (end - input_finished) / 1e6, "image_file": image_file,
                    "applied": applied, "control_state": lease.reason,
                    "policy_phase": phase, "blank_frame": invalid_frame,
                    "input_generation": generation, "observe_only": observe_only,
@@ -332,6 +344,7 @@ def main():
     parser.add_argument("--arm-timeout", type=float, default=180, help="Initial waiting limit in seconds. Zero waits until F8 or F9.")
     parser.add_argument("--hz", type=float, default=20)
     parser.add_argument("--output", help="New JSONL path; existing files are never overwritten")
+    parser.add_argument("--image-output", help="New private directory for captured PNG images during enabled frames")
     parser.add_argument("--input-trace", help="New local JSONL file for input-worker audit events")
     args = parser.parse_args()
     if args.observe_only and (not args.live or args.watchdog_fault or args.policy == "watchdog_check"):

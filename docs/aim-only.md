@@ -117,10 +117,35 @@ The game executable and original packages remain unchanged.
 The engine repository's [inherited console reference](https://github.com/doomtech/zandronum/blob/master/docs/console.html) describes network cheat permission and the god-mode toggle.
 Permission alone does not enable god mode.
 The reference describes protection against normal attacks and notes that telefragging can still kill the player.
-The supplied alpha and loaded MODs still require an attended activation check.
-The current practice profile records god mode as unverified.
+The operator reported the enabled-mode message with the supplied alpha and loaded MODs.
+The operator also reported that ordinary Cutman attacks no longer reduce health.
+This observation does not establish protection from every damage type.
 
 After joining as a living player, press F7 once and inspect the game message.
 Do not repeatedly press F7 because it toggles the mode.
 Check ordinary Cutman damage before the next aim run.
 The next comparison keeps the detector and aim thresholds unchanged.
+
+
+## Practice replay preparation
+
+The next attended run keeps the same model, appearance conditions, confirmation count, gains, and movement limits.
+It enables optional diagnostic image output with `--image-output NEW_PRIVATE_DIRECTORY`.
+The image directory must be new.
+The runtime saves PNG images only for enabled, nonblank frames.
+Each runtime row records the matching image filename and write-stage duration.
+The saved image contains the original captured pixels rather than an annotated overlay.
+
+Image writing occurs after input submission.
+The complete loop duration includes the write stage, while the input duration excludes it.
+This instrumentation adds processing cost.
+The comparison cannot isolate its timing effect from other session differences.
+The images contain AI-assisted play and do not establish human imitation labels.
+Keep these files in private ignored storage.
+
+Linux and native Windows each saved three synthetic images with exact RGB agreement.
+Both checks rejected an existing image directory and retained the earlier image hashes.
+These checks sent no desktop input.
+Both platforms also passed all 241 regression tests without skips.
+The [practice preflight evidence](evidence/aim-practice-preflight.json) records the operator report and diagnostic checks.
+The next attended aim result remains pending.

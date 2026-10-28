@@ -317,5 +317,6 @@ Its first attended test completed 298 images with empty actions and normal opera
 
 The [mouse-only tracking prototype](docs/aim-only.md) adds candidate checks, confirmation, and small mouse proposals.
 Its first attended aim test produced one small turn that the operator did not observe.
-A separate local practice profile requests cheat permission for a god-mode check.
+The operator reported god mode against ordinary attacks in the local practice profile.
+The next aim test will retain private diagnostic images.
 Attack stays disabled.

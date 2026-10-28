@@ -1,0 +1,43 @@
+{
+  "format": "vimm8bdm-god-mode-aim-preflight-v1",
+  "god_mode_check": {
+    "operator_report": "God mode enabled; ordinary Cutman attacks do not reduce health.",
+    "ordinary_attack_protection_confirmed": true,
+    "all_damage_protection_verified": false,
+    "source": "operator_game_message_and_health_observation"
+  },
+  "model_and_aim_thresholds_changed": false,
+  "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+  "aim_code_sha256": "17bc2bf192c255c593240182558c7dbb31e8bd9bb9cf05c858bf9d3f61c626c2",
+  "new_live_result_available": false,
+  "image_output_checks": {
+    "linux": {
+      "images": 3,
+      "exact_rgb_match": true,
+      "existing_directory_rejected": true,
+      "existing_images_unchanged": true
+    },
+    "windows": {
+      "images": 3,
+      "exact_rgb_match": true,
+      "existing_directory_rejected": true,
+      "existing_images_unchanged": true
+    },
+    "live_capture": false,
+    "input_sent": false
+  },
+  "verification": {
+    "linux": {
+      "tests": 241,
+      "skipped": 0,
+      "seconds": 3.675
+    },
+    "windows": {
+      "tests": 241,
+      "skipped": 0,
+      "seconds": 12.613
+    },
+    "ste_lint_findings": 0
+  },
+  "automatic_attack_enabled": false
+}
