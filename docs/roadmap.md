@@ -230,7 +230,8 @@ Native Windows maximum processing reaches 106.58 milliseconds.
 The [continuous scan](continuous-body-scan.md) found projectile confusion beyond the earlier negative samples.
 The [targeted projectile follow-up](projectile-transfer.md) retains eight of nine locations and suppresses one known projectile example.
 Other foreground and projectile failures remain.
-The next step adds an observation-only runtime without game input.
+The [body observation runtime](body-shadow.md) adds current-image detection with empty actions.
+Its first attended test remains pending.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

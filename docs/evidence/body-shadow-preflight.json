@@ -1,0 +1,57 @@
+{
+  "format": "vimm8bdm-body-observation-preflight-v1",
+  "live_attended_test_completed": false,
+  "automatic_combat_enabled": false,
+  "policy_always_returns_empty_action": true,
+  "cli_requires_observe_only": true,
+  "entry_age_limit_ms": 75,
+  "result_age_limit_ms": 150,
+  "warmup_calls": 5,
+  "threads": 4,
+  "verification": {
+    "linux": {
+      "tests": 231,
+      "skipped": 0,
+      "seconds": 3.581
+    },
+    "windows": {
+      "tests": 231,
+      "skipped": 0,
+      "seconds": 11.455
+    },
+    "ste_lint_findings": 0
+  },
+  "native_recorded_image_smoke": {
+    "platform": "win32",
+    "empty_action": true,
+    "real_image_frame": 965,
+    "model_output": {
+      "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+      "input_sent": false,
+      "candidates": [
+        {
+          "box": [
+            308.48284912109375,
+            115.19817352294922,
+            66.1370849609375,
+            85.71251678466797
+          ],
+          "score": 0.5636694431304932,
+          "category": "cutman_body_candidate",
+          "enemy_identification_verified": false
+        }
+      ],
+      "stale": false,
+      "inference_performed": true,
+      "reset_reason": null,
+      "capture_age_at_entry_ms": 0.0088,
+      "enemy_or_life_state_verified": false,
+      "discarded_candidates": 0,
+      "local_zoom_crop": null,
+      "capture_age_at_result_ms": 28.9803,
+      "processing_ms": 28.9715
+    },
+    "live_capture": false,
+    "input_sent": false
+  }
+}
