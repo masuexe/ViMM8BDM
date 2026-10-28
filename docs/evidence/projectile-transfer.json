@@ -1,0 +1,330 @@
+{
+  "format": "vimm8bdm-targeted-projectile-training-evidence-v1",
+  "new_review": {
+    "contact_images": 70,
+    "accepted_positives": 5,
+    "accepted_negatives": 2,
+    "human_box_reviewed": false,
+    "model_assisted": true
+  },
+  "mixture": {
+    "train_images": 1816,
+    "real_positives": 49,
+    "real_negatives": 65,
+    "synthetic_monitor_images": 128
+  },
+  "training": {
+    "protocol": {
+      "format": "vimm8bdm-ssdlite-sprite-transfer-v1",
+      "epochs": 4,
+      "batch_size": 4,
+      "seed": 0,
+      "threads": 4,
+      "device": "cpu",
+      "learning_rate": 0.0005,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "gradient_clip": 10,
+      "selection": "fixed_final_epoch",
+      "train_images": 1816,
+      "validation_images": 128,
+      "initial_checkpoint_sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+      "synthetic_dataset_sha256": "399af3276569ee38349d5978885c8c0e3c8a1aa2bc07adcd7a70b0ecd939a72a",
+      "starting_checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+      "starting_from_transfer": true,
+      "training_source_session_ids": [
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70"
+      ],
+      "training_source_archives": {
+        "55f9246f5a28beae2df85466372f62e50fa62d5d5a96f900ea1ea339eb592f70": "f77ed4fc4791554ee9a3e512f77348ec5bbc061e0d49b05c5599ed04cbad0c4b",
+        "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c": "5955c774335446e21c21daccd7aeaf2160838e73d470ae8ef61d4242f81af7f2"
+      },
+      "training_source_session_id": "335f284460ab010fffe46ae035c933a52775daa655a0e2b1d3b72234ed9fe93c",
+      "input_sent": false,
+      "real_calibration_images_used_for_gradients": true,
+      "independent_validation": false
+    },
+    "epochs": [
+      {
+        "epoch": 1,
+        "mean_loss": 0.8347270626919385,
+        "steps": 454,
+        "validation": {
+          "images": 128,
+          "localized": 87,
+          "recall": 0.6796875,
+          "unmatched_predictions": 2,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 111.31817741300074
+      },
+      {
+        "epoch": 2,
+        "mean_loss": 0.5202483358887324,
+        "steps": 908,
+        "validation": {
+          "images": 128,
+          "localized": 97,
+          "recall": 0.7578125,
+          "unmatched_predictions": 3,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 210.45054909700048
+      },
+      {
+        "epoch": 3,
+        "mean_loss": 0.4340338983823287,
+        "steps": 1362,
+        "validation": {
+          "images": 128,
+          "localized": 94,
+          "recall": 0.734375,
+          "unmatched_predictions": 4,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 311.8546651910001
+      },
+      {
+        "epoch": 4,
+        "mean_loss": 0.37977127873621846,
+        "steps": 1816,
+        "validation": {
+          "images": 128,
+          "localized": 90,
+          "recall": 0.703125,
+          "unmatched_predictions": 3,
+          "score_threshold": 0.5,
+          "minimum_iou": 0.5
+        },
+        "elapsed_seconds": 414.6148513019998
+      }
+    ],
+    "seconds": 414.6617030840007,
+    "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+    "input_sent": false
+  },
+  "preflight": {
+    "format": "vimm8bdm-projectile-training-preflight-v1",
+    "counts": {
+      "train": 1816,
+      "validation": 128
+    },
+    "all_image_hashes_and_bounds_checked": true,
+    "reserved_recording_unchanged": true,
+    "reserved_recording_in_training": false,
+    "dataset_sha256": "399af3276569ee38349d5978885c8c0e3c8a1aa2bc07adcd7a70b0ecd939a72a",
+    "initial_checkpoint_sha256": "de671713e8909713161b048ed91b2180b21c6bf47cb4f4efd454ad8ba499578c",
+    "epochs": 4,
+    "learning_rate": 0.0005,
+    "batch": 4,
+    "seed": 0,
+    "threads": 4,
+    "checkpoint_selection": "fixed_final_epoch",
+    "model_assisted_annotation": true,
+    "human_box_reviewed": false,
+    "input_sent": false
+  },
+  "independent_test": false,
+  "automatic_aim_enabled": false,
+  "automatic_attack_enabled": false,
+  "linux": {
+    "reused_validation": {
+      "independent_test": false,
+      "validation_reused_after_prior_result": true,
+      "independent_session_validation": true,
+      "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+      "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+      "score_threshold": 0.5,
+      "minimum_iou": 0.5,
+      "summary": {
+        "positive_images": 9,
+        "negative_images": 8,
+        "localized_positives": 8,
+        "negative_images_with_predictions": 0,
+        "total_predictions": 9,
+        "local_zoom_extra_passes": 3,
+        "processing_ms": {
+          "p50": 26.062712999191717,
+          "p95": 57.59107100129768,
+          "maximum": 57.59107100129768
+        }
+      },
+      "conditions": {
+        "recall_at_least_0_8": true,
+        "zero_negative_candidates": true,
+        "median_processing_ms_at_most_50": true
+      },
+      "conditions_passed": true,
+      "input_sent": false
+    },
+    "continuous_scan": {
+      "frames": 1192,
+      "frames_with_candidates": 523,
+      "total_candidates": 535,
+      "frames_with_multiple_candidates": 12,
+      "extra_model_calls": 267,
+      "candidate_presence_changes": 187,
+      "adjacent_candidate_pairs": 429,
+      "adjacent_top_boxes_iou_below_point_one": 33,
+      "processing_ms": {
+        "p50": 28.178827999909117,
+        "p95": 57.116653999401024,
+        "maximum": 181.2512769993191
+      },
+      "archive_to_result_ms": {
+        "p50": 30.688316999658127,
+        "p95": 59.49279999913415,
+        "maximum": 184.05586199878599
+      },
+      "estimated_capture_plus_processing_ms": {
+        "p50": 36.091848999438696,
+        "p95": 65.09019599893792,
+        "maximum": 189.77487699931908
+      },
+      "measured_processing_over_50_ms": 185,
+      "measured_processing_over_100_ms": 1,
+      "scan_seconds": 42.21790012299971
+    },
+    "source_unchanged": true
+  },
+  "windows": {
+    "reused_validation": {
+      "independent_test": false,
+      "validation_reused_after_prior_result": true,
+      "independent_session_validation": true,
+      "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+      "annotations_sha256": "bba898a16c0547df315c58dc4838908732a1ff683474f77010f5c1133e389814",
+      "score_threshold": 0.5,
+      "minimum_iou": 0.5,
+      "summary": {
+        "positive_images": 9,
+        "negative_images": 8,
+        "localized_positives": 8,
+        "negative_images_with_predictions": 0,
+        "total_predictions": 9,
+        "local_zoom_extra_passes": 3,
+        "processing_ms": {
+          "p50": 27.849299998706556,
+          "p95": 61.88859999929264,
+          "maximum": 61.88859999929264
+        }
+      },
+      "conditions": {
+        "recall_at_least_0_8": true,
+        "zero_negative_candidates": true,
+        "median_processing_ms_at_most_50": true
+      },
+      "conditions_passed": true,
+      "input_sent": false
+    },
+    "continuous_scan": {
+      "frames": 1192,
+      "frames_with_candidates": 523,
+      "total_candidates": 535,
+      "frames_with_multiple_candidates": 12,
+      "extra_model_calls": 267,
+      "candidate_presence_changes": 187,
+      "adjacent_candidate_pairs": 429,
+      "adjacent_top_boxes_iou_below_point_one": 33,
+      "processing_ms": {
+        "p50": 30.985349999355094,
+        "p95": 63.011500000357046,
+        "maximum": 89.14939999885974
+      },
+      "archive_to_result_ms": {
+        "p50": 34.66200000002573,
+        "p95": 66.64119999913964,
+        "maximum": 92.8671999990911
+      },
+      "estimated_capture_plus_processing_ms": {
+        "p50": 39.08760000022169,
+        "p95": 71.75230000110633,
+        "maximum": 97.7431000002321
+      },
+      "measured_processing_over_50_ms": 226,
+      "measured_processing_over_100_ms": 0,
+      "scan_seconds": 47.46831459999885
+    },
+    "source_unchanged": true
+  },
+  "continuous_comparison": {
+    "cross_platform_same_frame_decisions": true,
+    "previous_only_candidate_frames": 59,
+    "new_only_candidate_frames": 25,
+    "reviewed_comparison_images": 41,
+    "false_positive_rate_measured": false,
+    "complete_ground_truth": false
+  },
+  "known_projectile_diagnostic": {
+    "format": "vimm8bdm-known-projectile-diagnostic-v1",
+    "frame": 965,
+    "projectile_region_xywh": [
+      301,
+      243,
+      88,
+      103
+    ],
+    "minimum_region_iou": 0.5,
+    "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+    "independent_test": false,
+    "previously_observed_failure": true,
+    "training_recording": false,
+    "input_sent": false,
+    "base_predictions": [
+      {
+        "box": [
+          308.48284912109375,
+          115.19817352294922,
+          66.1370849609375,
+          85.71253204345703
+        ],
+        "score": 0.5636703372001648,
+        "category": "coco_person",
+        "enemy_identification_verified": false
+      }
+    ],
+    "zoom_predictions": [
+      {
+        "box": [
+          308.48284912109375,
+          115.19817352294922,
+          66.1370849609375,
+          85.71253204345703
+        ],
+        "score": 0.5636703372001648,
+        "category": "coco_person",
+        "enemy_identification_verified": false
+      }
+    ],
+    "zoom_crop": null,
+    "base_projectile_hits": 0,
+    "zoom_projectile_hits": 0
+  },
+  "remaining_failure_examples": [
+    {
+      "frame": 447,
+      "finding": "A high-scoring box still combines body and foreground projectile."
+    },
+    {
+      "frame": 677,
+      "finding": "Large foreground body candidates remain during visible local player death."
+    },
+    {
+      "frame": 808,
+      "finding": "Large foreground body candidates remain during visible local player death."
+    },
+    {
+      "frame": 259,
+      "finding": "Two accepted boxes overlap the single annotated body."
+    }
+  ],
+  "recording_hash_checks": {
+    "cutman-visual-demo-1": true,
+    "cutman-visual-validation-1": true
+  },
+  "decision": "Retain the diagnostic result. Do not enable automatic combat. Add an observation-only runtime to measure actual capture and stale-result behavior."
+}

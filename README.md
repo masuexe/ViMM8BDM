@@ -308,3 +308,6 @@ Automatic combat remains disabled.
 
 The [continuous scan](docs/continuous-body-scan.md) found projectile confusion outside the earlier reviewed samples.
 The detector remains outside automatic combat.
+
+The [targeted projectile follow-up](docs/projectile-transfer.md) suppresses one known projectile example but retains other combat failures.
+An observation-only runtime is the next step.
