@@ -55,9 +55,42 @@ The thirty-second duration starts after the first F8 enable command.
 
 The test does not save a new training recording.
 It measures runtime behavior rather than new detector ground truth.
-The first attended body-observation test remains pending.
+The first attended body-observation test is complete.
 
 Linux and native Windows each passed all 231 tests without skips.
 The native Windows policy also processed one real archived image and returned an empty action.
 That check does not measure current capture.
 The [preflight evidence](evidence/body-shadow-preflight.json) retains these results.
+
+
+## First attended result
+
+The native Windows client completed approximately thirty seconds of observation at a target rate of ten images per second.
+The operator reported no problem.
+The runtime processed 298 images and performed inference on every image.
+All 298 action messages remained empty.
+The input trace retained no owned key or attack state and dropped no events.
+The input worker stopped normally at the duration limit.
+
+Screenshot capture took a median of 7.40 milliseconds.
+Policy processing took a median of 41.24 milliseconds and a 95th percentile of 82.04 milliseconds.
+The complete loop took a median of 49.55 milliseconds and a maximum of 108.35 milliseconds.
+The result age reached a maximum of 107.60 milliseconds.
+No result exceeded the 150-millisecond age limit.
+This session therefore does not exercise the stale-result rejection branch.
+Unit tests separately check that branch.
+
+Candidates appeared in 171 images, and 82 images required an extra crop call.
+These counts do not measure detector accuracy.
+The observation log does not supply new visual ground truth.
+The earlier detection failures remain relevant, and automatic combat remains disabled.
+
+The original console summary incorrectly reported that no neural inference occurred.
+Its condition omitted the new policy name.
+The per-frame records show all 298 inference calls.
+The summary condition now includes the body observation policy.
+A regression test checks both performed and skipped inference.
+The original runtime records remain unchanged.
+The [attended evidence](evidence/body-shadow-attended.json) retains the observed results and the summary error.
+
+After the summary fix, Linux and native Windows each passed all 232 tests without skips.

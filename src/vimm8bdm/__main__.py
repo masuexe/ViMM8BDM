@@ -87,7 +87,7 @@ def summarize(rows, mode, policy_name, exit_reason):
                "policy": policy_name,
                "exit_reason": exit_reason,
                "neural_inference_measured": policy_name == "continuousdoom" or
-                    (policy_name == "temporal_shadow" and any((row.get("model_output") or {}).get("inference_performed") for row in rows)),
+                    (policy_name in ("temporal_shadow", "body_shadow") and any((row.get("model_output") or {}).get("inference_performed") for row in rows)),
                "accepted_actions": sum(row["applied"] for row in rows),
                "inactive_or_rejected_frames": sum(not row["applied"] for row in rows),
                "input_stage": ("input_process_roundtrip" if mode == "desktop" else "lease_and_sink")

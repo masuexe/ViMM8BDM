@@ -313,4 +313,4 @@ The [targeted projectile follow-up](docs/projectile-transfer.md) suppresses one 
 An observation-only runtime is the next step.
 
 The [body observation runtime](docs/body-shadow.md) adds live capture and detection logs with empty actions.
-Its first attended test remains pending.
+Its first attended test completed 298 images with empty actions and normal operator control.

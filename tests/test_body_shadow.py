@@ -90,3 +90,18 @@ class BodyShadowTests(unittest.TestCase):
                                policy='body_shadow', observe_only=False, checkpoint='unused')
         with self.assertRaisesRegex(ValueError, 'shadow policy requires'):
             run(args)
+
+    def test_runtime_summary_reports_body_inference_only_when_it_ran(self):
+        import contextlib
+        import io
+        import json
+        from vimm8bdm.__main__ import summarize
+        for performed in [True, False]:
+            row = dict(applied=True, observe_only=True, capture_ms=1, policy_ms=2,
+                       input_ms=0, loop_ms=3, model_output=dict(inference_performed=performed))
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                summarize([row], 'desktop', 'body_shadow', 'duration_limit')
+            result = json.loads(output.getvalue())
+            self.assertEqual(result['neural_inference_measured'], performed)
+            self.assertEqual(result['dispatched_policy_actions'], 0)

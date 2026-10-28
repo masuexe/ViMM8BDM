@@ -231,7 +231,7 @@ The [continuous scan](continuous-body-scan.md) found projectile confusion beyond
 The [targeted projectile follow-up](projectile-transfer.md) retains eight of nine locations and suppresses one known projectile example.
 Other foreground and projectile failures remain.
 The [body observation runtime](body-shadow.md) adds current-image detection with empty actions.
-Its first attended test remains pending.
+Its first attended test completed 298 images with empty actions and normal operator control.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

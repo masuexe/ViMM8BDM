@@ -1,0 +1,66 @@
+{
+  "format": "vimm8bdm-attended-body-observation-v1",
+  "operator_report": "The operator reported no problem.",
+  "frames": 298,
+  "inference_frames": 298,
+  "stale_results": 0,
+  "candidate_bearing_frames": 171,
+  "extra_crop_calls": 82,
+  "all_action_messages_empty": true,
+  "policy_actions_suppressed": true,
+  "nonempty_game_input_messages": 0,
+  "all_trace_owned_inputs_empty": true,
+  "input_trace_dropped_events": 0,
+  "input_worker_stopped": true,
+  "exit_reason": "duration_limit",
+  "live_capture": true,
+  "live_detector_accuracy_measured": false,
+  "automatic_combat_enabled": false,
+  "checkpoint_sha256": "01fa5036e94d5be9ed6dbe7d1fbc8aa95ebddc8c0cdfd335b60fbe339000ef2f",
+  "timing_ms": {
+    "capture_ms": {
+      "p50": 7.40195,
+      "p95": 10.2153,
+      "maximum": 11.8147
+    },
+    "policy_ms": {
+      "p50": 41.2376,
+      "p95": 82.0411,
+      "maximum": 97.7613
+    },
+    "input_ms": {
+      "p50": 0.4351,
+      "p95": 0.6285,
+      "maximum": 0.8697
+    },
+    "loop_ms": {
+      "p50": 49.54625,
+      "p95": 90.7864,
+      "maximum": 108.349
+    }
+  },
+  "result_age_ms": {
+    "p50": 48.88815,
+    "p95": 90.1561,
+    "maximum": 107.6047
+  },
+  "summary_field_fix": {
+    "original_stdout_neural_inference_measured": false,
+    "actual_inference_frames": 298,
+    "cause": "The summary condition omitted the body observation policy.",
+    "runtime_rows_changed": false
+  },
+  "verification": {
+    "linux": {
+      "tests": 232,
+      "skipped": 0,
+      "seconds": 3.575
+    },
+    "windows": {
+      "tests": 232,
+      "skipped": 0,
+      "seconds": 11.392
+    },
+    "ste_lint_findings": 0
+  }
+}
