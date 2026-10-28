@@ -124,3 +124,6 @@ python -m vimm8bdm.sprite_transfer \
 The short frame list illustrates the interface and does not reproduce the complete background selection.
 All output directories must be new.
 Keep game art, model weights, screenshots, labels, and complete local reports private.
+
+The [separate-session intake](visual-validation-session.md) completed the new recording requirement.
+Its reserved images have not entered gradient training or model prediction checks.

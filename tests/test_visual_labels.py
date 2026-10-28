@@ -46,6 +46,24 @@ class VisualLabelsTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 export(source, review, root / 'export')
 
+    def test_validation_export_retains_the_reserved_split(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root, 'example', 'train', 1)
+            source = root / 'example-source'
+            identity, _ = source_identity(source)
+            review = root / 'review.json'
+            rows = labels(identity)
+            rows['split'] = 'validation'
+            review.write_text(json.dumps(rows))
+            result = export(source, review, root / 'validation')
+            coco = json.loads((root / 'validation/annotations.coco.json').read_text())
+            self.assertEqual(result['split'], 'validation')
+            self.assertEqual(coco['info']['split'], 'validation')
+            self.assertTrue(result['reserved_for_validation'])
+            self.assertFalse(result['training_ready'])
+            self.assertFalse(result['action_training_eligible'])
+
     def test_wrong_source_is_rejected_before_output_creation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -22,8 +22,8 @@ def source_identity(directory):
 
 
 def validate_labels(labels, frames):
-    if labels.get('format') != FORMAT or labels.get('split') != 'calibration' or not labels.get('annotator'):
-        raise ValueError('Supply an identified calibration review in the supported format')
+    if labels.get('format') != FORMAT or labels.get('split') not in ('calibration', 'validation') or not labels.get('annotator'):
+        raise ValueError('Supply an identified calibration or validation review in the supported format')
     if type(labels.get('human_box_reviewed')) is not bool:
         raise ValueError('State whether a human reviewed the actual boxes')
     previous = -1
@@ -95,13 +95,14 @@ def export(recording, label_file, output):
                                     'occluded': box['occluded'], 'truncated': box['truncated']})
     if source_identity(recording) != (session, hashes):
         raise ValueError('The original recording changed during export')
-    coco = {'info': {'description': 'Candidate visible Cutman body labels', 'split': 'calibration',
+    coco = {'info': {'description': 'Candidate visible Cutman body labels', 'split': labels['split'],
                       'source_session_id': session, 'training_ready': False},
             'images': images, 'annotations': annotations,
             'categories': [{'id': 1, 'name': 'cutman_body'}]}
     metadata = {'format': 'vimm8bdm-visible-coco-v1', 'source_session_id': session,
                 'source_directory': Path(os.path.relpath(recording, output)).as_posix(),
-                'source_hashes': hashes, 'source_integrity': integrity, 'split': 'calibration',
+                'source_hashes': hashes, 'source_integrity': integrity, 'split': labels['split'],
+                'reserved_for_validation': labels['split'] == 'validation',
                 'review_sha256': file_digest(label_file), 'annotator': labels['annotator'],
                 'human_box_reviewed': labels['human_box_reviewed'], 'source_files_changed': False,
                 'images': len(images), 'positive_images': sum(bool(row['boxes']) for row in usable),
@@ -117,7 +118,7 @@ def export(recording, label_file, output):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Export private visible-body calibration labels as COCO')
+    parser = argparse.ArgumentParser(description='Export private reviewed body boxes as COCO')
     parser.add_argument('--recording', type=Path, required=True)
     parser.add_argument('--review', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)

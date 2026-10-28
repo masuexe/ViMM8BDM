@@ -219,7 +219,8 @@ The [synthetic sprite transfer](sprite-transfer.md) improved real calibration lo
 Recall remains below the required 0.8, so the detector remains offline.
 The [appearance follow-up](sprite-transfer-augmentation.md) reviewed 37 real calibration images in total.
 Neither synthetic model passed the expanded conditions.
-A separate real recording is necessary before supervised transfer to real images.
+A [separate visual validation recording](visual-validation-session.md) is complete and reserved outside training.
+Its seventeen reviewed images have no detector predictions yet.
 Automated combat remains disabled.
 
 Train behavior cloning before RL.

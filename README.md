@@ -294,3 +294,5 @@ The [synthetic sprite transfer](docs/sprite-transfer.md) improves Cutman calibra
 The model remains outside the live controller because it did not pass the recall condition.
 
 The [appearance follow-up](docs/sprite-transfer-augmentation.md) found additional false candidates and rejected the second synthetic model.
+
+A [separate visual validation session](docs/visual-validation-session.md) is complete and reserved outside training.

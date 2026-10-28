@@ -1,0 +1,74 @@
+{
+  "format": "vimm8bdm-visual-validation-intake-evidence-v1",
+  "recording": {
+    "frames": 1192,
+    "events": 4613,
+    "segments": 1,
+    "complete": true,
+    "dropped_items": 0,
+    "writer_error": null,
+    "cleanup_errors": [],
+    "input_sent": false,
+    "exit_reason": "duration_limit"
+  },
+  "integrity": {
+    "archive_integrity": "pass",
+    "capture_ms_median": 7.5286,
+    "capture_ms_max": 24.0819,
+    "same_segment_gap_ms_max": 53.179,
+    "event_types": {
+      "segment_start": 1,
+      "key": 302,
+      "motion": 4256,
+      "button": 52,
+      "segment_end": 1,
+      "recording_end": 1
+    }
+  },
+  "operator_review": {
+    "operator_reported_cutman_visible": true,
+    "operator_reported_character": "grenademan",
+    "operator_reported_character_stable": true,
+    "death_and_respawn_images_allowed": true,
+    "human_box_reviewed": false,
+    "recording_files_changed": false,
+    "action_training_eligible": false
+  },
+  "annotation": {
+    "sampled_images": 24,
+    "accepted_images": 17,
+    "positive_images": 9,
+    "negative_images": 8,
+    "boxes": 9,
+    "excluded_images": 7,
+    "annotator": "development_agent_visual_review",
+    "human_box_reviewed": false,
+    "model_predictions_used": false
+  },
+  "reservation": {
+    "split": "validation",
+    "reserved_for_validation": true,
+    "gradient_training_allowed": false,
+    "checkpoint_selection_allowed": false,
+    "model_prediction_runs": 0,
+    "source_files_changed": false,
+    "distinct_from_development_session": true,
+    "distinct_archive_from_development": true,
+    "distinct_from_synthetic_background_session": true,
+    "unseen_map_test": false,
+    "action_training_eligible": false
+  },
+  "verification": {
+    "linux": {
+      "tests": 214,
+      "skipped": 0,
+      "seconds": 3.41
+    },
+    "windows": {
+      "tests": 214,
+      "skipped": 0,
+      "seconds": 11.48
+    },
+    "ste_lint_findings": 0
+  }
+}

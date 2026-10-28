@@ -106,6 +106,22 @@ class SpriteTransferTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'annotations changed'):
                 SyntheticImages(root/'a','train')
 
+    def test_reserved_real_validation_export_cannot_enter_synthetic_training(self):
+        from test_visual_labels import labels
+        from vimm8bdm.visual_labels import export
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fixture(root, 'example', 'train', 1)
+            source = root / 'example-source'
+            identity, _ = source_identity(source)
+            rows = labels(identity)
+            rows['split'] = 'validation'
+            review = root / 'review.json'
+            review.write_text(json.dumps(rows))
+            export(source, review, root / 'validation')
+            with self.assertRaisesRegex(ValueError, 'synthetic body dataset'):
+                SyntheticImages(root / 'validation', 'train')
+
     def test_transfer_checkpoint_rejects_an_unknown_training_identity(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)/'fake.pt'
