@@ -1,0 +1,101 @@
+{
+  "format": "vimm8bdm-colab-pk3-training-smoke-v1",
+  "v6a_gondola": {
+    "packages": [
+      "MM8BDM-v6a.pk3",
+      "classes-v9fh.pk3",
+      "gondolapatchv2.7h2.pk3"
+    ],
+    "upright_views": 136,
+    "occluder_count": 249,
+    "occluder_prefixes": [
+      "BUS2",
+      "BUST",
+      "CBUS",
+      "MBU2",
+      "MMDX",
+      "MMFX",
+      "MXP1",
+      "MXP2",
+      "MXP3",
+      "MXP4",
+      "NEDR",
+      "PCOI",
+      "RCTC",
+      "RCUT",
+      "W_0B"
+    ],
+    "archive_sha256": "76150f14cea8a70f545381c8e558d384e56f6000aba93ee0dc3e2f2d74a11b03"
+  },
+  "v6b_gondola": {
+    "packages": [
+      "mm8bdm-v6b.pk3",
+      "8bdm-v6b-miscfixes-v6.pk3",
+      "classes-v9fh.pk3",
+      "gondolapatchv2.7h2.pk3"
+    ],
+    "upright_views": 136,
+    "occluder_count": 249,
+    "occluder_prefixes": [
+      "BUS2",
+      "BUST",
+      "CBUS",
+      "MBU2",
+      "MMDX",
+      "MMFX",
+      "MXP1",
+      "MXP2",
+      "MXP3",
+      "MXP4",
+      "NEDR",
+      "PCOI",
+      "RCTC",
+      "RCUT",
+      "W_0B"
+    ]
+  },
+  "v6b_base_only": {
+    "packages": [
+      "mm8bdm-v6b.pk3",
+      "8bdm-v6b-miscfixes-v6.pk3"
+    ],
+    "allow_partial_poses": true,
+    "upright_views": 64,
+    "upright_poses": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "J"
+    ],
+    "occluder_count": 135,
+    "occluder_prefixes": [
+      "BUS2",
+      "BUST",
+      "CBUS",
+      "MMDX",
+      "MMFX",
+      "MXP1",
+      "MXP2",
+      "MXP3",
+      "MXP4",
+      "RCUT"
+    ]
+  },
+  "cuda_bundle_training_smoke": {
+    "device": "cuda",
+    "epochs": 1,
+    "batch_size": 4,
+    "train_images": 8,
+    "validation_images": 4,
+    "seconds": 10.4203,
+    "checkpoint_sha256": "77d9caed394682ff5e1c686742ffccb99d7bbcea566400651b9a5551a2c8a033",
+    "policy_loaded_on_cuda": true,
+    "policy_phase": "aim_and_attack",
+    "input_sent": false
+  },
+  "tests_passed": 252
+}

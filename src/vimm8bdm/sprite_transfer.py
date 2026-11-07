@@ -191,11 +191,12 @@ def main():
     parser.add_argument('--initial', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--epochs', type=int, default=8)
+    parser.add_argument('--batch-size', type=int, default=4)
     parser.add_argument('--initial-transfer', action='store_true')
     parser.add_argument('--learning-rate', type=float, default=.002)
     parser.add_argument('--device', choices=('auto', 'cpu', 'cuda'), default='auto')
     args = parser.parse_args()
-    result = train(args.dataset, args.initial, args.output, epochs=args.epochs,
+    result = train(args.dataset, args.initial, args.output, epochs=args.epochs, batch_size=args.batch_size,
                    initial_transfer=args.initial_transfer, learning_rate=args.learning_rate, device=args.device)
     print(json.dumps(dict(seconds=result['seconds'], checkpoint_sha256=result['checkpoint_sha256'])), flush=True)
 

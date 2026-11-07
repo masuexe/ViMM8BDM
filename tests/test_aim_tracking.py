@@ -63,9 +63,22 @@ class StableAimTests(unittest.TestCase):
         third, detail3 = tracker.step(aligned_box, 640, 480, 700_000_000)
         self.assertTrue(detail3['in_attack_window'])
         self.assertTrue(third.attack)
-        # Target loss immediately stops attack and resets confirmation
-        lost, _ = tracker.step([], 640, 480, 800_000_000)
+        # Single post-attack occlusion frame sends no input but retains confirmation
+        occluded, detail_occ = tracker.step([], 640, 480, 800_000_000)
+        self.assertEqual(occluded, Action())
+        self.assertEqual(detail_occ['reason'], 'post_attack_occlusion')
+        self.assertEqual(detail_occ['matches'], 5)
+        # Immediate re-detection resumes tracking without re-confirming from scratch
+        resumed, detail_res = tracker.step(aligned_box, 640, 480, 900_000_000)
+        self.assertEqual(detail_res['reason'], 'track_target')
+        self.assertEqual(detail_res['matches'], 6)
+        self.assertTrue(resumed.attack)
+        # Two consecutive missing frames after attack reset confirmation completely
+        self.assertEqual(tracker.step([], 640, 480, 1_000_000_000)[1]['reason'], 'post_attack_occlusion')
+        lost, detail_lost = tracker.step([], 640, 480, 1_100_000_000)
         self.assertEqual(lost, Action())
+        self.assertEqual(detail_lost['reason'], 'missing_target')
+        self.assertEqual(detail_lost['matches'], 0)
 
 
 @unittest.skipIf(Image is None,'Install Pillow')

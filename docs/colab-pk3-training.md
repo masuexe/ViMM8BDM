@@ -1,0 +1,69 @@
+# Version-agnostic PK3 extraction and Colab GPU training
+
+The detector training pipeline now extracts upright character views and foreground projectile or hit-smoke occluders from any ordered PK3 stack and packages them into a self-contained `.tar.gz` training bundle for local or Google Colab GPU execution.
+
+## Version-agnostic PK3 sprite and occluder resolution
+
+Different MM8BDM releases store base skin sprites under different prefixes.
+`MM8BDM-v6a.pk3` stores Cutman skin frames under `CUTM`, whereas `mm8bdm-v6b.pk3` and `mm8bdm-v6c.pk3` declare `sprite = $CUT` in `SKININFO.txt` and store frames `A` through `H` as `$CUTA1.PNG` through `$CUTH8H2.PNG` while keeping `CUTMI` and `CUTMJ`.
+`build_bank` in `src/vimm8bdm/sprite_synthesis.py` now parses `SKININFO` and `SKININFO.txt` across the supplied PK3 load order and normalizes both `CUTM` and `$CUT` frames so later addon packages override earlier packages.
+Full class stacks (`v6a` or `v6b` plus `classes-v9fh.pk3` and `gondolapatchv2.7h2.pk3`) supply all 17 upright poses (`136` views).
+Base-only stacks (`mm8bdm-v6b.pk3` plus `8bdm-v6b-miscfixes-v6.pk3`) can pass `--allow-partial-poses` to extract the eight upright base poses (`64` views).
+
+`build_occluder_bank` extracts foreground projectile and hit-smoke sprites (`BUST`, `BUS2`, `CBUS`, `MBU2`, `MMDX`, `MMFX`, `MXP1`, `MXP2`, `MXP3`, `MXP4`, `NEDR`, `PCOI`, `RCTC`, `RCUT`, `W_0B`) across the same PK3 load order.
+When `build_dataset` runs with `--profile occlusion` and `--occluders`, `composite` places foreground projectile or explosion sprites either partially in front of the target body (updating the ground-truth box to the remaining visible body pixels) or as separate foreground distractors in the scene.
+
+## Post-attack occlusion grace in `StableAim`
+
+In `runs/body-aim-4`, single-frame self-projectiles and hit smoke immediately after a tap-fire pulse briefly occluded the target and forced a full three-frame re-confirmation.
+When `enable_attack=True`, `StableAim` now holds the prior target box and match count for at most one missing frame (`reason="post_attack_occlusion"`, ` interval <= 0.2 s `) immediately after a frame that pulsed `attack=True`.
+The occluded frame still emits `Action()` (zero mouse motion and `attack=False`).
+If the target reappears on the very next frame within `0.25 s`, tracking resumes immediately without resetting `matches`; if the target remains missing for a second frame, confirmation resets to zero.
+
+## Export a portable Colab GPU bundle
+
+Export a self-contained `.tar.gz` bundle from any PK3 stack and reviewed background recording:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m vimm8bdm.colab_bundle export \
+  --packages .local/wads/MM8BDM-v6a.pk3 .local/wads/classes-v9fh.pk3 .local/wads/gondolapatchv2.7h2.pk3 \
+  --initial .local/perception/torchvision/ssdlite320_mobilenet_v3_large_coco-a79551df.pth \
+  --recording .local/recordings/background-session \
+  --frames 0 76 153 230 307 384 461 538 \
+  --train-count 512 --validation-count 128 \
+  --output .local/bundles/cutman-occlusion-bundle.tar.gz
+```
+
+To package an existing reviewed mixed dataset (`data/cutman-real-mixed-3`) with a `v6b` + Gondola stack and start from an existing transfer checkpoint:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m vimm8bdm.colab_bundle export \
+  --packages .local/wads/mm8bdm-v6b.pk3 .local/wads/8bdm-v6b-miscfixes-v6.pk3 \
+             .local/wads/classes-v9fh.pk3 .local/wads/gondolapatchv2.7h2.pk3 \
+  --initial .local/weights/projectile-transfer-model.pt --initial-transfer \
+  --dataset data/cutman-real-mixed-3 \
+  --output .local/bundles/cutman-v6b-mixed-bundle.tar.gz
+```
+
+The exported archive contains `dataset/`, `initial/checkpoint.pt`, `upright_bank/bank.json`, `occluder_bank/occluders.json`, `colab_manifest.json`, `src/vimm8bdm/`, and a standalone `train_colab.py` script.
+It excludes raw `.pk3` and `.vrec` archives so it can be uploaded directly to Google Drive or a Colab session.
+
+## Run GPU training on Google Colab or local CUDA
+
+Inside a Google Colab GPU runtime (A100, L4, or T4) or on a local CUDA machine, run training directly from the `.tar.gz` archive:
+
+```bash
+PYTHONPATH=src python3 -m vimm8bdm.colab_bundle train \
+  --bundle cutman-occlusion-bundle.tar.gz \
+  --output trained-detector \
+  --device cuda --epochs 8 --batch-size 16 --learning-rate 0.0005
+```
+
+Or unpack the archive and run the bundled script:
+
+```bash
+tar -xzf cutman-occlusion-bundle.tar.gz
+python3 train_colab.py --output trained-detector --device cuda --epochs 8 --batch-size 16
+```
+
+`train_from_bundle` checks every SHA256 digest in `colab_manifest.json` before starting SGD, rejects unsafe archive paths, writes `trained-detector/model.pt` and `trained-detector/colab_bundle_provenance.local.json`, and produces a checkpoint compatible with `BodyShadowPolicy` and `BodyAimPolicy`.

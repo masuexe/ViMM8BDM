@@ -50,6 +50,7 @@ class StableAim:
         self.timestamp = None
         self.matches = 0
         self.attack_pulsed = False
+        self.occluded_after_attack = False
 
     def step(self, candidates, width, height, captured_ns):
         reason = None
@@ -58,16 +59,26 @@ class StableAim:
         elif len(candidates) != 1:
             reason = 'missing_target' if not candidates else 'ambiguous_targets'
         if reason:
+            interval = None if self.timestamp is None else (captured_ns - self.timestamp) / 1e9
+            if (reason == 'missing_target' and self.enable_attack and self.attack_pulsed
+                    and self.previous is not None and interval is not None and 0 < interval <= .2):
+                self.attack_pulsed = False
+                self.occluded_after_attack = True
+                return Action(), dict(reason='post_attack_occlusion', matches=self.matches,
+                                      selected_box=list(self.previous))
             self.reset()
             return Action(), dict(reason=reason, matches=0)
         box = candidates[0]['box']
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9
+        max_interval = .25 if self.occluded_after_attack else .2
+        max_distance = 64 if self.occluded_after_attack else 48
         matched = False
-        if self.previous is not None and interval is not None and 0 < interval <= .2:
+        if self.previous is not None and interval is not None and 0 < interval <= max_interval:
             x,y,w,h = box
             px,py,pw,ph = self.previous
             distance = math.hypot(x+w/2-px-pw/2, y+h/2-py-ph/2)
-            matched = .5 <= w*h/(pw*ph) <= 2 and (box_iou(box,self.previous) >= .1 or distance <= 48)
+            matched = .5 <= w*h/(pw*ph) <= 2 and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
+        self.occluded_after_attack = False
         self.matches = self.matches+1 if matched else 1
         self.previous, self.timestamp = list(box), captured_ns
         detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))

@@ -322,3 +322,5 @@ The next aim test will retain private diagnostic images.
 Attack stays disabled.
 
 The [practice aim result](docs/aim-practice-result.md) records partial following and an initial stale-frame pause in the first practice run, followed by an uninterrupted 297-frame (42-dispatch) second run with idle warmup and CUDA inference enabled, and a 294-frame third run (`--enable-attack`) with 64 mouse dispatches and seven on-target tap-fire pulses.
+
+The [version-agnostic PK3 and Colab GPU training pipeline](docs/colab-pk3-training.md) extracts upright views (`CUTM` and `$CUT`) and foreground projectile/smoke occluders from any ordered `.pk3` stack into a portable `.tar.gz` bundle (`docs/evidence/colab-pk3-training.json`) and adds single-frame post-attack occlusion grace to `StableAim`.
