@@ -116,3 +116,30 @@ class BodyShadowTests(unittest.TestCase):
         self.assertEqual(self.policy.idle_warmup_calls, 1)
         self.assertFalse(self.policy.keep_ready())
         self.assertEqual(len(self.inputs), 1)
+
+    def test_module_model_follows_requested_device_and_records_it(self):
+        checkpoint = Path(self.directory.name) / 'model.pt'
+        seen_devices = []
+
+        class ModuleModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.weight = torch.nn.Parameter(torch.zeros(1))
+
+            def forward(self, inputs):
+                seen_devices.append(inputs[0].device.type)
+                return [dict(boxes=torch.tensor([[0., 0., 2., 2.]]),
+                             labels=torch.tensor([1]),
+                             scores=torch.tensor([.9]))]
+
+        model = ModuleModel()
+        with patch('vimm8bdm.body_shadow.load_checkpoint', return_value=(model, {})):
+            policy = BodyShadowPolicy(checkpoint, self.clock, device='meta')
+        self.assertEqual(model.weight.device.type, 'meta')
+        self.assertEqual(policy.device, 'meta')
+        self.assertEqual(policy.predict(self.frame()), Action())
+        self.assertEqual(policy.last_prediction['device'], 'meta')
+        self.clock.now += 2_000_000_000
+        self.assertTrue(policy.keep_ready())
+        self.assertEqual(len(seen_devices), 7)
+        self.assertTrue(all(dev == 'meta' for dev in seen_devices))

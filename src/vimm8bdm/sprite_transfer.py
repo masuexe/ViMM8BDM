@@ -78,11 +78,13 @@ def load_checkpoint(path, provenance_dataset=None):
 
 def validate(model, images):
     model.eval()
+    parameters = getattr(model, 'parameters', None)
+    device = next(parameters(), torch.empty(0)).device if callable(parameters) else torch.device('cpu')
     matches, false_predictions = 0, 0
     with torch.inference_mode():
         for i in range(len(images)):
             image, target = images[i]
-            prediction = person_boxes(model([image])[0], image.shape[2], image.shape[1], .5)
+            prediction = person_boxes(model([image.to(device)])[0], image.shape[2], image.shape[1], .5)
             a = target['boxes'][0].tolist()
             expected = [a[0], a[1], a[2]-a[0], a[3]-a[1]]
             hits = [box_iou(row['box'], expected) >= .5 for row in prediction]
@@ -92,7 +94,7 @@ def validate(model, images):
                 unmatched_predictions=false_predictions, score_threshold=.5, minimum_iou=.5)
 
 
-def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_transfer=False, learning_rate=.002):
+def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_transfer=False, learning_rate=.002, device=None):
     if output.exists():
         raise FileExistsError('The training output already exists')
     import math
@@ -118,13 +120,17 @@ def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_tran
             raise ValueError('Dataset provenance must include every inherited training recording')
     else:
         model = load_model(initial)
+    if device is None or device == 'auto':
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = str(torch.device(device))
+    model.to(device)
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=.9, weight_decay=.0005)
     loader = DataLoader(training, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True,
                         generator=torch.Generator().manual_seed(seed), collate_fn=lambda rows: tuple(zip(*rows)))
     if not len(loader):
         raise ValueError('The training split is smaller than one complete batch')
     output.mkdir(parents=True, exist_ok=False)
-    protocol = dict(format=FORMAT, epochs=epochs, batch_size=batch_size, seed=seed, threads=4, device='cpu',
+    protocol = dict(format=FORMAT, epochs=epochs, batch_size=batch_size, seed=seed, threads=4, device=device,
                     learning_rate=learning_rate, momentum=.9, weight_decay=.0005, gradient_clip=10,
                     selection='fixed_final_epoch', train_images=len(training), validation_images=len(validation),
                     initial_checkpoint_sha256=CHECKPOINT_SHA256, synthetic_dataset_sha256=dataset_hash,
@@ -141,7 +147,9 @@ def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_tran
             losses = []
             for batch, (images, targets) in enumerate(loader, 1):
                 optimizer.zero_grad(set_to_none=True)
-                parts = model(list(images), list(targets))
+                images = [img.to(device) for img in images]
+                targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+                parts = model(images, targets)
                 loss = sum(parts.values())
                 if not torch.isfinite(loss):
                     raise ValueError('The body detector loss is not finite')
@@ -163,7 +171,7 @@ def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_tran
             print(json.dumps(record), flush=True)
     if file_digest(dataset / 'dataset.json') != dataset_hash:
         raise ValueError('The training dataset metadata changed during training')
-    checkpoint = dict(format=FORMAT, state_dict=model.state_dict(), class_id=1,
+    checkpoint = dict(format=FORMAT, state_dict={k: v.cpu() for k, v in model.state_dict().items()}, class_id=1,
                       initial_checkpoint_sha256=CHECKPOINT_SHA256,
                       training_source_session_id=metadata['source_session_id'],
                       synthetic_dataset_sha256=dataset_hash, epochs=epochs, steps=steps, seed=seed,
@@ -185,9 +193,10 @@ def main():
     parser.add_argument('--epochs', type=int, default=8)
     parser.add_argument('--initial-transfer', action='store_true')
     parser.add_argument('--learning-rate', type=float, default=.002)
+    parser.add_argument('--device', choices=('auto', 'cpu', 'cuda'), default='auto')
     args = parser.parse_args()
     result = train(args.dataset, args.initial, args.output, epochs=args.epochs,
-                   initial_transfer=args.initial_transfer, learning_rate=args.learning_rate)
+                   initial_transfer=args.initial_transfer, learning_rate=args.learning_rate, device=args.device)
     print(json.dumps(dict(seconds=result['seconds'], checkpoint_sha256=result['checkpoint_sha256'])), flush=True)
 
 

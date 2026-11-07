@@ -34,3 +34,31 @@ class LocalZoomTests(unittest.TestCase):
         self.assertEqual(source['box'], [5, 7, 20, 30])
         self.assertEqual(mapped[0]['score'], .8)
         self.assertFalse(mapped[0]['enemy_identification_verified'])
+
+    def test_refine_with_local_zoom_moves_crop_tensor_to_model_parameter_device(self):
+        try:
+            import torch
+            from PIL import Image
+            from vimm8bdm.local_zoom import refine_with_local_zoom
+        except ImportError:
+            self.skipTest('Install the optional detector packages')
+
+        seen_devices = []
+
+        class ModuleModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.weight = torch.nn.Parameter(torch.zeros(1))
+
+            def forward(self, inputs):
+                seen_devices.append(inputs[0].device)
+                return [dict(boxes=torch.tensor([[10., 20., 30., 50.]]),
+                             labels=torch.tensor([1]), scores=torch.tensor([.9]))]
+
+        image = Image.new('RGB', (640, 480), (10, 20, 30))
+        model = ModuleModel().to('meta')
+        boxes, window = refine_with_local_zoom(model, image, prediction([310, 230, 330, 250], .3))
+        self.assertEqual(window, (160, 80, 480, 400))
+        self.assertEqual(len(boxes), 1)
+        self.assertEqual(boxes[0]['box'], [170., 100., 20., 30.])
+        self.assertEqual(seen_devices, [torch.device('meta')])

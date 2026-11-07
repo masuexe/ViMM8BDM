@@ -167,11 +167,13 @@ def run(args):
             policy = VisualNavigationPolicy()
         elif args.policy == "body_aim":
             from .body_aim import BodyAimPolicy
-            policy = BodyAimPolicy(args.checkpoint)
+            device = getattr(args, "device", None)
+            policy = BodyAimPolicy(args.checkpoint, device=device) if device is not None else BodyAimPolicy(args.checkpoint)
             print("Body aim model ready. Movement keys and attack are disabled.", flush=True)
         elif args.policy == "body_shadow":
             from .body_shadow import BodyShadowPolicy
-            policy = BodyShadowPolicy(args.checkpoint)
+            device = getattr(args, "device", None)
+            policy = BodyShadowPolicy(args.checkpoint, device=device) if device is not None else BodyShadowPolicy(args.checkpoint)
             print("Body model loaded. CPU warm-up completed. This policy returns empty actions.", flush=True)
         elif args.policy == "temporal_shadow":
             from .temporal_shadow import TemporalShadowPolicy
@@ -339,6 +341,7 @@ def main():
     parser.add_argument("--watchdog-fault", choices=("stall", "exit"), help="Explicit local fault test for the watchdog policy")
     parser.add_argument("--continuous-source", help="Trusted external upstream Python source directory")
     parser.add_argument("--checkpoint", help="Trusted local model checkpoint path")
+    parser.add_argument("--device", choices=("auto", "cpu", "cuda"), help="Inference device for detector-backed policies")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
     parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")

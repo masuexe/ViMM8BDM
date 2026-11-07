@@ -31,5 +31,8 @@ def refine_with_local_zoom(model, image, full_prediction):
     if window is None:
         return person_boxes(full_prediction, image.width, image.height, .5), None
     crop = image.crop(window)
-    prediction = model([pil_to_tensor(crop).float() / 255])[0]
+    tensor = pil_to_tensor(crop).float() / 255
+    parameters = getattr(model, 'parameters', None)
+    device = next(parameters(), tensor).device if callable(parameters) else tensor.device
+    prediction = model([tensor.to(device)])[0]
     return restore_boxes(person_boxes(prediction, crop.width, crop.height, .5), window), window

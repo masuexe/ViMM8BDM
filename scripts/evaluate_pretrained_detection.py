@@ -16,7 +16,7 @@ from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transf
 from vimm8bdm.recording import file_digest
 
 
-def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None, validation_reuse=False, local_zoom=False):
+def evaluate(dataset, checkpoint, output, transfer=False, validation=False, provenance_dataset=None, validation_reuse=False, local_zoom=False, device=None):
     if output.exists():
         raise FileExistsError('The evaluation directory already exists')
     metadata = json.loads((dataset / 'dataset.json').read_text())
@@ -41,12 +41,18 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
         check_transfer_evaluation(metadata, training, validation=validation)
     else:
         model = load_model(checkpoint)
+    if device is None or device == 'auto':
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = str(torch.device(device))
+    model.to(device)
     threshold = .5
     cases = []
     with torch.inference_mode():
         # Exclude initialization and five warmup calls from measured processing.
         for _ in range(5):
-            model([torch.zeros(3, 480, 640)])
+            model([torch.zeros(3, 480, 640, device=device)])
+        if device.startswith('cuda'):
+            torch.cuda.synchronize()
         for row in coco['images']:
             path = dataset / row['file_name']
             if file_digest(path) != metadata['image_sha256'][str(row['id'])]:
@@ -54,13 +60,15 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
             with Image.open(path) as image:
                 rgb = image.convert('RGB')
             started = time.perf_counter()
-            tensor = pil_to_tensor(rgb).to(dtype=torch.float32) / 255
+            tensor = pil_to_tensor(rgb).to(device=device, dtype=torch.float32) / 255
             prediction = model([tensor])[0]
             boxes = person_boxes(prediction, rgb.width, rgb.height, threshold)
             window = None
             if local_zoom:
                 from vimm8bdm.local_zoom import refine_with_local_zoom
                 boxes, window = refine_with_local_zoom(model, rgb, prediction)
+            if device.startswith('cuda'):
+                torch.cuda.synchronize()
             if transfer:
                 for box in boxes:
                     box['category'] = 'cutman_body_candidate'
@@ -89,7 +97,7 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
                   local_zoom_trigger_minimum_score=.2 if local_zoom else None,
                   annotations_sha256=file_digest(dataset/'annotations.coco.json'),
                   export_metadata_sha256=file_digest(dataset/'dataset.json'),
-                  torch=torch.__version__,torchvision=torchvision.__version__,device='cpu',threads=4,
+                  torch=torch.__version__,torchvision=torchvision.__version__,device=device,threads=4,
                   checkpoint_sha256=file_digest(checkpoint),checkpoint_bytes=checkpoint.stat().st_size,
                   model='ssdlite320_mobilenet_v3_large',weights='local_sprite_transfer' if transfer else 'COCO_V1',class_id=1,
                   score_threshold=threshold,minimum_iou=.5,warmup_calls=5,
@@ -119,6 +127,7 @@ if __name__ == '__main__':
     parser.add_argument('--provenance-dataset',type=Path)
     parser.add_argument('--validation-reuse',action='store_true')
     parser.add_argument('--local-zoom',action='store_true')
+    parser.add_argument('--device',choices=('auto','cpu','cuda'),default='auto')
     args = parser.parse_args()
     evaluate(args.dataset,args.checkpoint,args.output,transfer=args.transfer,validation=args.validation,
-             provenance_dataset=args.provenance_dataset,validation_reuse=args.validation_reuse,local_zoom=args.local_zoom)
+             provenance_dataset=args.provenance_dataset,validation_reuse=args.validation_reuse,local_zoom=args.local_zoom,device=args.device)

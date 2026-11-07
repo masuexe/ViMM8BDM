@@ -75,4 +75,15 @@ It does not prove that idle warmup resolves every startup delay.
 The PNG initialization path also saved three exact synthetic RGB images on native Windows.
 It rejected an existing output directory and retained the saved image hashes.
 This check used no game capture or desktop input.
-The next attended result remains pending.
+
+## Second attended practice aim result (CUDA and idle warmup)
+
+The detector and body policies now support CUDA device routing (`--device {auto,cpu,cuda}`).
+Both the Linux and native Windows environments use PyTorch `2.14.1+cu126` on the local RTX 4060 Laptop GPU.
+Linux and native Windows each passed all 246 tests without skips.
+
+In the second 30-second attended practice run (`runs/body-aim-3`), the runtime captured and inferred on all 297 frames (`device="cuda"`).
+The input worker accepted all 297 action messages with zero stale or inactive frames (`initial_stale_frame=false`).
+The first frame policy call took 52.04 milliseconds, its result age was 62.51 milliseconds (well within the 150-millisecond limit), and its PNG write took 14.06 milliseconds.
+The controller dispatched nonzero mouse movements in 42 frames and proposed zero movement keys or attacks.
+The operator observed continuous automatic following until the 30-second duration limit stopped control normally.

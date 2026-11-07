@@ -211,5 +211,61 @@
       "input_sent": false
     },
     "ste_lint_findings": 0
+  },
+  "second_attended_run": {
+    "format": "vimm8bdm-attended-aim-practice-result-v2",
+    "device": "cuda",
+    "frames": 297,
+    "inference_frames": 297,
+    "accepted_action_messages": 297,
+    "nonzero_mouse_dispatches": 42,
+    "longest_consecutive_motion_frames": 7,
+    "paired_private_images": 297,
+    "initial_stale_frame": false,
+    "initial_frame_policy_ms": 52.0391,
+    "initial_frame_result_age_ms": 62.5114,
+    "initial_frame_image_write_ms": 14.0641,
+    "initial_idle_warmup_calls": 1840,
+    "stale_or_inactive_frames": 0,
+    "accepted_timing_ms": {
+      "capture_ms": {
+        "p50": 6.8221,
+        "p95": 9.8624,
+        "maximum": 14.5836
+      },
+      "policy_ms": {
+        "p50": 44.3708,
+        "p95": 68.9032,
+        "maximum": 116.0404
+      },
+      "input_ms": {
+        "p50": 0.4326,
+        "p95": 0.9554,
+        "maximum": 4.3587
+      },
+      "image_write_ms": {
+        "p50": 12.8888,
+        "p95": 14.1959,
+        "maximum": 17.2941
+      },
+      "loop_ms": {
+        "p50": 64.7733,
+        "p95": 90.1703,
+        "maximum": 139.6028
+      }
+    },
+    "inference_policy_ms": {
+      "p50": 44.3708,
+      "p95": 68.9032,
+      "maximum": 116.0404
+    },
+    "movement_key_messages": 0,
+    "attack_messages": 0,
+    "operator_report": "The operator observed continuous automatic following.",
+    "input_worker_stopped": true,
+    "trace_dropped_events": 0,
+    "exit_reason": "duration_limit",
+    "image_manifest_sha256": "7711a9a965d08c312ab19eeb229f13b5af6305fd1abc57509d8e18ba74b5982b",
+    "tests_passed": 246
   }
 }

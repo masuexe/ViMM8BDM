@@ -27,7 +27,7 @@ def distribution(values):
                 maximum=ordered[-1])
 
 
-def scan(recording, checkpoint, output, local_zoom=False):
+def scan(recording, checkpoint, output, local_zoom=False, device=None):
     if output.exists():
         raise FileExistsError('The scan directory already exists')
     integrity = review(recording)
@@ -35,19 +35,25 @@ def scan(recording, checkpoint, output, local_zoom=False):
     torch.set_num_threads(4)
     torch.manual_seed(0)
     model, training = load_checkpoint(checkpoint)
+    if device is None or device == 'auto':
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = str(torch.device(device))
+    model.to(device)
     check_transfer_evaluation(dict(format='vimm8bdm-visible-coco-v1', split='calibration',
                                    source_session_id=source, source_hashes=hashes), training)
     frames = [json.loads(line) for line in (recording/'frames.jsonl').read_text().splitlines()]
     output.mkdir(parents=True, exist_ok=False)
     protocol = dict(format='vimm8bdm-continuous-body-scan-v1', source_session_id=source,
                     source_hashes=hashes, checkpoint_sha256=file_digest(checkpoint),
-                    local_zoom=local_zoom, score_threshold=.5, threads=4, warmup_calls=5,
+                    local_zoom=local_zoom, score_threshold=.5, device=device, threads=4, warmup_calls=5,
                     independent_test=False, ground_truth_available=False, input_sent=False)
     (output/'protocol.local.json').write_text(json.dumps(protocol, indent=2))
     cases = []
     with torch.inference_mode(), (recording/'frames.vrec').open('rb') as archive, (output/'frames.local.jsonl').open('x') as stream:
         for _ in range(5):
-            model([torch.zeros(3, 480, 640)])
+            model([torch.zeros(3, 480, 640, device=device)])
+        if device.startswith('cuda'):
+            torch.cuda.synchronize()
         started_scan = time.perf_counter()
         for row in frames:
             started = time.perf_counter()
@@ -61,11 +67,13 @@ def scan(recording, checkpoint, output, local_zoom=False):
             with Image.open(io.BytesIO(raw)) as image:
                 rgb = image.convert('RGB')
             decoded = time.perf_counter()
-            prediction = model([pil_to_tensor(rgb).float()/255])[0]
+            prediction = model([pil_to_tensor(rgb).to(device=device, dtype=torch.float32)/255])[0]
             boxes = person_boxes(prediction, rgb.width, rgb.height, .5)
             window = None
             if local_zoom:
                 boxes, window = refine_with_local_zoom(model, rgb, prediction)
+            if device.startswith('cuda'):
+                torch.cuda.synchronize()
             for box in boxes:
                 box['category'] = 'cutman_body_candidate'
             finished = time.perf_counter()
@@ -118,5 +126,6 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--local-zoom', action='store_true')
+    parser.add_argument('--device', choices=('auto', 'cpu', 'cuda'), default='auto')
     args = parser.parse_args()
-    scan(args.recording, args.checkpoint, args.output, args.local_zoom)
+    scan(args.recording, args.checkpoint, args.output, args.local_zoom, device=args.device)

@@ -15,7 +15,7 @@ try:
     from torchvision.models.detection.ssd import SSD
     from torchvision.models.detection._utils import BoxCoder
     from vimm8bdm.sprite_synthesis import POSES, build_bank, build_dataset, composite, augment_scene
-    from vimm8bdm.sprite_transfer import SyntheticImages, load_checkpoint
+    from vimm8bdm.sprite_transfer import SyntheticImages, load_checkpoint, validate
 except ImportError:
     torch = None
 
@@ -137,3 +137,29 @@ class SpriteTransferTests(unittest.TestCase):
             [torch.tensor([[0.,0.,10.,10.],[10.,10.,20.,20.]])],
             [torch.tensor([-1,-1])])
         self.assertEqual(float(sum(losses.values())),0)
+
+    def test_validate_routes_images_to_model_device_and_handles_parameterless_modules(self):
+        seen_devices = []
+
+        class ParameterModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.weight = torch.nn.Parameter(torch.zeros(1))
+
+            def forward(self, inputs):
+                seen_devices.append(inputs[0].device.type)
+                return [dict(boxes=torch.tensor([[10., 20., 30., 50.]]),
+                             labels=torch.tensor([1]), scores=torch.tensor([.9]))]
+
+        class ParameterlessModel(torch.nn.Module):
+            def forward(self, inputs):
+                seen_devices.append(inputs[0].device.type)
+                return [dict(boxes=torch.tensor([[10., 20., 30., 50.]]),
+                             labels=torch.tensor([1]), scores=torch.tensor([.9]))]
+
+        sample = [(torch.zeros(3, 80, 80), dict(boxes=torch.tensor([[10., 20., 30., 50.]]), labels=torch.tensor([1])))]
+        report_meta = validate(ParameterModel().to('meta'), sample)
+        report_cpu = validate(ParameterlessModel(), sample)
+        self.assertEqual(report_meta['localized'], 1)
+        self.assertEqual(report_cpu['localized'], 1)
+        self.assertEqual(seen_devices, ['meta', 'cpu'])
