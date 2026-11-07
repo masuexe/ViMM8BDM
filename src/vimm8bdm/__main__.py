@@ -101,6 +101,7 @@ def summarize(rows, mode, policy_name, exit_reason):
     accepted = [row for row in rows if row["applied"]]
     summary["policy_actions_suppressed"] = any(row.get("observe_only", False) for row in rows)
     summary["dispatched_policy_actions"] = sum(row["applied"] and not row.get("observe_only", False) for row in rows)
+    summary["dispatched_attack_actions"] = sum(row["applied"] and not row.get("observe_only", False) and row["action"]["attack"] for row in rows)
     summary["accepted_action_latency"] = {}
     for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
         vals = sorted(row[key] for row in accepted)
@@ -118,6 +119,8 @@ def run(args):
         raise ValueError("A shadow policy requires --live, --observe-only, and --checkpoint")
     if args.policy == "body_aim" and (not args.live or not getattr(args, "checkpoint", None)):
         raise ValueError("Body aim requires --live and --checkpoint")
+    if getattr(args, "enable_attack", False) and (args.policy != "body_aim" or getattr(args, "observe_only", False)):
+        raise ValueError("--enable-attack requires --policy body_aim without --observe-only")
     sink = capture = worker = None
     rows = []
     output = None
@@ -168,8 +171,17 @@ def run(args):
         elif args.policy == "body_aim":
             from .body_aim import BodyAimPolicy
             device = getattr(args, "device", None)
-            policy = BodyAimPolicy(args.checkpoint, device=device) if device is not None else BodyAimPolicy(args.checkpoint)
-            print("Body aim model ready. Movement keys and attack are disabled.", flush=True)
+            enable_attack = bool(getattr(args, "enable_attack", False))
+            kwargs = {}
+            if device is not None:
+                kwargs["device"] = device
+            if enable_attack:
+                kwargs["enable_attack"] = True
+            policy = BodyAimPolicy(args.checkpoint, **kwargs)
+            if enable_attack:
+                print("Body aim model ready. Movement keys are disabled. Gated tap-fire is enabled.", flush=True)
+            else:
+                print("Body aim model ready. Movement keys and attack are disabled.", flush=True)
         elif args.policy == "body_shadow":
             from .body_shadow import BodyShadowPolicy
             device = getattr(args, "device", None)
@@ -343,6 +355,7 @@ def main():
     parser.add_argument("--checkpoint", help="Trusted local model checkpoint path")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), help="Inference device for detector-backed policies")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
+    parser.add_argument("--enable-attack", action="store_true", help="Allow gated tap-fire during confirmed body_aim tracking")
     parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")
     parser.add_argument("--capture", choices=("desktop", "x11-window", "window"), default="desktop")
@@ -358,6 +371,8 @@ def main():
     args = parser.parse_args()
     if args.observe_only and (not args.live or args.watchdog_fault or args.policy == "watchdog_check"):
         parser.error("observe-only requires --live and cannot run a watchdog fault test")
+    if args.enable_attack and (args.policy != "body_aim" or args.observe_only):
+        parser.error("enable-attack requires --policy body_aim without --observe-only")
     if args.watchdog_fault or args.policy == "watchdog_check":
         if not (args.live and args.policy == "watchdog_check" and args.watchdog_fault and args.output and args.input_trace):
             parser.error("A watchdog fault test requires --live, --policy watchdog_check, --watchdog-fault, --output, and --input-trace")

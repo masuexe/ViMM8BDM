@@ -267,5 +267,82 @@
     "exit_reason": "duration_limit",
     "image_manifest_sha256": "7711a9a965d08c312ab19eeb229f13b5af6305fd1abc57509d8e18ba74b5982b",
     "tests_passed": 246
+  },
+  "third_attended_run": {
+    "format": "vimm8bdm-attended-aim-practice-result-v3",
+    "device": "cuda",
+    "single_class_cuda_postprocess": true,
+    "attack_enabled": true,
+    "frames": 294,
+    "inference_frames": 294,
+    "accepted_action_messages": 294,
+    "nonzero_mouse_dispatches": 64,
+    "longest_consecutive_motion_frames": 13,
+    "attack_window_frames": [
+      35,
+      115,
+      131,
+      133,
+      169,
+      193,
+      194,
+      263
+    ],
+    "dispatched_attack_frames": [
+      35,
+      115,
+      131,
+      133,
+      169,
+      193,
+      263
+    ],
+    "attack_messages": 7,
+    "paired_private_images": 294,
+    "initial_stale_frame": false,
+    "initial_frame_policy_ms": 72.9692,
+    "initial_frame_result_age_ms": 85.7557,
+    "initial_frame_image_write_ms": 23.4608,
+    "initial_idle_warmup_calls": 76,
+    "stale_or_inactive_frames": 0,
+    "accepted_timing_ms": {
+      "capture_ms": {
+        "p50": 15.47925,
+        "p95": 23.6078,
+        "maximum": 29.0623
+      },
+      "policy_ms": {
+        "p50": 37.2495,
+        "p95": 67.2103,
+        "maximum": 103.3604
+      },
+      "input_ms": {
+        "p50": 0.6126,
+        "p95": 1.6712,
+        "maximum": 19.9139
+      },
+      "image_write_ms": {
+        "p50": 23.6794,
+        "p95": 27.1812,
+        "maximum": 31.0109
+      },
+      "loop_ms": {
+        "p50": 78.1221,
+        "p95": 109.3635,
+        "maximum": 153.0134
+      }
+    },
+    "inference_policy_ms": {
+      "p50": 37.2495,
+      "p95": 67.2103,
+      "maximum": 103.3604
+    },
+    "movement_key_messages": 0,
+    "visual_review": "All seven dispatched attack frames show CUTMAN ENEMY on the HUD and visible target alignment; post-shot frames show self-projectile and hit-smoke foreground occlusion.",
+    "input_worker_stopped": true,
+    "trace_dropped_events": 0,
+    "exit_reason": "duration_limit",
+    "image_manifest_sha256": "e90fac4cc28de0f49651834c98d0362dfb6e1a156c51ecfdfa65e2760166f65e",
+    "tests_passed": 249
   }
 }

@@ -279,3 +279,4 @@ The current recordings support the next offline model diagnosis.
 The [practice aim result](aim-practice-result.md) records sixteen mouse dispatches after the operator enabled control again.
 The first stale result paused control.
 Idle model warmup, PNG initialization, and CUDA device routing then completed a second 30-second attended check (`runs/body-aim-3`) with 297 of 297 frames accepted, zero stale pauses, and 42 nonzero mouse dispatches.
+A third 30-second attended check (`runs/body-aim-4`) with single-class CUDA postprocessing and gated tap-fire (`--enable-attack`) accepted 294 of 294 frames (median policy processing 37.25 ms), dispatched 64 mouse movements and seven on-target attack pulses, and identified post-shot foreground projectile and hit-smoke occlusion as the next perception bottleneck.

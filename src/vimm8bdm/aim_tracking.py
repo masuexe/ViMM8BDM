@@ -41,13 +41,15 @@ def filter_candidates(image, candidates):
 class StableAim:
     """Require three matching observations and stop on every missing target."""
 
-    def __init__(self):
+    def __init__(self, enable_attack=False):
+        self.enable_attack = bool(enable_attack)
         self.reset()
 
     def reset(self):
         self.previous = None
         self.timestamp = None
         self.matches = 0
+        self.attack_pulsed = False
 
     def step(self, candidates, width, height, captured_ns):
         reason = None
@@ -70,11 +72,18 @@ class StableAim:
         self.previous, self.timestamp = list(box), captured_ns
         detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))
         if self.matches < 3:
+            self.attack_pulsed = False
             return Action(), detail
         x,y,w,h = box
         error_x, error_y = x+w/2-width/2, y+h/2-height/2
         dt = min(interval, .1)
         dx = 0 if abs(error_x) <= 8 else max(-60*dt,min(60*dt,error_x*.15))
         dy = 0 if abs(error_y) <= 6 else max(-40*dt,min(40*dt,error_y*.15/.625))
-        detail.update(reason='track_target', error_pixels=[error_x,error_y])
-        return Action(mouse_dx=dx, mouse_dy=dy), detail
+        window_x, window_y = max(8., w * .35), max(6., h * .35)
+        in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
+        attack = self.enable_attack and in_attack_window and not self.attack_pulsed
+        self.attack_pulsed = attack
+        detail.update(reason='track_target', error_pixels=[error_x,error_y],
+                      attack_window_pixels=[window_x,window_y],
+                      in_attack_window=in_attack_window, attack=attack)
+        return Action(mouse_dx=dx, mouse_dy=dy, attack=attack), detail

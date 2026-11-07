@@ -87,3 +87,18 @@ The input worker accepted all 297 action messages with zero stale or inactive fr
 The first frame policy call took 52.04 milliseconds, its result age was 62.51 milliseconds (well within the 150-millisecond limit), and its PNG write took 14.06 milliseconds.
 The controller dispatched nonzero mouse movements in 42 frames and proposed zero movement keys or attacks.
 The operator observed continuous automatic following until the 30-second duration limit stopped control normally.
+
+## Third attended practice aim result (single-class CUDA postprocessing and gated tap-fire)
+
+On CUDA, stock SSD postprocessing checks 90 foreground classes with per-class device-to-host synchronization.
+Because the body detector only uses class 1, the CUDA path now binds a single-class postprocessing step before warmup.
+The `body_aim` policy also accepts `--enable-attack` for gated tap-fire.
+When enabled, the tracker pulses `attack=True` for one frame only after at least three consecutive matched observations and only when the crosshair error lies within the target box window (`max(8, 0.35 * width)` horizontally and `max(6, 0.35 * height)` vertically).
+The next frame releases attack so charge-on-hold weapons fire normal projectiles, and any missing or ambiguous target immediately resets confirmation and stops attack.
+Linux and native Windows each passed all 249 tests without skips.
+
+In the third 30-second attended practice run (`runs/body-aim-4`), the runtime inferred and accepted all 294 frames on CUDA with zero stale or rejected frames.
+Median policy processing dropped to 37.25 milliseconds (95th percentile 67.21 milliseconds, maximum 103.36 milliseconds).
+The controller dispatched nonzero mouse movements in 64 frames, entered the attack window in eight frames, and dispatched seven single-frame attack pulses (`[35, 115, 131, 133, 169, 193, 263]`).
+Visual review of the saved diagnostic frames shows `CUTMAN ENEMY` on the HUD and visible target alignment in all seven attack frames, with hit smoke on the target in frames 133 and 134.
+Immediate post-shot frames (`36, 116, 132, 134, 264`) show foreground self-projectiles and hit smoke that briefly occlude the target and interrupt consecutive tracking.

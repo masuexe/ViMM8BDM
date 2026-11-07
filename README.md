@@ -321,4 +321,4 @@ The operator reported god mode against ordinary attacks in the local practice pr
 The next aim test will retain private diagnostic images.
 Attack stays disabled.
 
-The [practice aim result](docs/aim-practice-result.md) records partial following and an initial stale-frame pause in the first practice run, followed by an uninterrupted 297-frame (42-dispatch) second run with idle warmup and CUDA inference enabled.
+The [practice aim result](docs/aim-practice-result.md) records partial following and an initial stale-frame pause in the first practice run, followed by an uninterrupted 297-frame (42-dispatch) second run with idle warmup and CUDA inference enabled, and a 294-frame third run (`--enable-attack`) with 64 mouse dispatches and seven on-target tap-fire pulses.

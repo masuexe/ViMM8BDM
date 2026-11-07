@@ -39,6 +39,34 @@ class StableAimTests(unittest.TestCase):
         for i in range(3):self.assertEqual(tracker.step(box,640,480,i*100_000_000)[0],Action())
         self.assertEqual(tracker.step(box,800,600,300_000_000)[1]['reason'],'uncalibrated_image_size')
 
+    def test_gated_attack_pulses_only_inside_confirmed_target_window(self):
+        tracker = StableAim(enable_attack=True)
+        far_box = [candidate([450, 100, 40, 80])]
+        for i in range(3):
+            action, detail = tracker.step(far_box, 640, 480, i * 100_000_000)
+            self.assertFalse(action.attack)
+        self.assertFalse(detail['in_attack_window'])
+        # Move into hit window: box=[290, 180, 80, 120] -> center=(330, 240), err=(10, 0), window=(28, 42)
+        aligned_box = [candidate([290, 180, 80, 120])]
+        for i in range(2):
+            action, _ = tracker.step(aligned_box, 640, 480, (3 + i) * 100_000_000)
+            self.assertFalse(action.attack)
+        first, detail1 = tracker.step(aligned_box, 640, 480, 500_000_000)
+        self.assertTrue(detail1['in_attack_window'])
+        self.assertTrue(first.attack)
+        self.assertEqual(first.keys, frozenset())
+        # Next aligned frame releases attack (tap-fire) so charge-on-hold weapons fire
+        second, detail2 = tracker.step(aligned_box, 640, 480, 600_000_000)
+        self.assertTrue(detail2['in_attack_window'])
+        self.assertFalse(second.attack)
+        # Third aligned frame pulses attack again
+        third, detail3 = tracker.step(aligned_box, 640, 480, 700_000_000)
+        self.assertTrue(detail3['in_attack_window'])
+        self.assertTrue(third.attack)
+        # Target loss immediately stops attack and resets confirmation
+        lost, _ = tracker.step([], 640, 480, 800_000_000)
+        self.assertEqual(lost, Action())
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):

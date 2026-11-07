@@ -143,3 +143,25 @@ class BodyShadowTests(unittest.TestCase):
         self.assertTrue(policy.keep_ready())
         self.assertEqual(len(seen_devices), 7)
         self.assertTrue(all(dev == 'meta' for dev in seen_devices))
+
+    def test_single_class_postprocess_matches_class_one_detections(self):
+        from torchvision.models.detection import ssdlite320_mobilenet_v3_large
+        from vimm8bdm.body_shadow import _bind_single_class_postprocess
+        model = ssdlite320_mobilenet_v3_large(weights=None, weights_backbone=None).eval()
+        torch.manual_seed(0)
+        head_outputs = {
+            'bbox_regression': torch.randn(1, 32, 4) * 0.1,
+            'cls_logits': torch.full((1, 32, 91), -10.0),
+        }
+        head_outputs['cls_logits'][0, :, 0] = 0.0
+        head_outputs['cls_logits'][0, :4, 1] = torch.tensor([9.0, 8.0, 7.0, 6.0])
+        anchors = [torch.tensor([[10., 10., 60., 90.]] * 32)]
+        shapes = [(240, 320)]
+        stock = model.postprocess_detections(head_outputs, anchors, shapes)[0]
+        _bind_single_class_postprocess(model)
+        fast = model.postprocess_detections(head_outputs, anchors, shapes)[0]
+        keep = stock['labels'] == 1
+        self.assertTrue(torch.allclose(fast['boxes'], stock['boxes'][keep]))
+        self.assertTrue(torch.allclose(fast['scores'], stock['scores'][keep]))
+        self.assertTrue(torch.equal(fast['labels'], stock['labels'][keep]))
+
