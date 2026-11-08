@@ -128,17 +128,19 @@
   "body_aim_4_post_attack_occlusion_replay": {
     "frames": 294,
     "reasons": {
-      "confirm_target": 90,
-      "track_target": 67,
-      "missing_target": 134,
-      "post_attack_occlusion": 3
+      "confirm_target": 64,
+      "track_target": 93,
+      "missing_target": 133,
+      "post_attack_occlusion": 4
     },
+    "attack_frames": [35, 115, 131, 133, 153, 169, 193, 263, 284],
     "recovered_post_attack_sequences": [
-      [115, 116, 117, 118],
-      [133, 134, 135]
+      [115, 116, 117, 118, 119],
+      [133, 134, 135, 136]
     ],
     "reset_two_frame_missing_sequences": [
-      [263, 264, 265]
+      [263, 264, 265],
+      [284, 285, 286]
     ]
   },
   "attended_live_validation_body_aim_5": {
@@ -150,6 +152,20 @@
     "dispatched_attack_frames": [126, 167, 280],
     "post_attack_occlusion_frames": [127, 168, 281],
     "recovered_live_sequence": [167, 168, 169],
+    "width_scaled_association_replay": {
+      "reasons": {
+        "confirm_target": 70,
+        "missing_target": 171,
+        "track_target": 54,
+        "post_attack_occlusion": 3
+      },
+      "attack_frames": [66, 126, 167, 200, 206, 228, 280],
+      "recovered_post_attack_sequences": [
+        [167, 168, 169, 170, 171],
+        [280, 281, 282, 283, 284]
+      ],
+      "consecutive_detection_resets": []
+    },
     "policy_ms": {
       "p50": 19.51835,
       "p95": 39.2198,
@@ -159,6 +175,33 @@
       "p50": 39.2758,
       "p95": 59.9382,
       "maximum": 127.2998
+    }
+  },
+  "attended_live_validation_body_aim_6": {
+    "device": "cuda",
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "consecutive_detection_resets": 0,
+    "reasons": {
+      "confirm_target": 74,
+      "track_target": 85,
+      "missing_target": 135,
+      "post_attack_occlusion": 4
+    },
+    "nonzero_mouse_dispatches": 83,
+    "longest_consecutive_motion_frames": 26,
+    "dispatched_attack_frames": [27, 104, 127, 144, 186, 271, 290],
+    "post_attack_occlusion_frames": [28, 128, 187, 291],
+    "policy_ms": {
+      "p50": 20.83835,
+      "p95": 40.4211,
+      "maximum": 132.0781
+    },
+    "loop_ms": {
+      "p50": 41.53945,
+      "p95": 62.3864,
+      "maximum": 153.5545
     }
   },
   "tests_passed": 252

@@ -75,9 +75,9 @@ class StableAim:
         if self.previous is not None and interval is not None and 0 < interval <= .2:
             x,y,w,h = box
             px,py,pw,ph = self.previous
-            max_distance = max(96, 1.35 * max(w, pw)) if self.occluded_after_attack else 48
+            max_distance = max(144, 2.0 * max(w, pw)) if self.occluded_after_attack else max(96, 1.35 * max(w, pw))
             distance = math.hypot(x+w/2-px-pw/2, y+h/2-py-ph/2)
-            matched = .5 <= w*h/(pw*ph) <= 2 and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
+            matched = 1/3 <= w*h/(pw*ph) <= 3 and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
         self.occluded_after_attack = False
         self.matches = self.matches+1 if matched else 1
         self.previous, self.timestamp = list(box), captured_ns

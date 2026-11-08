@@ -28,7 +28,8 @@ class StableAimTests(unittest.TestCase):
         for interruption, timestamp in [([],300_000_000),
                                         ([candidate([450,100,40,80])]*2,300_000_000),
                                         ([candidate([450,100,40,80])],500_000_000),
-                                        ([candidate([10,350,40,80])],300_000_000)]:
+                                        ([candidate([10,350,40,80])],300_000_000),
+                                        ([candidate([430,60,80,160])],300_000_000)]:
             tracker=StableAim();box=[candidate([450,100,40,80])]
             for i in range(3):tracker.step(box,640,480,i*100_000_000)
             self.assertEqual(tracker.step(interruption,640,480,timestamp)[0],Action())
@@ -68,13 +69,15 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(occluded, Action())
         self.assertEqual(detail_occ['reason'], 'post_attack_occlusion')
         self.assertEqual(detail_occ['matches'], 5)
-        # Immediate re-detection after 2-frame motion (85.6px shift, IoU=0 across 280ms) resumes tracking
-        moved_box = [candidate([375, 190, 80, 120])]
+        # Immediate re-detection after 2-frame motion (135.4px shift, IoU=0 across 280ms) resumes tracking
+        moved_box = [candidate([425, 190, 80, 120])]
         resumed, detail_res = tracker.step(moved_box, 640, 480, 980_000_000)
         self.assertEqual(detail_res['reason'], 'track_target')
         self.assertEqual(detail_res['matches'], 6)
-        # Step back into the attack window and verify 2 consecutive missing frames reset confirmation
-        tracker.step([candidate([335, 185, 80, 120])], 640, 480, 1_080_000_000)
+        # 1-frame strafe (96.0px shift, IoU=0, 0.375x area) stays tracked; 2 missing frames reset confirmation
+        strafe, detail_strafe = tracker.step([candidate([345, 200, 50, 72])], 640, 480, 1_080_000_000)
+        self.assertEqual(detail_strafe['reason'], 'track_target')
+        self.assertEqual(detail_strafe['matches'], 7)
         realigned, _ = tracker.step(aligned_box, 640, 480, 1_180_000_000)
         self.assertTrue(realigned.attack)
         self.assertEqual(tracker.step([], 640, 480, 1_280_000_000)[1]['reason'], 'post_attack_occlusion')
