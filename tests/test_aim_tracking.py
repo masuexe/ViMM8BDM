@@ -74,12 +74,21 @@ class StableAimTests(unittest.TestCase):
         resumed, detail_res = tracker.step(moved_box, 640, 480, 980_000_000)
         self.assertEqual(detail_res['reason'], 'track_target')
         self.assertEqual(detail_res['matches'], 6)
-        # 1-frame strafe (96.0px shift, IoU=0, 0.375x area) stays tracked; 2 missing frames reset confirmation
+        # 1-frame strafe (96.0px shift, IoU=0, 0.375x area) stays tracked; partial horizontal occlusion (0.19x area, 0.503x height) and recovery (3.58x area, 1.503x height) stay tracked; 2 missing frames reset confirmation
         strafe, detail_strafe = tracker.step([candidate([345, 200, 50, 72])], 640, 480, 1_080_000_000)
         self.assertEqual(detail_strafe['reason'], 'track_target')
         self.assertEqual(detail_strafe['matches'], 7)
         realigned, _ = tracker.step(aligned_box, 640, 480, 1_180_000_000)
         self.assertTrue(realigned.attack)
+        slice_box = [candidate([360, 195, 28, 65])]  # area_ratio = 1820/9600 = 0.1896, h/ph = 65/120 = 0.542
+        _, detail_slice = tracker.step(slice_box, 640, 480, 1_230_000_000)
+        self.assertEqual(detail_slice['reason'], 'track_target')
+        self.assertEqual(detail_slice['matches'], 9)
+        recovered_full = [candidate([290, 185, 68, 102])]  # area_ratio = 6936/1820 = 3.81, h/ph = 102/65 = 1.569
+        realigned2, detail_rec = tracker.step(recovered_full, 640, 480, 1_260_000_000)
+        self.assertEqual(detail_rec['reason'], 'track_target')
+        self.assertEqual(detail_rec['matches'], 10)
+        self.assertTrue(realigned2.attack)
         self.assertEqual(tracker.step([], 640, 480, 1_280_000_000)[1]['reason'], 'post_attack_occlusion')
         lost, detail_lost = tracker.step([], 640, 480, 1_380_000_000)
         self.assertEqual(lost, Action())

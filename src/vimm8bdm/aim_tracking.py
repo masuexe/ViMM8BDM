@@ -90,7 +90,9 @@ class StableAim:
             px,py,pw,ph = self.previous
             max_distance = max(144, 2.0 * max(w, pw)) if self.occluded_after_attack else max(96, 1.35 * max(w, pw))
             distance = math.hypot(x+w/2-px-pw/2, y+h/2-py-ph/2)
-            matched = 1/3 <= w*h/(pw*ph) <= 3 and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
+            area_ratio = w*h/(pw*ph)
+            size_ok = 1/3 <= area_ratio <= 3 or (.5 < h/ph < 2 and .18 <= area_ratio <= 4)
+            matched = size_ok and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
         self.occluded_after_attack = False
         self.matches = self.matches+1 if matched else 1
         self.previous, self.timestamp = list(box), captured_ns

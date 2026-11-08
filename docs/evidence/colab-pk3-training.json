@@ -281,6 +281,11 @@
     "attack_window_frames": [33, 34, 74, 75, 197, 207],
     "dispatched_attack_frames": [34, 75, 197, 207],
     "post_attack_occlusion_frames": [35, 76],
+    "partial_occlusion_narrow_box_replay": {
+      "track_target_frames": 46,
+      "continuous_tracking_sequence": [194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210],
+      "bridged_partial_occlusion_frames": [201, 208]
+    },
     "policy_ms": {
       "p50": 17.6676,
       "p95": 34.7739,
@@ -290,6 +295,37 @@
       "p50": 36.135,
       "p95": 53.8095,
       "maximum": 86.8598
+    }
+  },
+  "attended_live_validation_body_aim_10": {
+    "device": "cuda",
+    "local_zoom_cuda_prewarm": true,
+    "bounded_horizontal_search_scan": true,
+    "search_brake_and_2frame_reacquisition": true,
+    "close_range_body_area_allowance": true,
+    "partial_occlusion_narrow_box_association": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "search_frames": 120,
+    "search_reacquisition_frames": [21, 31, 47, 65, 82, 90, 111, 125, 136, 145, 148, 158, 172, 181, 187, 205, 209, 231, 251, 275, 295],
+    "search_brake_frames": [21, 31, 47, 65, 82, 90, 111, 125, 136, 145, 148, 158, 172, 181, 187, 205, 209, 231, 251, 275, 295],
+    "track_target_frames": 103,
+    "bridged_partial_occlusion_transitions": [[31, 32], [158, 159], [160, 161]],
+    "nonzero_mouse_dispatches": 244,
+    "longest_consecutive_motion_frames": 21,
+    "attack_window_frames": [70, 85, 91, 126, 130, 162, 175, 188, 189, 192, 199, 223, 253],
+    "dispatched_attack_frames": [70, 130, 162, 175, 189, 192, 199, 253],
+    "post_attack_occlusion_frames": [131, 163, 176, 254],
+    "policy_ms": {
+      "p50": 17.69385,
+      "p95": 35.3327,
+      "maximum": 55.7195
+    },
+    "loop_ms": {
+      "p50": 38.3759,
+      "p95": 55.8732,
+      "maximum": 76.8766
     }
   },
   "tests_passed": 254
