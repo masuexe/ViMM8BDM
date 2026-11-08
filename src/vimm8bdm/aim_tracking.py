@@ -23,11 +23,10 @@ def filter_candidates(image, candidates):
             crop = image.crop((int(x), int(y), math.ceil(x+w), math.ceil(y+h))).convert('RGB')
             crop.thumbnail((96, 96))
             raw = crop.tobytes()
-            pixels = list(zip(raw[0::3],raw[1::3],raw[2::3]))
-            pink = [(i % crop.width, i // crop.width) for i, (r,g,b) in enumerate(pixels)
-                    if r >= 100 and b >= 60 and g < r*.6 and g < b*.6]
-            if (not pink or len(pink)/len(pixels) < .03
-                    or (max(p[1] for p in pink)-min(p[1] for p in pink)+1)/crop.height < .45):
+            pink_y = [i // crop.width for i, (r,g,b) in enumerate(zip(raw[0::3],raw[1::3],raw[2::3]))
+                      if r >= 100 and b >= 60 and g < r*.6 and g < b*.6]
+            if (not pink_y or len(pink_y)/(crop.width*crop.height) < .03
+                    or (max(pink_y)-min(pink_y)+1)/crop.height < .45):
                 reason = 'cutman_appearance'
             elif any(box_iou(row['box'], previous['box']) > .3 for previous in accepted):
                 reason = 'duplicate_box'
@@ -41,14 +40,15 @@ def filter_candidates(image, candidates):
 class StableAim:
     """Require three matching observations and stop on every missing target."""
 
-    def __init__(self, enable_attack=False, enable_search=False):
+    def __init__(self, enable_attack=False, enable_search=False, enable_strafe=False):
         self.enable_attack = bool(enable_attack)
         self.enable_search = bool(enable_search)
+        self.enable_strafe = bool(enable_strafe)
         self.reset()
 
     def reset(self):
         self.previous = self.timestamp = None
-        self.matches = self.missing_streak = 0
+        self.matches = self.missing_streak = self.strafe_step = 0
         self.attack_pulsed = self.occluded_after_attack = False
         self.search_direction = 1
 
@@ -98,7 +98,7 @@ class StableAim:
         self.previous, self.timestamp = list(box), captured_ns
         error_x, error_y = x+w/2-width/2, y+h/2-height/2
         dt = min(interval, .1) if interval is not None and 0 < interval <= .2 else .1
-        limit_x = (160 if self.enable_search else 60) * dt
+        limit_x = (160 if (self.enable_search or self.enable_strafe) else 60) * dt
         dx = 0 if abs(error_x) <= 8 else max(-limit_x,min(limit_x,error_x*.15))
         detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))
         if self.matches < (2 if self.enable_search else 3):
@@ -112,7 +112,13 @@ class StableAim:
         in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
         attack = self.enable_attack and self.matches >= 3 and in_attack_window and not self.attack_pulsed
         self.attack_pulsed = attack
+        keys = frozenset()
+        if self.enable_strafe:
+            strafe_key = 'a' if (self.strafe_step // 4) % 2 == 0 else 'd'
+            self.strafe_step += 1
+            keys = frozenset({strafe_key})
+            detail['strafe_key'] = strafe_key
         detail.update(reason='track_target', error_pixels=[error_x,error_y],
                       attack_window_pixels=[window_x,window_y],
                       in_attack_window=in_attack_window, attack=attack)
-        return Action(mouse_dx=dx, mouse_dy=dy, attack=attack), detail
+        return Action(keys=keys, mouse_dx=dx, mouse_dy=dy, attack=attack), detail

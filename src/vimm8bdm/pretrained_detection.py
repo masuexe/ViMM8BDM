@@ -58,6 +58,19 @@ def bind_single_class_postprocess(model):
         return detections
 
     model.postprocess_detections = postprocess
+    if hasattr(model, 'anchor_generator') and hasattr(model.anchor_generator, 'forward'):
+        orig_anchor_forward = model.anchor_generator.forward
+        anchor_cache = {}
+
+        def cached_anchors(image_list, feature_maps):
+            key = (tuple(tuple(f.shape[-2:]) for f in feature_maps),
+                   tuple(image_list.tensors.shape[-2:]), len(image_list.image_sizes),
+                   feature_maps[0].dtype, feature_maps[0].device)
+            if key not in anchor_cache:
+                anchor_cache[key] = orig_anchor_forward(image_list, feature_maps)
+            return anchor_cache[key]
+
+        model.anchor_generator.forward = cached_anchors
 
 
 def load_model(checkpoint):

@@ -28,6 +28,10 @@ class BodyShadowPolicy:
             self.model.to(self.device)
         if self.device.startswith('cuda'):
             _bind_single_class_postprocess(self.model)
+            transform = getattr(self.model, 'transform', None)
+            if transform is not None and hasattr(transform, 'image_mean') and hasattr(transform, 'image_std'):
+                transform.image_mean = torch.as_tensor(transform.image_mean, dtype=torch.float32, device=self.device)
+                transform.image_std = torch.as_tensor(transform.image_std, dtype=torch.float32, device=self.device)
         with torch.inference_mode():
             for h, w in [(480, 640)] * 4 + [(320, 320)]:
                 self.model([torch.zeros(3, h, w, device=self.device)])
@@ -52,10 +56,12 @@ class BodyShadowPolicy:
     def reset(self):
         self.last_capture_ns = None
         self.last_prediction = None
+        self.last_image = None
         self.phase = 'observe'
 
     def predict(self, frame):
         started = self.clock()
+        self.last_image = None
         age = started - frame.captured_ns
         reason = None
         if not 0 <= age <= 75_000_000:
@@ -73,8 +79,11 @@ class BodyShadowPolicy:
             return Action()
         self.last_capture_ns = frame.captured_ns
         image = Image.frombytes('RGB', (frame.width, frame.height), frame.bgra, 'raw', 'BGRX')
+        self.last_image = image
         with torch.inference_mode():
-            tensor = (pil_to_tensor(image).float() / 255).to(self.device)
+            raw_tensor = pil_to_tensor(image)
+            tensor = (raw_tensor.to(self.device).float().div_(255)
+                      if self.device.startswith('cuda') else (raw_tensor.float() / 255).to(self.device))
             prediction = self.model([tensor])[0]
             boxes, window = refine_with_local_zoom(self.model, image, prediction)
             if self.device.startswith('cuda'):

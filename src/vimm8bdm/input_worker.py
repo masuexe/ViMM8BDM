@@ -93,6 +93,8 @@ class InputOwner:
                     "timed_pending": self.pending is not None, **owned}
 
     def press(self, name):
+        if name not in {"f8", "f9", "esc"}:
+            return None
         with self.lease.lock:
             deadline = self.lease.deadline
             before = self.lease.armed
@@ -104,6 +106,8 @@ class InputOwner:
             return reason
 
     def release_key(self, name):
+        if name not in {"f8", "f9", "esc"}:
+            return
         with self.lease.lock:
             self.keys.release(name)
 
@@ -216,7 +220,11 @@ def _worker_main(connection, window_id, backend_factory, trace_path):
             def released(key):
                 owner.release_key(getattr(key, "name", None))
 
-            listener = keyboard.Listener(on_press=pressed, on_release=released)
+            listener = keyboard.Listener(
+                on_press=pressed,
+                on_release=released,
+                win32_event_filter=lambda msg, data: getattr(data, "vkCode", None) in (0x1B, 0x77, 0x78),
+            )
             listener.start()
             listener.wait()
         connection.send({"kind": "ready", "state": owner.state()})

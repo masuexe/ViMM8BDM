@@ -204,6 +204,31 @@ class InputWorkerTests(unittest.TestCase):
     def test_killed_inference_process_releases_keys_and_worker_exits(self):
         self.process_failure(heartbeat=True)
 
+    def test_hook_thread_non_control_keys_do_not_deadlock_with_sink_apply_lock(self):
+        from vimm8bdm.input_worker import InputOwner
+        import threading
+        owner_ref = {}
+        class HookCallbackSink:
+            def apply(self, action):
+                done = threading.Event()
+                def hook_callback():
+                    owner_ref["owner"].release_key(None)
+                    owner_ref["owner"].press(None)
+                    owner_ref["owner"].release_key("a")
+                    owner_ref["owner"].press("d")
+                    done.set()
+                t = threading.Thread(target=hook_callback)
+                t.start()
+                if not done.wait(timeout=.2):
+                    raise RuntimeError("Hook callback deadlocked on lease.lock during sink.apply")
+                t.join(timeout=.1)
+            def release(self):
+                pass
+        owner = InputOwner(HookCallbackSink(), lambda: True)
+        owner_ref["owner"] = owner
+        owner.press("f8")
+        self.assertTrue(owner.submit(Action(frozenset({"d"})), time.perf_counter_ns(), owner.generation))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,9 +2,9 @@
 from .pretrained_detection import person_boxes
 
 
-def crop_window(prediction, width, height):
+def crop_window(prediction, width, height, accepted=None):
     """Return one bounded square only when no full-image candidate passes."""
-    if person_boxes(prediction, width, height, .5):
+    if (person_boxes(prediction, width, height, .5) if accepted is None else accepted):
         return None
     proposals = person_boxes(prediction, width, height, .2)
     if not proposals:
@@ -27,12 +27,17 @@ def restore_boxes(boxes, window):
 def refine_with_local_zoom(model, image, full_prediction):
     """Use at most one extra model call with the unchanged score threshold."""
     from torchvision.transforms.functional import pil_to_tensor
-    window = crop_window(full_prediction, image.width, image.height)
+    boxes = person_boxes(full_prediction, image.width, image.height, .5)
+    if boxes:
+        return boxes, None
+    window = crop_window(full_prediction, image.width, image.height, boxes)
     if window is None:
-        return person_boxes(full_prediction, image.width, image.height, .5), None
+        return boxes, None
     crop = image.crop(window)
-    tensor = pil_to_tensor(crop).float() / 255
+    raw = pil_to_tensor(crop)
     parameters = getattr(model, 'parameters', None)
-    device = next(parameters(), tensor).device if callable(parameters) else tensor.device
-    prediction = model([tensor.to(device)])[0]
+    device = next(parameters(), raw).device if callable(parameters) else raw.device
+    tensor = (raw.to(device).float().div_(255)
+              if str(device).startswith('cuda') else (raw.float() / 255).to(device))
+    prediction = model([tensor])[0]
     return restore_boxes(person_boxes(prediction, crop.width, crop.height, .5), window), window

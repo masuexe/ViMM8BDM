@@ -166,6 +166,31 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(tracker.missing_streak, 0)
         self.assertEqual(tracker.step([], 640, 480, 13_400_000_000)[1]['reason'], 'missing_target')
 
+    def test_bounded_combat_strafe_alternates_lateral_keys_only_during_track_target(self):
+        tracker = StableAim(enable_attack=True, enable_search=True, enable_strafe=True)
+        box = [candidate([290, 180, 60, 100])]
+        # 1st frame is confirm_target -> no movement keys
+        act1, det1 = tracker.step(box, 640, 480, 100_000_000)
+        self.assertEqual(det1['reason'], 'confirm_target')
+        self.assertEqual(act1.keys, frozenset())
+        # Frames 2..9 are track_target -> 4 frames 'a' followed by 4 frames 'd'
+        keys_seq = []
+        for i in range(8):
+            act, det = tracker.step(box, 640, 480, (i + 2) * 100_000_000)
+            self.assertEqual(det['reason'], 'track_target')
+            keys_seq.append(set(act.keys))
+        self.assertEqual(keys_seq, [{'a'}, {'a'}, {'a'}, {'a'}, {'d'}, {'d'}, {'d'}, {'d'}])
+        # Post-attack occlusion, missing_target, and search_target immediately release all movement keys
+        occ_act, occ_det = tracker.step([], 640, 480, 1_000_000_000)
+        self.assertEqual(occ_det['reason'], 'post_attack_occlusion')
+        self.assertEqual(occ_act.keys, frozenset())
+        miss_act, miss_det = tracker.step([], 640, 480, 1_100_000_000)
+        self.assertEqual(miss_det['reason'], 'missing_target')
+        self.assertEqual(miss_act.keys, frozenset())
+        search_act, search_det = tracker.step([], 640, 480, 1_200_000_000)
+        self.assertEqual(search_det['reason'], 'search_target')
+        self.assertEqual(search_act.keys, frozenset())
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):

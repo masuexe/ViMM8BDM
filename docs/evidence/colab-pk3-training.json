@@ -328,5 +328,46 @@
       "maximum": 76.8766
     }
   },
-  "tests_passed": 254
+  "attended_live_validation_body_aim_13": {
+    "device": "cuda",
+    "local_zoom_cuda_prewarm": true,
+    "bounded_horizontal_search_scan": true,
+    "search_brake_and_2frame_reacquisition": true,
+    "close_range_body_area_allowance": true,
+    "partial_occlusion_narrow_box_association": true,
+    "bounded_combat_strafe": true,
+    "hook_non_control_key_filter": true,
+    "gpu_tensor_norm_and_cached_anchors": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "search_frames": 62,
+    "search_reacquisition_frames": [14, 22, 43, 49, 54, 57, 65, 70, 75, 78, 87, 92, 101, 105, 114, 118, 140, 167, 187, 192, 205, 212, 216, 228, 232, 250, 286, 293],
+    "search_brake_frames": [14, 22, 43, 49, 54, 57, 65, 70, 75, 78, 87, 92, 101, 105, 114, 118, 140, 167, 187, 192, 205, 212, 216, 228, 232, 250, 286, 293],
+    "track_target_frames": 117,
+    "strafe_left_frames": 60,
+    "strafe_right_frames": 57,
+    "movement_key_messages": 117,
+    "nonzero_mouse_dispatches": 207,
+    "longest_consecutive_motion_frames": 15,
+    "attack_window_frames": [36, 135, 143, 171, 193, 252, 257, 258, 259],
+    "dispatched_attack_frames": [36, 135, 143, 171, 252, 257, 259],
+    "post_attack_occlusion_frames": [37, 136, 144, 172, 260],
+    "input_ms": {
+      "p50": 0.8524,
+      "p95": 2.6315,
+      "maximum": 8.9604
+    },
+    "policy_ms": {
+      "p50": 17.8275,
+      "p95": 33.0571,
+      "maximum": 37.1894
+    },
+    "loop_ms": {
+      "p50": 38.644,
+      "p95": 54.4283,
+      "maximum": 59.9923
+    }
+  },
+  "tests_passed": 256
 }

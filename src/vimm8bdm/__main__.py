@@ -102,6 +102,7 @@ def summarize(rows, mode, policy_name, exit_reason):
     summary["policy_actions_suppressed"] = any(row.get("observe_only", False) for row in rows)
     summary["dispatched_policy_actions"] = sum(row["applied"] and not row.get("observe_only", False) for row in rows)
     summary["dispatched_attack_actions"] = sum(row["applied"] and not row.get("observe_only", False) and row["action"]["attack"] for row in rows)
+    summary["dispatched_strafe_actions"] = sum(row["applied"] and not row.get("observe_only", False) and bool(row["action"].get("keys")) for row in rows)
     summary["accepted_action_latency"] = {}
     for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
         vals = sorted(row[key] for row in accepted)
@@ -123,6 +124,8 @@ def run(args):
         raise ValueError("--enable-attack requires --policy body_aim without --observe-only")
     if getattr(args, "enable_search", False) and (args.policy != "body_aim" or getattr(args, "observe_only", False)):
         raise ValueError("--enable-search requires --policy body_aim without --observe-only")
+    if getattr(args, "enable_strafe", False) and (args.policy != "body_aim" or getattr(args, "observe_only", False)):
+        raise ValueError("--enable-strafe requires --policy body_aim without --observe-only")
     sink = capture = worker = None
     rows = []
     output = None
@@ -175,6 +178,7 @@ def run(args):
             device = getattr(args, "device", None)
             enable_attack = bool(getattr(args, "enable_attack", False))
             enable_search = bool(getattr(args, "enable_search", False))
+            enable_strafe = bool(getattr(args, "enable_strafe", False))
             kwargs = {}
             if device is not None:
                 kwargs["device"] = device
@@ -182,6 +186,8 @@ def run(args):
                 kwargs["enable_attack"] = True
             if enable_search:
                 kwargs["enable_search"] = True
+            if enable_strafe:
+                kwargs["enable_strafe"] = True
             policy = BodyAimPolicy(args.checkpoint, **kwargs)
             if enable_attack:
                 print("Body aim model ready. Movement keys are disabled. Gated tap-fire is enabled.", flush=True)
@@ -294,7 +300,8 @@ def run(args):
             image_file = None
             if image_directory is not None and armed and not invalid_frame:
                 image_file = f"{index:06d}.png"
-                image = Image.frombytes("RGB", (frame.width, frame.height), frame.bgra, "raw", "BGRX")
+                image = getattr(policy, "last_image", None) or Image.frombytes(
+                    "RGB", (frame.width, frame.height), frame.bgra, "raw", "BGRX")
                 image.save(image_directory / image_file)
             end = time.perf_counter_ns()
             row = {"frame": index, "capture_started_ns": begin,
@@ -362,6 +369,7 @@ def main():
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
     parser.add_argument("--enable-attack", action="store_true", help="Allow gated tap-fire during confirmed body_aim tracking")
     parser.add_argument("--enable-search", action="store_true", help="Allow bounded horizontal search turns when body_aim loses the target")
+    parser.add_argument("--enable-strafe", action="store_true", help="Allow bounded alternating lateral strafe keys (a/d) during confirmed body_aim tracking")
     parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")
     parser.add_argument("--capture", choices=("desktop", "x11-window", "window"), default="desktop")
@@ -381,6 +389,8 @@ def main():
         parser.error("enable-attack requires --policy body_aim without --observe-only")
     if args.enable_search and (args.policy != "body_aim" or args.observe_only):
         parser.error("enable-search requires --policy body_aim without --observe-only")
+    if args.enable_strafe and (args.policy != "body_aim" or args.observe_only):
+        parser.error("enable-strafe requires --policy body_aim without --observe-only")
     if args.watchdog_fault or args.policy == "watchdog_check":
         if not (args.live and args.policy == "watchdog_check" and args.watchdog_fault and args.output and args.input_trace):
             parser.error("A watchdog fault test requires --live, --policy watchdog_check, --watchdog-fault, --output, and --input-trace")
