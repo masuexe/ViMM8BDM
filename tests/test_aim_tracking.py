@@ -86,6 +86,59 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(detail_lost['reason'], 'missing_target')
         self.assertEqual(detail_lost['matches'], 0)
 
+    def test_bounded_horizontal_search_scans_last_seen_side_and_stops_after_budget_or_reappearance(self):
+        tracker = StableAim(enable_attack=True, enable_search=True)
+        # Left target: box=[40, 180, 60, 100] -> center_x = 70 < 320 -> search_direction = -1
+        left_box = [candidate([40, 180, 60, 100])]
+        action0, detail0 = tracker.step(left_box, 640, 480, 100_000_000)
+        self.assertEqual(action0, Action())
+        self.assertEqual(detail0['reason'], 'confirm_target')
+        self.assertEqual(tracker.search_direction, -1)
+        # 1st missing frame waits without turning
+        miss1, detail_m1 = tracker.step([], 640, 480, 200_000_000)
+        self.assertEqual(miss1, Action())
+        self.assertEqual(detail_m1['reason'], 'missing_target')
+        self.assertEqual(detail_m1['matches'], 0)
+        # 2nd..120th missing frames scan left (mouse_dx=-16, mouse_dy=0, attack=False)
+        for streak in range(2, 121):
+            act, det = tracker.step([], 640, 480, (streak + 1) * 100_000_000)
+            self.assertEqual(act, Action(mouse_dx=-16, mouse_dy=0, attack=False))
+            self.assertEqual(act.keys, frozenset())
+            self.assertEqual(det['reason'], 'search_target')
+            self.assertEqual(det['search_direction'], -1)
+            self.assertEqual(det['missing_streak'], streak)
+            self.assertEqual(det['matches'], 0)
+        # 121st missing frame stops scanning so camera never spins endlessly
+        stopped, detail_stop = tracker.step([], 640, 480, 12_200_000_000)
+        self.assertEqual(stopped, Action())
+        self.assertEqual(detail_stop['reason'], 'missing_target')
+        # Right target: box=[290, 180, 60, 100] -> center_x = 320 >= 320 -> search_direction = 1
+        right_box = [candidate([290, 180, 60, 100])]
+        reappear, detail_re = tracker.step(right_box, 640, 480, 12_300_000_000)
+        self.assertEqual(reappear, Action())
+        self.assertEqual(detail_re['reason'], 'confirm_target')
+        self.assertEqual(detail_re['matches'], 1)
+        self.assertEqual(tracker.missing_streak, 0)
+        self.assertEqual(tracker.search_direction, 1)
+        # 1st missing frame waits, 2nd missing frame scans right (mouse_dx=16)
+        self.assertEqual(tracker.step([], 640, 480, 12_400_000_000)[1]['reason'], 'missing_target')
+        act_right, det_right = tracker.step([], 640, 480, 12_500_000_000)
+        self.assertEqual(act_right, Action(mouse_dx=16, mouse_dy=0, attack=False))
+        self.assertEqual(det_right['reason'], 'search_target')
+        self.assertEqual(det_right['search_direction'], 1)
+        # Candidate reappearance during active search immediately stops search and starts confirmation
+        resume, det_resume = tracker.step(right_box, 640, 480, 12_600_000_000)
+        self.assertEqual(resume, Action())
+        self.assertEqual(det_resume['reason'], 'confirm_target')
+        self.assertEqual(det_resume['matches'], 1)
+        # Ambiguous targets reset missing_streak and never trigger search
+        self.assertEqual(tracker.step([], 640, 480, 12_700_000_000)[1]['reason'], 'missing_target')
+        amb, det_amb = tracker.step(right_box * 2, 640, 480, 12_800_000_000)
+        self.assertEqual(amb, Action())
+        self.assertEqual(det_amb['reason'], 'ambiguous_targets')
+        self.assertEqual(tracker.missing_streak, 0)
+        self.assertEqual(tracker.step([], 640, 480, 12_900_000_000)[1]['reason'], 'missing_target')
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):

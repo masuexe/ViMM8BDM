@@ -121,6 +121,8 @@ def run(args):
         raise ValueError("Body aim requires --live and --checkpoint")
     if getattr(args, "enable_attack", False) and (args.policy != "body_aim" or getattr(args, "observe_only", False)):
         raise ValueError("--enable-attack requires --policy body_aim without --observe-only")
+    if getattr(args, "enable_search", False) and (args.policy != "body_aim" or getattr(args, "observe_only", False)):
+        raise ValueError("--enable-search requires --policy body_aim without --observe-only")
     sink = capture = worker = None
     rows = []
     output = None
@@ -172,11 +174,14 @@ def run(args):
             from .body_aim import BodyAimPolicy
             device = getattr(args, "device", None)
             enable_attack = bool(getattr(args, "enable_attack", False))
+            enable_search = bool(getattr(args, "enable_search", False))
             kwargs = {}
             if device is not None:
                 kwargs["device"] = device
             if enable_attack:
                 kwargs["enable_attack"] = True
+            if enable_search:
+                kwargs["enable_search"] = True
             policy = BodyAimPolicy(args.checkpoint, **kwargs)
             if enable_attack:
                 print("Body aim model ready. Movement keys are disabled. Gated tap-fire is enabled.", flush=True)
@@ -356,6 +361,7 @@ def main():
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), help="Inference device for detector-backed policies")
     parser.add_argument("--yaw-scale", type=float, help="Mouse counts per model yaw unit, requires calibration")
     parser.add_argument("--enable-attack", action="store_true", help="Allow gated tap-fire during confirmed body_aim tracking")
+    parser.add_argument("--enable-search", action="store_true", help="Allow bounded horizontal search turns when body_aim loses the target")
     parser.add_argument("--observe-only", action="store_true", help="Infer from live images and suppress policy actions")
     parser.add_argument("--live", action="store_true", help="Enable actual desktop capture and inputs")
     parser.add_argument("--capture", choices=("desktop", "x11-window", "window"), default="desktop")
@@ -373,6 +379,8 @@ def main():
         parser.error("observe-only requires --live and cannot run a watchdog fault test")
     if args.enable_attack and (args.policy != "body_aim" or args.observe_only):
         parser.error("enable-attack requires --policy body_aim without --observe-only")
+    if args.enable_search and (args.policy != "body_aim" or args.observe_only):
+        parser.error("enable-search requires --policy body_aim without --observe-only")
     if args.watchdog_fault or args.policy == "watchdog_check":
         if not (args.live and args.policy == "watchdog_check" and args.watchdog_fault and args.output and args.input_trace):
             parser.error("A watchdog fault test requires --live, --policy watchdog_check, --watchdog-fault, --output, and --input-trace")

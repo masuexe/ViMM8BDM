@@ -193,6 +193,32 @@
     "longest_consecutive_motion_frames": 26,
     "dispatched_attack_frames": [27, 104, 127, 144, 186, 271, 290],
     "post_attack_occlusion_frames": [28, 128, 187, 291],
+    "bounded_search_replay": {
+      "reasons": {
+        "confirm_target": 74,
+        "track_target": 85,
+        "missing_target": 49,
+        "search_target": 86,
+        "post_attack_occlusion": 4
+      },
+      "search_left_frames": 38,
+      "search_right_frames": 48,
+      "nonzero_mouse_dispatches": 169,
+      "attack_frames": [27, 104, 127, 144, 186, 271, 290],
+      "edge_exit_search_windows": [
+        {"frames": [16, 22], "search_direction": -1, "last_center_x": 20.7},
+        {"frames": [121, 124], "search_direction": -1, "last_center_x": 23.2},
+        {"frames": [156, 159], "search_direction": 1, "last_center_x": 442.1},
+        {"frames": [164, 168], "search_direction": 1, "last_center_x": 519.7},
+        {"frames": [174, 176], "search_direction": 1, "last_center_x": 535.1},
+        {"frames": [179, 183], "search_direction": 1, "last_center_x": 526.9},
+        {"frames": [193, 200], "search_direction": -1, "last_center_x": 138.0},
+        {"frames": [224, 230], "search_direction": 1, "last_center_x": 555.6},
+        {"frames": [233, 235], "search_direction": 1, "last_center_x": 548.1},
+        {"frames": [239, 240], "search_direction": 1, "last_center_x": 548.5},
+        {"frames": [276, 283], "search_direction": -1, "last_center_x": 195.1}
+      ]
+    },
     "policy_ms": {
       "p50": 20.83835,
       "p95": 40.4211,
@@ -204,5 +230,37 @@
       "maximum": 153.5545
     }
   },
-  "tests_passed": 252
+  "attended_live_validation_body_aim_8": {
+    "device": "cuda",
+    "local_zoom_cuda_prewarm": true,
+    "bounded_horizontal_search_scan": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "missing_target": 25,
+      "search_target": 188,
+      "confirm_target": 41,
+      "track_target": 42,
+      "post_attack_occlusion": 2
+    },
+    "search_left_frames": 39,
+    "search_right_frames": 149,
+    "search_reacquisition_frames": [3, 7, 21, 33, 41, 123, 136, 192, 197, 226, 229, 243, 248, 255, 278, 295],
+    "nonzero_mouse_dispatches": 230,
+    "longest_consecutive_motion_frames": 69,
+    "dispatched_attack_frames": [44, 264, 281],
+    "post_attack_occlusion_frames": [45, 265],
+    "policy_ms": {
+      "p50": 17.9843,
+      "p95": 35.6444,
+      "maximum": 51.1365
+    },
+    "loop_ms": {
+      "p50": 36.911,
+      "p95": 54.1976,
+      "maximum": 80.0169
+    }
+  },
+  "tests_passed": 254
 }

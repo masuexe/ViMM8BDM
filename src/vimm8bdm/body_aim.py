@@ -10,13 +10,14 @@ from .control import Action
 class BodyAimPolicy(BodyShadowPolicy):
     """Use current visual candidates for a limited Cutman aim experiment."""
 
-    def __init__(self, checkpoint, clock=time.perf_counter_ns, device=None, enable_attack=False):
+    def __init__(self, checkpoint, clock=time.perf_counter_ns, device=None, enable_attack=False, enable_search=False):
         self.enable_attack = bool(enable_attack)
+        self.enable_search = bool(enable_search)
         super().__init__(checkpoint, clock=clock, device=device)
 
     def reset(self):
         super().reset()
-        self.tracker = StableAim(enable_attack=self.enable_attack)
+        self.tracker = StableAim(enable_attack=self.enable_attack, enable_search=self.enable_search)
         self.phase = 'aim_and_attack' if self.enable_attack else 'aim_only'
 
     def predict(self, frame):
@@ -31,5 +32,6 @@ class BodyAimPolicy(BodyShadowPolicy):
         candidates, rejected = filter_candidates(image, result['candidates'])
         action, detail = self.tracker.step(candidates,frame.width,frame.height,frame.captured_ns)
         result['aim'] = dict(**detail, eligible_candidates=candidates, rejected=rejected,
-                             movement_keys_enabled=False, attack_enabled=self.enable_attack)
+                             movement_keys_enabled=False, attack_enabled=self.enable_attack,
+                             search_enabled=self.enable_search)
         return action

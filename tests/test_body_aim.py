@@ -56,6 +56,14 @@ class BodyAimTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(ValueError,'--enable-attack requires'):
                 run(bad_args)
+        for bad_search_args in (
+            SimpleNamespace(live=True,window_id=1,capture='window',policy='body_shadow',
+                            observe_only=True,checkpoint='fixture',enable_search=True),
+            SimpleNamespace(live=True,window_id=1,capture='window',policy='body_aim',
+                            observe_only=True,checkpoint='fixture',enable_search=True),
+        ):
+            with self.assertRaisesRegex(ValueError,'--enable-search requires'):
+                run(bad_search_args)
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
             summarize([
@@ -87,3 +95,32 @@ class BodyAimTests(unittest.TestCase):
             attacks.append(action.attack)
         self.assertEqual(attacks,[False,False,True,False,True])
         self.assertTrue(policy.last_prediction['aim']['attack_enabled'])
+        self.assertFalse(policy.last_prediction['aim']['search_enabled'])
+
+    def test_search_enabled_policy_scans_toward_last_seen_side_on_target_loss(self):
+        clock=SimpleNamespace(now=1_000_000_000)
+        visible=SimpleNamespace(flag=True)
+        def model(inputs):
+            if not visible.flag:
+                return [dict(boxes=torch.zeros((0,4)),labels=torch.zeros((0,),dtype=torch.int64),scores=torch.zeros((0,)))]
+            return [dict(boxes=torch.tensor([[40.,180.,100.,280.]]),
+                         labels=torch.tensor([1]),scores=torch.tensor([.99]))]
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'model.pt';path.write_bytes(b'fixture')
+            with patch('vimm8bdm.body_shadow.load_checkpoint',return_value=(model,{})):
+                policy=BodyAimPolicy(path,lambda:clock.now,enable_attack=True,enable_search=True)
+        image=Image.new('RGB',(640,480),'black')
+        ImageDraw.Draw(image).rectangle((40,180,99,279),fill=(255,0,120))
+        pixels=image.convert('RGBA').tobytes('raw','BGRA')
+        clock.now+=100_000_000
+        self.assertEqual(policy.predict(Frame(640,480,pixels,clock.now-1_000_000)),Action())
+        self.assertTrue(policy.last_prediction['aim']['search_enabled'])
+        visible.flag=False
+        clock.now+=100_000_000
+        self.assertEqual(policy.predict(Frame(640,480,pixels,clock.now-1_000_000)),Action())
+        self.assertEqual(policy.last_prediction['aim']['reason'],'missing_target')
+        clock.now+=100_000_000
+        search_action=policy.predict(Frame(640,480,pixels,clock.now-1_000_000))
+        self.assertEqual(search_action,Action(mouse_dx=-16,mouse_dy=0,attack=False))
+        self.assertEqual(policy.last_prediction['aim']['reason'],'search_target')
+        self.assertEqual(policy.last_prediction['aim']['search_direction'],-1)

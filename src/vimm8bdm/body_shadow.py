@@ -29,8 +29,8 @@ class BodyShadowPolicy:
         if self.device.startswith('cuda'):
             _bind_single_class_postprocess(self.model)
         with torch.inference_mode():
-            for _ in range(5):
-                self.model([torch.zeros(3, 480, 640, device=self.device)])
+            for h, w in [(480, 640)] * 4 + [(320, 320)]:
+                self.model([torch.zeros(3, h, w, device=self.device)])
             if self.device.startswith('cuda'):
                 torch.cuda.synchronize()
         self.idle_warmup_calls = 0

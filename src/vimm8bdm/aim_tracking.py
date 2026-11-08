@@ -41,16 +41,16 @@ def filter_candidates(image, candidates):
 class StableAim:
     """Require three matching observations and stop on every missing target."""
 
-    def __init__(self, enable_attack=False):
+    def __init__(self, enable_attack=False, enable_search=False):
         self.enable_attack = bool(enable_attack)
+        self.enable_search = bool(enable_search)
         self.reset()
 
     def reset(self):
-        self.previous = None
-        self.timestamp = None
-        self.matches = 0
-        self.attack_pulsed = False
-        self.occluded_after_attack = False
+        self.previous = self.timestamp = None
+        self.matches = self.missing_streak = 0
+        self.attack_pulsed = self.occluded_after_attack = False
+        self.search_direction = 1
 
     def step(self, candidates, width, height, captured_ns):
         reason = None
@@ -67,13 +67,25 @@ class StableAim:
                 self.timestamp = captured_ns
                 return Action(), dict(reason='post_attack_occlusion', matches=self.matches,
                                       selected_box=list(self.previous))
+            if reason == 'missing_target':
+                self.previous, self.matches = None, 0
+                self.attack_pulsed = self.occluded_after_attack = False
+                self.missing_streak += 1
+                self.timestamp = captured_ns
+                if self.enable_search and 2 <= self.missing_streak <= 120:
+                    return Action(mouse_dx=16 * self.search_direction), dict(
+                        reason='search_target', matches=0,
+                        search_direction=self.search_direction, missing_streak=self.missing_streak)
+                return Action(), dict(reason='missing_target', matches=0)
             self.reset()
             return Action(), dict(reason=reason, matches=0)
         box = candidates[0]['box']
+        x, y, w, h = box
+        self.search_direction = -1 if x + w / 2 < width / 2 else 1
+        self.missing_streak = 0
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9
         matched = False
         if self.previous is not None and interval is not None and 0 < interval <= .2:
-            x,y,w,h = box
             px,py,pw,ph = self.previous
             max_distance = max(144, 2.0 * max(w, pw)) if self.occluded_after_attack else max(96, 1.35 * max(w, pw))
             distance = math.hypot(x+w/2-px-pw/2, y+h/2-py-ph/2)
@@ -85,10 +97,10 @@ class StableAim:
         if self.matches < 3:
             self.attack_pulsed = False
             return Action(), detail
-        x,y,w,h = box
         error_x, error_y = x+w/2-width/2, y+h/2-height/2
         dt = min(interval, .1)
-        dx = 0 if abs(error_x) <= 8 else max(-60*dt,min(60*dt,error_x*.15))
+        limit_x = (160 if self.enable_search else 60) * dt
+        dx = 0 if abs(error_x) <= 8 else max(-limit_x,min(limit_x,error_x*.15))
         dy = 0 if abs(error_y) <= 6 else max(-40*dt,min(40*dt,error_y*.15/.625))
         window_x, window_y = max(8., w * .35), max(6., h * .35)
         in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
