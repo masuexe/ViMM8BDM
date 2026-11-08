@@ -191,6 +191,34 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(search_det['reason'], 'search_target')
         self.assertEqual(search_act.keys, frozenset())
 
+    def test_patrol_handoff_after_bounded_search_and_immediate_brake_on_reacquisition(self):
+        tracker = StableAim(enable_attack=True, enable_search=True, enable_strafe=True, enable_patrol=True)
+        left_box = [candidate([40, 180, 60, 100])]
+        tracker.step(left_box, 640, 480, 100_000_000)
+        self.assertEqual(tracker.step([], 640, 480, 200_000_000)[1]['reason'], 'missing_target')
+        for streak in range(2, 9):
+            act, det = tracker.step([], 640, 480, (streak + 1) * 100_000_000)
+            self.assertEqual(act, Action(mouse_dx=-16))
+            self.assertEqual(det['reason'], 'search_target')
+        patrol_act, patrol_det = tracker.step([], 640, 480, 1_000_000_000)
+        self.assertEqual(patrol_act, Action())
+        self.assertEqual(patrol_det['reason'], 'patrol_target')
+        self.assertEqual(patrol_det['missing_streak'], 9)
+        edge_box = [candidate([380, 180, 60, 100])]
+        brake_act, brake_det = tracker.step(edge_box, 640, 480, 1_100_000_000)
+        self.assertEqual(brake_act, Action(mouse_dx=13.5))
+        self.assertEqual(brake_act.keys, frozenset())
+        self.assertEqual(brake_det['reason'], 'confirm_target')
+        self.assertTrue(brake_det['search_brake'])
+        center_box = [candidate([290, 180, 60, 100])]
+        track_act, track_det = tracker.step(center_box, 640, 480, 1_200_000_000)
+        self.assertEqual(track_det['reason'], 'track_target')
+        self.assertEqual(track_act.keys, frozenset({'a'}))
+        self.assertFalse(track_act.attack)
+        fire_act, fire_det = tracker.step(center_box, 640, 480, 1_300_000_000)
+        self.assertEqual(fire_det['reason'], 'track_target')
+        self.assertTrue(fire_act.attack)
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):

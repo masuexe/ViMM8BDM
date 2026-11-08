@@ -369,5 +369,70 @@
       "maximum": 59.9923
     }
   },
-  "tests_passed": 256
+  "attended_live_validation_body_aim_16": {
+    "device": "cuda",
+    "local_zoom_cuda_prewarm": true,
+    "bounded_horizontal_search_scan": true,
+    "search_brake_and_2frame_reacquisition": true,
+    "close_range_body_area_allowance": true,
+    "partial_occlusion_narrow_box_association": true,
+    "bounded_combat_strafe": true,
+    "bounded_visual_patrol": true,
+    "patrol_search_limit": 8,
+    "hook_non_control_key_filter": true,
+    "gpu_tensor_norm_and_cached_anchors": true,
+    "gpu_local_zoom_slice_and_dual_idle_warmup": true,
+    "frames": 297,
+    "accepted_action_messages": 297,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "confirm_target": 13,
+      "track_target": 21,
+      "missing_target": 13,
+      "search_target": 19,
+      "post_attack_occlusion": 1,
+      "patrol_target": 230
+    },
+    "patrol_phases": {
+      "settle": 12,
+      "forward": 140,
+      "turn": 78
+    },
+    "patrol_blockage_decisions": {
+      "reduced_image_change": 2,
+      "static_view": 1
+    },
+    "search_frames": 19,
+    "patrol_frames": 230,
+    "patrol_forward_w_frames": 140,
+    "patrol_turn_frames": 78,
+    "search_reacquisition_frames": [5, 15, 21, 38, 42],
+    "patrol_reacquisition_frames": [94],
+    "search_brake_frames": [5, 15, 21, 38, 42, 94],
+    "track_target_frames": 21,
+    "strafe_left_frames": 12,
+    "strafe_right_frames": 9,
+    "movement_key_messages": 161,
+    "nonzero_mouse_dispatches": 122,
+    "longest_consecutive_motion_frames": 32,
+    "attack_window_frames": [45],
+    "dispatched_attack_frames": [45],
+    "post_attack_occlusion_frames": [46],
+    "input_ms": {
+      "p50": 0.7309,
+      "p95": 3.0294,
+      "maximum": 12.1477
+    },
+    "policy_ms": {
+      "p50": 31.4194,
+      "p95": 54.9699,
+      "maximum": 89.9879
+    },
+    "loop_ms": {
+      "p50": 63.7613,
+      "p95": 96.4063,
+      "maximum": 126.8425
+    }
+  },
+  "tests_passed": 258
 }

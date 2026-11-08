@@ -40,10 +40,11 @@ def filter_candidates(image, candidates):
 class StableAim:
     """Require three matching observations and stop on every missing target."""
 
-    def __init__(self, enable_attack=False, enable_search=False, enable_strafe=False):
+    def __init__(self, enable_attack=False, enable_search=False, enable_strafe=False, enable_patrol=False):
         self.enable_attack = bool(enable_attack)
         self.enable_search = bool(enable_search)
         self.enable_strafe = bool(enable_strafe)
+        self.enable_patrol = bool(enable_patrol)
         self.reset()
 
     def reset(self):
@@ -72,16 +73,21 @@ class StableAim:
                 self.attack_pulsed = self.occluded_after_attack = False
                 self.missing_streak += 1
                 self.timestamp = captured_ns
-                if self.enable_search and 2 <= self.missing_streak <= 120:
+                search_limit = 8 if self.enable_patrol else 120
+                if self.enable_search and 2 <= self.missing_streak <= search_limit:
                     return Action(mouse_dx=16 * self.search_direction), dict(
                         reason='search_target', matches=0,
                         search_direction=self.search_direction, missing_streak=self.missing_streak)
+                if self.enable_patrol and self.missing_streak > (search_limit if self.enable_search else 1):
+                    return Action(), dict(reason='patrol_target', matches=0,
+                                          missing_streak=self.missing_streak)
                 return Action(), dict(reason='missing_target', matches=0)
             self.reset()
             return Action(), dict(reason=reason, matches=0)
         box = candidates[0]['box']
         x, y, w, h = box
-        was_searching = self.enable_search and 2 <= self.missing_streak <= 120
+        was_searching = ((self.enable_search and 2 <= self.missing_streak <= 120)
+                         or (self.enable_patrol and self.missing_streak >= 2))
         self.search_direction = -1 if x + w / 2 < width / 2 else 1
         self.missing_streak = 0
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9
@@ -98,10 +104,10 @@ class StableAim:
         self.previous, self.timestamp = list(box), captured_ns
         error_x, error_y = x+w/2-width/2, y+h/2-height/2
         dt = min(interval, .1) if interval is not None and 0 < interval <= .2 else .1
-        limit_x = (160 if (self.enable_search or self.enable_strafe) else 60) * dt
+        limit_x = (160 if (self.enable_search or self.enable_strafe or self.enable_patrol) else 60) * dt
         dx = 0 if abs(error_x) <= 8 else max(-limit_x,min(limit_x,error_x*.15))
         detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))
-        if self.matches < (2 if self.enable_search else 3):
+        if self.matches < (2 if (self.enable_search or self.enable_patrol) else 3):
             self.attack_pulsed = False
             if was_searching:
                 detail['search_brake'] = True

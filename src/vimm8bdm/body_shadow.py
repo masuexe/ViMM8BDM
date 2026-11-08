@@ -45,8 +45,9 @@ class BodyShadowPolicy:
         """Warm idle inference at most once per two seconds without input."""
         if self.clock() - self.last_ready_ns < 2_000_000_000:
             return False
+        h, w = (320, 320) if self.device.startswith('cuda') and self.idle_warmup_calls % 2 else (480, 640)
         with torch.inference_mode():
-            self.model([torch.zeros(3, 480, 640, device=self.device)])
+            self.model([torch.zeros(3, h, w, device=self.device)])
             if self.device.startswith('cuda'):
                 torch.cuda.synchronize()
         self.last_ready_ns = self.clock()
@@ -85,7 +86,7 @@ class BodyShadowPolicy:
             tensor = (raw_tensor.to(self.device).float().div_(255)
                       if self.device.startswith('cuda') else (raw_tensor.float() / 255).to(self.device))
             prediction = self.model([tensor])[0]
-            boxes, window = refine_with_local_zoom(self.model, image, prediction)
+            boxes, window = refine_with_local_zoom(self.model, image, prediction, tensor)
             if self.device.startswith('cuda'):
                 torch.cuda.synchronize()
         finished = self.clock()

@@ -24,7 +24,7 @@ def restore_boxes(boxes, window):
                            row['box'][2], row['box'][3]]} for row in boxes]
 
 
-def refine_with_local_zoom(model, image, full_prediction):
+def refine_with_local_zoom(model, image, full_prediction, full_tensor=None):
     """Use at most one extra model call with the unchanged score threshold."""
     from torchvision.transforms.functional import pil_to_tensor
     boxes = person_boxes(full_prediction, image.width, image.height, .5)
@@ -33,11 +33,15 @@ def refine_with_local_zoom(model, image, full_prediction):
     window = crop_window(full_prediction, image.width, image.height, boxes)
     if window is None:
         return boxes, None
-    crop = image.crop(window)
-    raw = pil_to_tensor(crop)
-    parameters = getattr(model, 'parameters', None)
-    device = next(parameters(), raw).device if callable(parameters) else raw.device
-    tensor = (raw.to(device).float().div_(255)
-              if str(device).startswith('cuda') else (raw.float() / 255).to(device))
+    left, top, right, bottom = window
+    if full_tensor is not None and tuple(full_tensor.shape[-2:]) == (image.height, image.width):
+        tensor = full_tensor[:, top:bottom, left:right]
+    else:
+        crop = image.crop(window)
+        raw = pil_to_tensor(crop)
+        parameters = getattr(model, 'parameters', None)
+        device = next(parameters(), raw).device if callable(parameters) else raw.device
+        tensor = (raw.to(device).float().div_(255)
+                  if str(device).startswith('cuda') else (raw.float() / 255).to(device))
     prediction = model([tensor])[0]
-    return restore_boxes(person_boxes(prediction, crop.width, crop.height, .5), window), window
+    return restore_boxes(person_boxes(prediction, right - left, bottom - top, .5), window), window
