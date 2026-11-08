@@ -27,7 +27,8 @@
     ],
     "archive_sha256": "76150f14cea8a70f545381c8e558d384e56f6000aba93ee0dc3e2f2d74a11b03"
   },
-  "v6b_gondola": {
+  "offline_v6b_prefix_override_smoke": {
+    "note": "Offline archive-only test of $CUT + addon override; classes-v9fh.pk3 and gondolapatchv2.7h2.pk3 require MM8BDM-v6a.pk3 at Zandronum launch",
     "packages": [
       "mm8bdm-v6b.pk3",
       "8bdm-v6b-miscfixes-v6.pk3",
@@ -139,6 +140,26 @@
     "reset_two_frame_missing_sequences": [
       [263, 264, 265]
     ]
+  },
+  "attended_live_validation_body_aim_5": {
+    "device": "cuda",
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "nonzero_mouse_dispatches": 33,
+    "dispatched_attack_frames": [126, 167, 280],
+    "post_attack_occlusion_frames": [127, 168, 281],
+    "recovered_live_sequence": [167, 168, 169],
+    "policy_ms": {
+      "p50": 19.51835,
+      "p95": 39.2198,
+      "maximum": 104.5288
+    },
+    "loop_ms": {
+      "p50": 39.2758,
+      "p95": 59.9382,
+      "maximum": 127.2998
+    }
   },
   "tests_passed": 252
 }
