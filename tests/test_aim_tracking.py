@@ -131,13 +131,31 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(resume, Action())
         self.assertEqual(det_resume['reason'], 'confirm_target')
         self.assertEqual(det_resume['matches'], 1)
+        self.assertTrue(det_resume['search_brake'])
+        # Off-center candidate during active search triggers immediate horizontal brake, 2nd frame tracks without attack, 3rd frame unlocks attack
+        self.assertEqual(tracker.step([], 640, 480, 12_620_000_000)[1]['reason'], 'missing_target')
+        self.assertEqual(tracker.step([], 640, 480, 12_640_000_000)[0], Action(mouse_dx=16))
+        edge_box = [candidate([380, 180, 60, 100])]  # center_x = 410 -> error_x = +90 -> mouse_dx = 13.5
+        brake_act, brake_det = tracker.step(edge_box, 640, 480, 12_740_000_000)
+        self.assertEqual(brake_act, Action(mouse_dx=13.5, mouse_dy=0, attack=False))
+        self.assertEqual(brake_det['reason'], 'confirm_target')
+        self.assertEqual(brake_det['matches'], 1)
+        self.assertTrue(brake_det['search_brake'])
+        track2_act, track2_det = tracker.step(right_box, 640, 480, 12_840_000_000)
+        self.assertEqual(track2_det['reason'], 'track_target')
+        self.assertEqual(track2_det['matches'], 2)
+        self.assertFalse(track2_act.attack)
+        track3_act, track3_det = tracker.step(right_box, 640, 480, 12_940_000_000)
+        self.assertEqual(track3_det['reason'], 'track_target')
+        self.assertEqual(track3_det['matches'], 3)
+        self.assertTrue(track3_act.attack)
         # Ambiguous targets reset missing_streak and never trigger search
-        self.assertEqual(tracker.step([], 640, 480, 12_700_000_000)[1]['reason'], 'missing_target')
-        amb, det_amb = tracker.step(right_box * 2, 640, 480, 12_800_000_000)
+        self.assertEqual(tracker.step([], 640, 480, 13_200_000_000)[1]['reason'], 'missing_target')
+        amb, det_amb = tracker.step(right_box * 2, 640, 480, 13_300_000_000)
         self.assertEqual(amb, Action())
         self.assertEqual(det_amb['reason'], 'ambiguous_targets')
         self.assertEqual(tracker.missing_streak, 0)
-        self.assertEqual(tracker.step([], 640, 480, 12_900_000_000)[1]['reason'], 'missing_target')
+        self.assertEqual(tracker.step([], 640, 480, 13_400_000_000)[1]['reason'], 'missing_target')
 
 
 @unittest.skipIf(Image is None,'Install Pillow')
@@ -152,8 +170,8 @@ class AimAppearanceTests(unittest.TestCase):
 
     def test_duplicate_box_is_removed_and_large_foreground_box_is_rejected(self):
         image=Image.new('RGB',(640,480),(255,0,120))
-        good,bad=filter_candidates(image,[candidate([100,100,40,80]),candidate([101,101,40,80],.9),candidate([0,0,600,450],.95)])
-        self.assertEqual(len(good),1)
+        good,bad=filter_candidates(image,[candidate([100,100,40,80]),candidate([101,101,40,80],.9),candidate([120,20,360,440],.85),candidate([0,0,600,450],.95)])
+        self.assertEqual(len(good),2)
         self.assertEqual({r['reason'] for r in bad},{'duplicate_box','box_extent'})
 
     def test_small_magenta_strip_does_not_validate_a_large_projectile_box(self):

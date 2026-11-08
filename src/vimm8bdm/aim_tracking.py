@@ -16,7 +16,7 @@ def filter_candidates(image, candidates):
         elif row['score'] < .8:
             reason = 'low_aim_score'
         elif (x < 0 or y < 0 or w < 8 or h < 12 or x+w > image.width+.01
-              or y+h > image.height+.01 or w*h > image.width*image.height*.35
+              or y+h > image.height+.01 or w*h > image.width*image.height*.68
               or not .2 <= w/h <= 1.1):
             reason = 'box_extent'
         else:
@@ -81,6 +81,7 @@ class StableAim:
             return Action(), dict(reason=reason, matches=0)
         box = candidates[0]['box']
         x, y, w, h = box
+        was_searching = self.enable_search and 2 <= self.missing_streak <= 120
         self.search_direction = -1 if x + w / 2 < width / 2 else 1
         self.missing_streak = 0
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9
@@ -93,18 +94,21 @@ class StableAim:
         self.occluded_after_attack = False
         self.matches = self.matches+1 if matched else 1
         self.previous, self.timestamp = list(box), captured_ns
-        detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))
-        if self.matches < 3:
-            self.attack_pulsed = False
-            return Action(), detail
         error_x, error_y = x+w/2-width/2, y+h/2-height/2
-        dt = min(interval, .1)
+        dt = min(interval, .1) if interval is not None and 0 < interval <= .2 else .1
         limit_x = (160 if self.enable_search else 60) * dt
         dx = 0 if abs(error_x) <= 8 else max(-limit_x,min(limit_x,error_x*.15))
+        detail = dict(reason='confirm_target', matches=self.matches, selected_box=list(box))
+        if self.matches < (2 if self.enable_search else 3):
+            self.attack_pulsed = False
+            if was_searching:
+                detail['search_brake'] = True
+                return Action(mouse_dx=dx), detail
+            return Action(), detail
         dy = 0 if abs(error_y) <= 6 else max(-40*dt,min(40*dt,error_y*.15/.625))
         window_x, window_y = max(8., w * .35), max(6., h * .35)
         in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
-        attack = self.enable_attack and in_attack_window and not self.attack_pulsed
+        attack = self.enable_attack and self.matches >= 3 and in_attack_window and not self.attack_pulsed
         self.attack_pulsed = attack
         detail.update(reason='track_target', error_pixels=[error_x,error_y],
                       attack_window_pixels=[window_x,window_y],

@@ -262,5 +262,35 @@
       "maximum": 80.0169
     }
   },
+  "attended_live_validation_body_aim_9": {
+    "device": "cuda",
+    "local_zoom_cuda_prewarm": true,
+    "bounded_horizontal_search_scan": true,
+    "search_brake_and_2frame_reacquisition": true,
+    "close_range_body_area_allowance": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "box_extent_rejections": 2,
+    "search_frames": 203,
+    "search_reacquisition_frames": [4, 17, 32, 42, 48, 53, 58, 73, 167, 194, 213, 220],
+    "search_brake_frames": [4, 17, 32, 42, 48, 53, 58, 73, 167, 194, 213, 220],
+    "track_target_frames": 42,
+    "nonzero_mouse_dispatches": 257,
+    "longest_consecutive_motion_frames": 93,
+    "attack_window_frames": [33, 34, 74, 75, 197, 207],
+    "dispatched_attack_frames": [34, 75, 197, 207],
+    "post_attack_occlusion_frames": [35, 76],
+    "policy_ms": {
+      "p50": 17.6676,
+      "p95": 34.7739,
+      "maximum": 68.759
+    },
+    "loop_ms": {
+      "p50": 36.135,
+      "p95": 53.8095,
+      "maximum": 86.8598
+    }
+  },
   "tests_passed": 254
 }
