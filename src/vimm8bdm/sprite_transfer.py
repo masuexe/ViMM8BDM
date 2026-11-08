@@ -11,7 +11,13 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision.models.detection import ssdlite320_mobilenet_v3_large
 from torchvision.transforms.functional import pil_to_tensor
 
-from .pretrained_detection import CHECKPOINT_SHA256, load_model, person_boxes, complete_synthetic_provenance
+from .pretrained_detection import (
+    CHECKPOINT_SHA256,
+    bind_single_class_postprocess,
+    complete_synthetic_provenance,
+    load_model,
+    person_boxes,
+)
 from .recording import file_digest
 from .sprite_synthesis import DATA_FORMAT
 from .real_body_data import FORMAT as MIXED_FORMAT
@@ -124,6 +130,8 @@ def train(dataset, initial, output, epochs=8, batch_size=4, seed=0, initial_tran
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = str(torch.device(device))
     model.to(device)
+    if device.startswith('cuda'):
+        bind_single_class_postprocess(model)
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=.9, weight_decay=.0005)
     loader = DataLoader(training, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True,
                         generator=torch.Generator().manual_seed(seed), collate_fn=lambda rows: tuple(zip(*rows)))

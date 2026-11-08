@@ -12,7 +12,12 @@ import torchvision
 from torchvision.transforms.functional import pil_to_tensor
 
 from vimm8bdm.visual_metrics import box_iou as overlap
-from vimm8bdm.pretrained_detection import load_model, person_boxes, check_transfer_evaluation
+from vimm8bdm.pretrained_detection import (
+    bind_single_class_postprocess,
+    check_transfer_evaluation,
+    load_model,
+    person_boxes,
+)
 from vimm8bdm.recording import file_digest
 
 
@@ -45,6 +50,8 @@ def evaluate(dataset, checkpoint, output, transfer=False, validation=False, prov
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = str(torch.device(device))
     model.to(device)
+    if device.startswith('cuda'):
+        bind_single_class_postprocess(model)
     threshold = .5
     cases = []
     with torch.inference_mode():

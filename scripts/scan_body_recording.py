@@ -13,7 +13,7 @@ import torch
 from torchvision.transforms.functional import pil_to_tensor
 
 from vimm8bdm.local_zoom import refine_with_local_zoom
-from vimm8bdm.pretrained_detection import check_transfer_evaluation, person_boxes
+from vimm8bdm.pretrained_detection import bind_single_class_postprocess, check_transfer_evaluation, person_boxes
 from vimm8bdm.recording import file_digest
 from vimm8bdm.recording_review import review
 from vimm8bdm.sprite_transfer import load_checkpoint
@@ -39,6 +39,8 @@ def scan(recording, checkpoint, output, local_zoom=False, device=None):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = str(torch.device(device))
     model.to(device)
+    if device.startswith('cuda'):
+        bind_single_class_postprocess(model)
     check_transfer_evaluation(dict(format='vimm8bdm-visible-coco-v1', split='calibration',
                                    source_session_id=source, source_hashes=hashes), training)
     frames = [json.loads(line) for line in (recording/'frames.jsonl').read_text().splitlines()]

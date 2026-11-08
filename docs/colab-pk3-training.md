@@ -16,9 +16,9 @@ When `build_dataset` runs with `--profile occlusion` and `--occluders`, `composi
 ## Post-attack occlusion grace in `StableAim`
 
 In `runs/body-aim-4`, single-frame self-projectiles and hit smoke immediately after a tap-fire pulse briefly occluded the target and forced a full three-frame re-confirmation.
-When `enable_attack=True`, `StableAim` now holds the prior target box and match count for at most one missing frame (`reason="post_attack_occlusion"`, ` interval <= 0.2 s `) immediately after a frame that pulsed `attack=True`.
+When `enable_attack=True`, `StableAim` now holds the prior target box and match count for at most one missing frame (`reason="post_attack_occlusion"`, `interval <= 0.2 s`) immediately after a frame that pulsed `attack=True`, advances the tracker timestamp to the occluded frame, and allows up to `max(96, 1.35 * max(w, pw))` pixels of two-frame displacement when the target reappears on the next frame (`interval <= 0.2 s`).
 The occluded frame still emits `Action()` (zero mouse motion and `attack=False`).
-If the target reappears on the very next frame within `0.25 s`, tracking resumes immediately without resetting `matches`; if the target remains missing for a second frame, confirmation resets to zero.
+Replaying all 294 frames of `runs/body-aim-4` confirms that both post-attack single-frame occlusions (`115 -> 116 -> 117` and `133 -> 134 -> 135`) resume `track_target` immediately (`matches=7` and `matches=16`) instead of resetting to `matches=1`, while two consecutive missing frames (`263 -> 264 -> 265`) reset confirmation to zero.
 
 ## Export a portable Colab GPU bundle
 
@@ -34,14 +34,14 @@ PYTHONPATH=src .venv/bin/python -m vimm8bdm.colab_bundle export \
   --output .local/bundles/cutman-occlusion-bundle.tar.gz
 ```
 
-To package an existing reviewed mixed dataset (`data/cutman-real-mixed-3`) with a `v6b` + Gondola stack and start from an existing transfer checkpoint:
+To package an existing reviewed mixed dataset (`data/cutman-real-mixed-3`) with a `v6b` + Gondola stack, augment its training split with foreground occluders extracted from the PK3 stack (`--augment-occluders`), and start from an existing transfer checkpoint:
 
 ```bash
 PYTHONPATH=src .venv/bin/python -m vimm8bdm.colab_bundle export \
   --packages .local/wads/mm8bdm-v6b.pk3 .local/wads/8bdm-v6b-miscfixes-v6.pk3 \
              .local/wads/classes-v9fh.pk3 .local/wads/gondolapatchv2.7h2.pk3 \
   --initial .local/weights/projectile-transfer-model.pt --initial-transfer \
-  --dataset data/cutman-real-mixed-3 \
+  --dataset data/cutman-real-mixed-3 --augment-occluders 64 \
   --output .local/bundles/cutman-v6b-mixed-bundle.tar.gz
 ```
 

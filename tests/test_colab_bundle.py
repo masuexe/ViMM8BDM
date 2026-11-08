@@ -47,11 +47,12 @@ def _build_multi_version_pk3_stack(root):
     addon_poses = 'KLMQRSTVW'
     with zipfile.ZipFile(base_pk3, 'w') as zf:
         zf.writestr('PLAYPAL.pal', bytes(768))
-        zf.writestr('SKININFO.txt', '{\nname = "CutMan"\nsprite = $CUT\nclass = Megaman\n}\n')
         for pose in base_poses:
-            prefix = '$CUT' if pose in 'ABCDEFGH' else 'CUTM'
+            prefix = 'CUT3' if pose in 'ABCDEFGH' else 'CUTM'
             for suffix in (pose + '1', pose + '5', pose + '6' + pose + '4', pose + '7' + pose + '3', pose + '8' + pose + '2'):
                 zf.writestr(f'sprites/skins/MM1/cutman/{prefix}{suffix}.PNG', body_png)
+        # Place SKININFO.txt after sprites/ to verify two-pass archive prefix discovery
+        zf.writestr('SKININFO.txt', '{\nname = "CutMan"\nsprite = CUT3\nclass = Megaman\n}\n')
         zf.writestr('sprites/effects/explosions/MXP1A0.png', occ_png)
         zf.writestr('sprites/weapons/buster/BUSTA0.png', occ_png)
 
@@ -151,6 +152,35 @@ class ColabBundleTests(unittest.TestCase):
                 prov = json.loads((out_dir / 'colab_bundle_provenance.local.json').read_text())
                 self.assertEqual(prov['checkpoint_sha256'], result['checkpoint_sha256'])
                 self.assertEqual(prov['occluder_prefixes'], ['BUST', 'MXP1', 'NEDR', 'W_0B'])
+
+                # Exporting from an existing dataset augments train split with foreground occluders
+                existing_ds = root / 'existing-ds'
+                build_bank(stack, root / 'ds-bank')
+                build_dataset(root / 'ds-bank', recording, [0, 1, 2, 3], existing_ds,
+                              train_count=4, validation_count=2)
+                aug_bundle = root / 'aug-bundle'
+                aug_manifest = export_bundle(
+                    stack,
+                    initial,
+                    aug_bundle,
+                    dataset=existing_ds,
+                    augment_occluders=2,
+                )
+                self.assertEqual(aug_manifest['train_images'], 6)
+                self.assertEqual(aug_manifest['validation_images'], 2)
+
+            # Initial transfer checkpoint provenance mismatch is caught during export_bundle
+            with patch('vimm8bdm.colab_bundle.load_checkpoint',
+                       return_value=(None, {'training_source_session_id': 'other-session',
+                                            'training_source_session_ids': ['other-session']})):
+                with self.assertRaisesRegex(ValueError, 'inherited training recording'):
+                    export_bundle(
+                        stack,
+                        initial,
+                        root / 'bad-transfer-bundle',
+                        dataset=existing_ds,
+                        initial_transfer=True,
+                    )
 
             # Unsafe tar member is rejected before extraction
             bad_tar = root / 'unsafe.tar.gz'

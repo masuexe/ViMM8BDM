@@ -29,6 +29,37 @@ def person_boxes(prediction, width, height, threshold=.5):
     return output
 
 
+def bind_single_class_postprocess(model):
+    """Avoid 90-class host-device syncs in SSD.postprocess_detections when only class 1 is used."""
+    if not (hasattr(model, 'postprocess_detections') and hasattr(model, 'box_coder')):
+        return
+    import torch
+    import torch.nn.functional as F
+    from torchvision.ops import boxes as box_ops
+
+    def postprocess(head_outputs, image_anchors, image_shapes):
+        bbox_regression = head_outputs['bbox_regression']
+        pred_scores = F.softmax(head_outputs['cls_logits'], dim=-1)
+        detections = []
+        for boxes, scores, anchors, image_shape in zip(bbox_regression, pred_scores, image_anchors, image_shapes):
+            boxes = model.box_coder.decode_single(boxes, anchors)
+            boxes = box_ops.clip_boxes_to_image(boxes, image_shape)
+            s = scores[:, 1]
+            keep = s > model.score_thresh
+            s, b = s[keep], boxes[keep]
+            keep = box_ops.remove_small_boxes(b, min_size=1e-2)
+            s, b = s[keep], b[keep]
+            if s.numel() > model.topk_candidates:
+                s, topk = s.topk(model.topk_candidates)
+                b = b[topk]
+            labels = torch.ones_like(s, dtype=torch.int64)
+            keep_nms = box_ops.batched_nms(b, s, labels, model.nms_thresh)[:model.detections_per_img]
+            detections.append(dict(boxes=b[keep_nms], scores=s[keep_nms], labels=labels[keep_nms]))
+        return detections
+
+    model.postprocess_detections = postprocess
+
+
 def load_model(checkpoint):
     if file_digest(Path(checkpoint)) != CHECKPOINT_SHA256:
         raise ValueError('Supply the official SSDLite320 COCO V1 checkpoint with its expected hash')

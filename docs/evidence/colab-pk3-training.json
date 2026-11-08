@@ -97,5 +97,48 @@
     "policy_phase": "aim_and_attack",
     "input_sent": false
   },
+  "v6b_mixed_occlusion_transfer": {
+    "bundle_archive_sha256": "8f60a6d30e61abc233a66302171ca2c6ef99769d6aba5754a77a6dc18bb36a67",
+    "device": "cuda",
+    "epochs": 2,
+    "batch_size": 16,
+    "learning_rate": 0.0002,
+    "train_images": 1880,
+    "augmented_occluder_images": 64,
+    "validation_images": 128,
+    "reserved_validation": {
+      "positive_images": 9,
+      "negative_images": 8,
+      "localized_positives": 8,
+      "negative_images_with_predictions": 0,
+      "processing_ms": {
+        "p50": 29.085,
+        "p95": 103.257,
+        "maximum": 103.257
+      },
+      "conditions": {
+        "recall_at_least_0_8": true,
+        "zero_negative_candidates": true,
+        "median_processing_ms_at_most_50": true
+      },
+      "conditions_passed": true
+    }
+  },
+  "body_aim_4_post_attack_occlusion_replay": {
+    "frames": 294,
+    "reasons": {
+      "confirm_target": 90,
+      "track_target": 67,
+      "missing_target": 134,
+      "post_attack_occlusion": 3
+    },
+    "recovered_post_attack_sequences": [
+      [115, 116, 117, 118],
+      [133, 134, 135]
+    ],
+    "reset_two_frame_missing_sequences": [
+      [263, 264, 265]
+    ]
+  },
   "tests_passed": 252
 }

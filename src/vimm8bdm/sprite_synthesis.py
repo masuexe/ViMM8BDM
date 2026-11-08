@@ -38,15 +38,17 @@ def build_bank(packages, output, allow_partial_poses=False):
             if palette is None and 'PLAYPAL.pal' in archive.namelist():
                 palette = np.frombuffer(archive.read('PLAYPAL.pal')[:768], dtype=np.uint8).reshape(256, 3)
             for member in archive.namelist():
-                normalized = member.replace('\\', '/')
-                lower = normalized.lower()
-                if lower in ('skininfo', 'skininfo.txt'):
+                lower = member.replace('\\', '/').lower()
+                if lower in ('skininfo', 'skininfo.txt') or lower.startswith('skininfo/'):
                     text = archive.read(member).decode('latin-1', errors='ignore')
                     for block in re.findall(r'\{[^}]*\}', text, re.S):
                         if re.search(r'name\s*=\s*"?cutman"?', block, re.I):
                             m_sp = re.search(r'sprite\s*=\s*([^\s\}]+)', block, re.I)
                             if m_sp and len(m_sp.group(1).strip('"')) == 4:
                                 skin_prefixes.add(m_sp.group(1).strip('"').upper())
+            for member in archive.namelist():
+                normalized = member.replace('\\', '/')
+                lower = normalized.lower()
                 if lower == 'actors/megaman/cutman.txt':
                     actor_hash = hashlib.sha256(archive.read(member)).hexdigest()
                 if not lower.startswith('sprites/'):

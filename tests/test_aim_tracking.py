@@ -64,18 +64,21 @@ class StableAimTests(unittest.TestCase):
         self.assertTrue(detail3['in_attack_window'])
         self.assertTrue(third.attack)
         # Single post-attack occlusion frame sends no input but retains confirmation
-        occluded, detail_occ = tracker.step([], 640, 480, 800_000_000)
+        occluded, detail_occ = tracker.step([], 640, 480, 840_000_000)
         self.assertEqual(occluded, Action())
         self.assertEqual(detail_occ['reason'], 'post_attack_occlusion')
         self.assertEqual(detail_occ['matches'], 5)
-        # Immediate re-detection resumes tracking without re-confirming from scratch
-        resumed, detail_res = tracker.step(aligned_box, 640, 480, 900_000_000)
+        # Immediate re-detection after 2-frame motion (85.6px shift, IoU=0 across 280ms) resumes tracking
+        moved_box = [candidate([375, 190, 80, 120])]
+        resumed, detail_res = tracker.step(moved_box, 640, 480, 980_000_000)
         self.assertEqual(detail_res['reason'], 'track_target')
         self.assertEqual(detail_res['matches'], 6)
-        self.assertTrue(resumed.attack)
-        # Two consecutive missing frames after attack reset confirmation completely
-        self.assertEqual(tracker.step([], 640, 480, 1_000_000_000)[1]['reason'], 'post_attack_occlusion')
-        lost, detail_lost = tracker.step([], 640, 480, 1_100_000_000)
+        # Step back into the attack window and verify 2 consecutive missing frames reset confirmation
+        tracker.step([candidate([335, 185, 80, 120])], 640, 480, 1_080_000_000)
+        realigned, _ = tracker.step(aligned_box, 640, 480, 1_180_000_000)
+        self.assertTrue(realigned.attack)
+        self.assertEqual(tracker.step([], 640, 480, 1_280_000_000)[1]['reason'], 'post_attack_occlusion')
+        lost, detail_lost = tracker.step([], 640, 480, 1_380_000_000)
         self.assertEqual(lost, Action())
         self.assertEqual(detail_lost['reason'], 'missing_target')
         self.assertEqual(detail_lost['matches'], 0)

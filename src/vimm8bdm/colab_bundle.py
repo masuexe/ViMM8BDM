@@ -2,14 +2,19 @@
 import argparse
 import json
 from pathlib import Path
+import random
 import shutil
 import tarfile
 import tempfile
+
+import numpy as np
+from PIL import Image
 
 from .pretrained_detection import load_model
 from .recording import file_digest
 from .sprite_synthesis import BANK_FORMAT, OCCLUDER_FORMAT, build_bank, build_dataset, build_occluder_bank
 from .sprite_transfer import SyntheticImages, load_checkpoint, train
+from .visual_metrics import box_iou
 
 BUNDLE_FORMAT = 'vimm8bdm-colab-training-bundle-v1'
 
@@ -57,19 +62,92 @@ if __name__ == "__main__":
 '''
 
 
-def _copy_verified_dataset(source_dir, target_dir):
+def _overlay_occluder_on_annotated_image(image, bbox, occluders, rng):
+    """Paste a foreground occluder either outside the target box or clipping one box edge."""
+    out = image.copy().convert('RGB')
+    x, y, w, h = [float(v) for v in bbox]
+    occ = rng.choice(occluders)
+    occ_h = max(6, round(h * rng.uniform(.35, .75)))
+    occ_w = max(6, round(occ.width * occ_h / max(1, occ.height)))
+    occ_img = occ.resize((occ_w, occ_h), Image.Resampling.NEAREST)
+    new_box = [x, y, w, h]
+    placed = False
+    if rng.random() < .5 and w >= 16 and h >= 16:
+        clip_w = max(2, min(occ_w // 2, int(w * .25)))
+        oy = max(0, min(200 - occ_h, round(y + rng.uniform(0, max(0., h - occ_h)))))
+        if rng.random() < .5:
+            ox = round(x + clip_w - occ_w)
+            new_box = [x + clip_w, y, w - clip_w, h]
+        else:
+            ox = round(x + w - clip_w)
+            new_box = [x, y, w - clip_w, h]
+        placed = True
+    if not placed:
+        for _ in range(32):
+            ox = rng.randint(0, max(0, out.width - occ_w))
+            oy = rng.randint(8, max(8, min(198, out.height) - occ_h))
+            if box_iou([ox, oy, occ_w, occ_h], [x, y, w, h]) == 0:
+                placed = True
+                break
+        if not placed:
+            ox = 0 if x > out.width / 2 else max(0, out.width - occ_w)
+            oy = 8
+    fg = Image.new('RGBA', out.size)
+    fg.paste(occ_img, (ox, oy))
+    fg_alpha = np.array(fg.getchannel('A'))
+    fg_alpha[200:] = 0
+    out.paste(fg.convert('RGB'), (0, 0), Image.fromarray(fg_alpha))
+    return out, new_box
+
+
+def _copy_verified_dataset(source_dir, target_dir, occluder_dir=None, seed=7, augment_occluders=None):
     train_split = SyntheticImages(source_dir, 'train')
     val_split = SyntheticImages(source_dir, 'validation')
     for split_ds in (train_split, val_split):
         for i in range(len(split_ds)):
             _ = split_ds[i]
     shutil.copytree(source_dir, target_dir)
+    if occluder_dir is not None:
+        occ_meta = json.loads((occluder_dir / 'occluders.json').read_text())
+        occluders = []
+        for row in occ_meta['templates']:
+            with Image.open(occluder_dir / row['image']) as img:
+                occluders.append(img.convert('RGBA'))
+        count = max(1, len(train_split) // 8) if augment_occluders is None else int(augment_occluders)
+        if count > 0 and occluders:
+            rng = random.Random(seed)
+            metadata = json.loads((target_dir / 'dataset.json').read_text())
+            coco_path = target_dir / 'train.coco.json'
+            coco = json.loads(coco_path.read_text())
+            by_id = {row['image_id']: row['bbox'] for row in coco['annotations']}
+            base_rows = list(coco['images'])
+            for idx in range(count):
+                src_row = base_rows[idx % len(base_rows)]
+                with Image.open(target_dir / src_row['file_name']) as src_img:
+                    aug_img, aug_box = _overlay_occluder_on_annotated_image(
+                        src_img, by_id[src_row['id']], occluders, rng
+                    )
+                new_id = len(coco['images'])
+                rel_name = f'train/{new_id:06d}.png'
+                aug_img.save(target_dir / rel_name)
+                metadata['image_sha256'][rel_name] = file_digest(target_dir / rel_name)
+                coco['images'].append(dict(id=new_id, file_name=rel_name,
+                                           width=aug_img.width, height=aug_img.height))
+                coco['annotations'].append(dict(id=len(coco['annotations']) + 1, image_id=new_id,
+                                                category_id=1, bbox=aug_box,
+                                                area=aug_box[2] * aug_box[3], iscrowd=0))
+            coco_path.write_text(json.dumps(coco, indent=2))
+            metadata['counts']['train'] = len(coco['images'])
+            metadata['annotation_sha256']['train'] = file_digest(coco_path)
+            metadata['occluder_bank_sha256'] = file_digest(occluder_dir / 'occluders.json')
+            (target_dir / 'dataset.json').write_text(json.dumps(metadata, indent=2))
+            train_split = SyntheticImages(target_dir, 'train')
     return len(train_split), len(val_split)
 
 
 def export_bundle(packages, initial, output, *, dataset=None, recording=None, reviewed_frames=None,
                   train_count=512, validation_count=128, seed=7, initial_transfer=False,
-                  allow_partial_poses=False):
+                  allow_partial_poses=False, augment_occluders=None):
     """Build a self-contained directory or .tar.gz training bundle from any PK3 stack."""
     if output.exists():
         raise FileExistsError('The Colab bundle output already exists')
@@ -77,8 +155,9 @@ def export_bundle(packages, initial, output, *, dataset=None, recording=None, re
         raise ValueError('Supply either an existing --dataset or --recording with --frames')
     if recording is not None and not reviewed_frames:
         raise ValueError('Building a dataset from a recording requires --frames')
+    previous_ckpt = None
     if initial_transfer:
-        load_checkpoint(initial)
+        _, previous_ckpt = load_checkpoint(initial)
     else:
         load_model(initial)
     initial_sha256 = file_digest(initial)
@@ -97,7 +176,9 @@ def export_bundle(packages, initial, output, *, dataset=None, recording=None, re
         occluder_meta = build_occluder_bank(packages, occluder_dir)
 
         if dataset is not None:
-            train_n, val_n = _copy_verified_dataset(dataset, dataset_dir)
+            train_n, val_n = _copy_verified_dataset(
+                dataset, dataset_dir, occluder_dir=occluder_dir, seed=seed, augment_occluders=augment_occluders
+            )
         else:
             build_dataset(
                 upright_dir,
@@ -111,6 +192,13 @@ def export_bundle(packages, initial, output, *, dataset=None, recording=None, re
                 occluder_bank=occluder_dir,
             )
             train_n, val_n = train_count, validation_count
+
+        if previous_ckpt is not None:
+            ds_meta = json.loads((dataset_dir / 'dataset.json').read_text())
+            source_ids = ds_meta.get('training_source_session_ids', [ds_meta['source_session_id']])
+            inherited = previous_ckpt.get('training_source_session_ids', [previous_ckpt['training_source_session_id']])
+            if not set(inherited).issubset(source_ids):
+                raise ValueError('Dataset provenance must include every inherited training recording')
 
         target_ckpt = initial_dir / 'checkpoint.pt'
         shutil.copy2(initial, target_ckpt)
@@ -191,6 +279,8 @@ def train_from_bundle(bundle, output, *, epochs=8, batch_size=16, learning_rate=
         occluder_json = stage / 'occluder_bank' / 'occluders.json'
         dataset_json = stage / 'dataset' / 'dataset.json'
         initial_ckpt = stage / 'initial' / 'checkpoint.pt'
+        if not all(p.is_file() for p in (upright_json, occluder_json, dataset_json, initial_ckpt)):
+            raise ValueError('The Colab bundle is missing a required component file')
         if (file_digest(upright_json) != manifest['upright_bank_sha256']
                 or file_digest(occluder_json) != manifest['occluder_bank_sha256']
                 or file_digest(dataset_json) != manifest['dataset_sha256']
@@ -245,6 +335,7 @@ def main():
     exp.add_argument('--seed', type=int, default=7)
     exp.add_argument('--initial-transfer', action='store_true')
     exp.add_argument('--allow-partial-poses', action='store_true')
+    exp.add_argument('--augment-occluders', type=int)
 
     trn = sub.add_parser('train')
     trn.add_argument('--bundle', type=Path, required=True)
@@ -269,6 +360,7 @@ def main():
             seed=args.seed,
             initial_transfer=args.initial_transfer,
             allow_partial_poses=args.allow_partial_poses,
+            augment_occluders=args.augment_occluders,
         )
         print(json.dumps(dict(
             upright_views=manifest['upright_views'],

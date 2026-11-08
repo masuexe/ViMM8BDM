@@ -64,18 +64,18 @@ class StableAim:
                     and self.previous is not None and interval is not None and 0 < interval <= .2):
                 self.attack_pulsed = False
                 self.occluded_after_attack = True
+                self.timestamp = captured_ns
                 return Action(), dict(reason='post_attack_occlusion', matches=self.matches,
                                       selected_box=list(self.previous))
             self.reset()
             return Action(), dict(reason=reason, matches=0)
         box = candidates[0]['box']
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9
-        max_interval = .25 if self.occluded_after_attack else .2
-        max_distance = 64 if self.occluded_after_attack else 48
         matched = False
-        if self.previous is not None and interval is not None and 0 < interval <= max_interval:
+        if self.previous is not None and interval is not None and 0 < interval <= .2:
             x,y,w,h = box
             px,py,pw,ph = self.previous
+            max_distance = max(96, 1.35 * max(w, pw)) if self.occluded_after_attack else 48
             distance = math.hypot(x+w/2-px-pw/2, y+h/2-py-ph/2)
             matched = .5 <= w*h/(pw*ph) <= 2 and (box_iou(box,self.previous) >= .1 or distance <= max_distance)
         self.occluded_after_attack = False
