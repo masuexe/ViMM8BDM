@@ -118,13 +118,21 @@ class StableAim:
         in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
         attack = self.enable_attack and self.matches >= 3 and in_attack_window and not self.attack_pulsed
         self.attack_pulsed = attack
-        keys = frozenset()
+        keys = set()
         if self.enable_strafe:
             strafe_key = 'a' if (self.strafe_step // 4) % 2 == 0 else 'd'
             self.strafe_step += 1
-            keys = frozenset({strafe_key})
+            keys.add(strafe_key)
             detail['strafe_key'] = strafe_key
+        if self.enable_patrol:
+            area = w * h
+            if area < 4500:
+                keys.add('w')
+                detail['range_key'] = 'w'
+            elif area > 16000:
+                keys.add('s')
+                detail['range_key'] = 's'
         detail.update(reason='track_target', error_pixels=[error_x,error_y],
                       attack_window_pixels=[window_x,window_y],
                       in_attack_window=in_attack_window, attack=attack)
-        return Action(keys=keys, mouse_dx=dx, mouse_dy=dy, attack=attack), detail
+        return Action(keys=frozenset(keys), mouse_dx=dx, mouse_dy=dy, attack=attack), detail

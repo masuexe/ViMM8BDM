@@ -103,7 +103,7 @@ def summarize(rows, mode, policy_name, exit_reason):
     summary["dispatched_policy_actions"] = sum(row["applied"] and not row.get("observe_only", False) for row in rows)
     summary["dispatched_attack_actions"] = sum(row["applied"] and not row.get("observe_only", False) and row["action"]["attack"] for row in rows)
     summary["dispatched_strafe_actions"] = sum(row["applied"] and not row.get("observe_only", False) and bool(set(row["action"].get("keys", ())) & {"a", "d"}) for row in rows)
-    summary["dispatched_patrol_actions"] = sum(row["applied"] and not row.get("observe_only", False) and ("w" in row["action"].get("keys", ())) for row in rows)
+    summary["dispatched_patrol_actions"] = sum(row["applied"] and not row.get("observe_only", False) and row["action"].get("keys") == ["w"] for row in rows)
     summary["accepted_action_latency"] = {}
     for key in ("capture_ms", "policy_ms", "input_ms", "loop_ms"):
         vals = sorted(row[key] for row in accepted)

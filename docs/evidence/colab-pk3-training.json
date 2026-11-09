@@ -434,5 +434,74 @@
       "maximum": 126.8425
     }
   },
+  "attended_live_validation_body_aim_17": {
+    "device": "cuda",
+    "patrol_turn_direction_and_step_16": true,
+    "combat_distance_regulation_ws": true,
+    "frames": 297,
+    "accepted_action_messages": 297,
+    "stale_or_inactive_frames": 0,
+    "patrol_frames": 289,
+    "patrol_forward_w_frames": 190,
+    "patrol_turn_frames": 84,
+    "patrol_blockage_decisions": {
+      "reduced_image_change": 2,
+      "static_view": 3
+    },
+    "input_ms": {
+      "p50": 0.6632,
+      "p95": 2.1783,
+      "maximum": 9.0163
+    },
+    "policy_ms": {
+      "p50": 32.9882,
+      "p95": 49.9489,
+      "maximum": 79.4996
+    },
+    "loop_ms": {
+      "p50": 67.4678,
+      "p95": 87.2788,
+      "maximum": 139.0776
+    }
+  },
+  "attended_live_validation_body_aim_18": {
+    "device": "cuda",
+    "patrol_turn_direction_and_step_16": true,
+    "combat_distance_regulation_ws": true,
+    "frames": 120,
+    "accepted_action_messages": 120,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "confirm_target": 1,
+      "track_target": 16,
+      "missing_target": 1,
+      "search_target": 7,
+      "patrol_target": 95
+    },
+    "track_target_frames": 16,
+    "strafe_left_frames": 8,
+    "strafe_right_frames": 8,
+    "range_backoff_s_frames": [11, 12, 13],
+    "dispatched_attack_frames": [5, 12],
+    "search_frames": 7,
+    "patrol_frames": 95,
+    "patrol_forward_w_frames": 68,
+    "patrol_turn_frames": 21,
+    "input_ms": {
+      "p50": 0.38485,
+      "p95": 1.1597,
+      "maximum": 8.3443
+    },
+    "policy_ms": {
+      "p50": 17.3598,
+      "p95": 38.7441,
+      "maximum": 81.9515
+    },
+    "loop_ms": {
+      "p50": 33.7038,
+      "p95": 56.6405,
+      "maximum": 97.0989
+    }
+  },
   "tests_passed": 258
 }

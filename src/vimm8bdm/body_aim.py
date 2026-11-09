@@ -23,7 +23,7 @@ class BodyAimPolicy(BodyShadowPolicy):
         super().reset()
         self.tracker = StableAim(enable_attack=self.enable_attack, enable_search=self.enable_search,
                                  enable_strafe=self.enable_strafe, enable_patrol=self.enable_patrol)
-        self.navigator = VisualNavigationPolicy()
+        self.navigator = VisualNavigationPolicy(max_turn_step=16)
         self.phase = 'aim_and_attack' if self.enable_attack else 'aim_only'
 
     def predict(self, frame):
@@ -39,6 +39,7 @@ class BodyAimPolicy(BodyShadowPolicy):
         candidates, rejected = filter_candidates(image, result['candidates'])
         action, detail = self.tracker.step(candidates,frame.width,frame.height,frame.captured_ns)
         if detail['reason'] == 'patrol_target':
+            self.navigator.turn_direction = self.tracker.search_direction
             action = self.navigator.predict(frame)
             nav = self.navigator.last_prediction
             detail.update(patrol_phase=nav['phase'], navigation=nav)

@@ -28,7 +28,9 @@ def image_change(previous, current):
 class VisualNavigationPolicy:
     """Probe forward motion and turn after static or persistently reduced image change."""
 
-    def __init__(self):
+    def __init__(self, max_turn_step=8):
+        self.max_turn_step = int(max_turn_step)
+        self.turn_direction = 1
         self.reset()
 
     def reset(self):
@@ -107,9 +109,9 @@ class VisualNavigationPolicy:
         elif self.phase == 'turn':
             desired = min(self.turn_budget, int(elapsed * 160))
             # Use integer packets so the backend cannot lose fractional requests.
-            delta = min(8, max(0, int(desired - self.turn_sent)))
+            delta = min(self.max_turn_step, max(0, int(desired - self.turn_sent)))
             self.turn_sent += delta
-            action = Action(mouse_dx=delta)
+            action = Action(mouse_dx=delta * self.turn_direction)
             if self.turn_sent >= self.turn_budget:
                 # The last turn packet still executes before the settling interval.
                 self.phase, self.since_ns = 'settle', now

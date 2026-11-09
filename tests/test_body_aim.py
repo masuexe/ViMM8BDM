@@ -183,14 +183,14 @@ class BodyAimTests(unittest.TestCase):
         self.assertEqual(policy.predict(make_frame(shade=65)),Action(keys=frozenset({'w'})))
         self.assertEqual(policy.predict(make_frame(shade=90)),Action(keys=frozenset({'w'})))
         self.assertEqual(policy.navigator.successful_probes,1)
-        # Static wall (shade stays 90 for 0.2s) releases 'w' and enters turn phase
+        # Static wall (shade stays 90 for 0.2s) releases 'w' and enters turn phase at 16 * search_direction
         self.assertEqual(policy.predict(make_frame(shade=90)),Action(keys=frozenset({'w'})))
         wall_act=policy.predict(make_frame(shade=90))
         self.assertEqual(wall_act,Action())
         self.assertEqual(policy.last_prediction['aim']['patrol_phase'],'turn')
         turn_act=policy.predict(make_frame(shade=90))
         self.assertEqual(turn_act.keys,frozenset())
-        self.assertEqual(turn_act.mouse_dx,8)
+        self.assertEqual(turn_act.mouse_dx,16)
         # Target appears off-center during patrol: immediately releases movement, resets navigator, and applies search_brake
         state.box=[380.,180.,440.,280.]
         brake_act=policy.predict(make_frame(shade=90,box=state.box))
@@ -209,6 +209,12 @@ class BodyAimTests(unittest.TestCase):
         self.assertEqual(policy.last_prediction['aim']['reason'],'track_target')
         self.assertEqual(fire_act.keys,frozenset({'a'}))
         self.assertTrue(fire_act.attack)
+        # Point-blank target (120x180 = 21600 > 16000) adds 's' backoff while strafing
+        state.box=[260.,150.,380.,330.]
+        close_act=policy.predict(make_frame(shade=90,box=state.box))
+        self.assertEqual(policy.last_prediction['aim']['reason'],'track_target')
+        self.assertEqual(policy.last_prediction['aim']['range_key'],'s')
+        self.assertEqual(close_act.keys,frozenset({'a','s'}))
         # Stale frame immediately resets tracker and navigator and outputs empty Action()
         clock.now+=100_000_000
         stale_frame=Frame(640,480,bytes((0,0,0,255))*640*480,clock.now-200_000_000)

@@ -214,10 +214,24 @@ class StableAimTests(unittest.TestCase):
         track_act, track_det = tracker.step(center_box, 640, 480, 1_200_000_000)
         self.assertEqual(track_det['reason'], 'track_target')
         self.assertEqual(track_act.keys, frozenset({'a'}))
+        self.assertNotIn('range_key', track_det)
         self.assertFalse(track_act.attack)
         fire_act, fire_det = tracker.step(center_box, 640, 480, 1_300_000_000)
         self.assertEqual(fire_det['reason'], 'track_target')
         self.assertTrue(fire_act.attack)
+        # Far target (40x80 = 3200 < 4500) adds 'w' approach; point-blank target (120x180 = 21600 > 16000) adds 's' backoff
+        far_box = [candidate([300, 200, 40, 80])]
+        far_act, far_det = tracker.step(far_box, 640, 480, 1_400_000_000)
+        self.assertEqual(far_det['reason'], 'track_target')
+        self.assertEqual(far_det['range_key'], 'w')
+        self.assertEqual(far_act.keys, frozenset({'a', 'w'}))
+        mid_act, _ = tracker.step(center_box, 640, 480, 1_500_000_000)
+        self.assertEqual(mid_act.keys, frozenset({'a'}))
+        close_box = [candidate([260, 150, 120, 180])]
+        close_act, close_det = tracker.step(close_box, 640, 480, 1_600_000_000)
+        self.assertEqual(close_det['reason'], 'track_target')
+        self.assertEqual(close_det['range_key'], 's')
+        self.assertEqual(close_act.keys, frozenset({'d', 's'}))
 
 
 @unittest.skipIf(Image is None,'Install Pillow')
