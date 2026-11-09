@@ -610,7 +610,50 @@
     "augment_occluders": 512,
     "bottom_edge_clipping": true,
     "yellow_hit_flash_augmentation": true,
-    "archive_sha256": "08290d1ef4f25e51088489251fb2ccdbdaf922d491902ad7c3688f6718a979b5"
+    "archive_sha256": "08290d1ef4f25e51088489251fb2ccdbdaf922d491902ad7c3688f6718a979b5",
+    "trained_ep2_checkpoint_sha256": "41c87a1e2b0acf22fafdb6c55cde2ea29d31b6c6f0169c325d69939ec22969ee",
+    "trained_ep6_checkpoint_sha256": "d4e8ef407664a9f031614046164716509c09028f0941a469524c76f3d411ae28"
+  },
+  "attended_live_validation_body_aim_23": {
+    "device": "cuda",
+    "checkpoint_sha256": "41c87a1e2b0acf22fafdb6c55cde2ea29d31b6c6f0169c325d69939ec22969ee",
+    "cuda_p0_idle_warmup_400ms": true,
+    "idle_warmup_calls": 2667,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "counter_search": 151,
+      "track_target": 52,
+      "search_target": 49,
+      "missing_target": 14,
+      "search_brake": 13,
+      "patrol_target": 13,
+      "confirm_target": 6
+    },
+    "local_zoom_crops": 59,
+    "local_zoom_accepted_frames": 31,
+    "track_target_frames": 52,
+    "strafe_left_frames": 28,
+    "strafe_right_frames": 24,
+    "range_forward_w_frames": 15,
+    "range_backoff_s_frames": 5,
+    "dispatched_attack_frames": [216, 220, 222],
+    "input_ms": {
+      "p50": 0.75515,
+      "p95": 2.6973,
+      "maximum": 7.1744
+    },
+    "policy_ms": {
+      "p50": 17.62785,
+      "p95": 35.9752,
+      "maximum": 81.7682
+    },
+    "loop_ms": {
+      "p50": 33.90055,
+      "p95": 54.2586,
+      "maximum": 99.3122
+    }
   },
   "tests_passed": 264
 }
