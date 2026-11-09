@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
 
 def _overlay_occluder_on_annotated_image(image, bbox, occluders, rng):
-    """Paste a foreground occluder either outside the target box or clipping one box edge."""
+    """Paste a foreground occluder (left/right/bottom or distractor) and optional yellow hit-flash."""
     out = image.copy().convert('RGB')
     x, y, w, h = [float(v) for v in bbox]
     occ = rng.choice(occluders)
@@ -72,15 +72,24 @@ def _overlay_occluder_on_annotated_image(image, bbox, occluders, rng):
     occ_img = occ.resize((occ_w, occ_h), Image.Resampling.NEAREST)
     new_box = [x, y, w, h]
     placed = False
-    if rng.random() < .5 and w >= 16 and h >= 16:
-        clip_w = max(2, min(occ_w // 2, int(w * .25)))
-        oy = max(0, min(200 - occ_h, round(y + rng.uniform(0, max(0., h - occ_h)))))
-        if rng.random() < .5:
-            ox = round(x + clip_w - occ_w)
-            new_box = [x + clip_w, y, w - clip_w, h]
+    bottom_clip = False
+    if rng.random() < .6 and w >= 16 and h >= 16:
+        edge = rng.choice(('left', 'right', 'bottom'))
+        if edge == 'bottom':
+            clip_h = max(2, min(occ_h // 2, int(h * .3)))
+            ox = max(0, min(out.width - occ_w, round(x + rng.uniform(0, max(0., w - occ_w)))))
+            oy = round(y + h - clip_h)
+            new_box = [x, y, w, h - clip_h]
+            bottom_clip = True
         else:
-            ox = round(x + w - clip_w)
-            new_box = [x, y, w - clip_w, h]
+            clip_w = max(2, min(occ_w // 2, int(w * .25)))
+            oy = max(0, min(200 - occ_h, round(y + rng.uniform(0, max(0., h - occ_h)))))
+            if edge == 'left':
+                ox = round(x + clip_w - occ_w)
+                new_box = [x + clip_w, y, w - clip_w, h]
+            else:
+                ox = round(x + w - clip_w)
+                new_box = [x, y, w - clip_w, h]
         placed = True
     if not placed:
         for _ in range(32):
@@ -95,8 +104,12 @@ def _overlay_occluder_on_annotated_image(image, bbox, occluders, rng):
     fg = Image.new('RGBA', out.size)
     fg.paste(occ_img, (ox, oy))
     fg_alpha = np.array(fg.getchannel('A'))
-    fg_alpha[200:] = 0
+    if not bottom_clip:
+        fg_alpha[200:] = 0
     out.paste(fg.convert('RGB'), (0, 0), Image.fromarray(fg_alpha))
+    if rng.random() < .35:
+        alpha = rng.uniform(.05, .30)
+        out = Image.blend(out, Image.new('RGB', out.size, (255, 255, 0)), alpha)
     return out, new_box
 
 

@@ -191,3 +191,24 @@ class ColabBundleTests(unittest.TestCase):
                 tar.addfile(info, io.BytesIO(payload))
             with self.assertRaisesRegex(ValueError, 'Unsafe relative path'):
                 train_from_bundle(bad_tar, root / 'bad-out', epochs=1, batch_size=2)
+
+    def test_overlay_occluder_supports_bottom_edge_clipping_and_yellow_hit_flash(self):
+        from vimm8bdm.colab_bundle import _overlay_occluder_on_annotated_image
+        base = Image.new('RGB', (320, 240), (10, 10, 10))
+        occ = Image.new('RGBA', (24, 24), (200, 200, 200, 255))
+        rng = random.Random(3)
+        saw_bottom_clip = False
+        saw_lateral_clip = False
+        saw_yellow_flash = False
+        for _ in range(50):
+            aug, box = _overlay_occluder_on_annotated_image(base, [120, 100, 40, 60], [occ], rng)
+            if box[3] < 60:
+                saw_bottom_clip = True
+            if box[2] < 40:
+                saw_lateral_clip = True
+            r, g, b = aug.getpixel((0, 0))
+            if r > 15 and g > 15 and b < 10:
+                saw_yellow_flash = True
+        self.assertTrue(saw_bottom_clip)
+        self.assertTrue(saw_lateral_clip)
+        self.assertTrue(saw_yellow_flash)

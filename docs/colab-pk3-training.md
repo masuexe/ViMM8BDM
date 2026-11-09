@@ -11,7 +11,7 @@ Full `v6a` Gondola stacks (`MM8BDM-v6a.pk3` plus `classes-v9fh.pk3` and `gondola
 Base-only `v6b` stacks (`mm8bdm-v6b.pk3` plus `8bdm-v6b-miscfixes-v6.pk3`) can pass `--allow-partial-poses` to extract the eight upright base poses (`64` views), and future `v6b`-compatible class/Gondola releases will resolve `$CUT` base frames alongside addon frames automatically.
 
 `build_occluder_bank` extracts foreground projectile and hit-smoke sprites (`BUST`, `BUS2`, `CBUS`, `MBU2`, `MMDX`, `MMFX`, `MXP1`, `MXP2`, `MXP3`, `MXP4`, `NEDR`, `PCOI`, `RCTC`, `RCUT`, `W_0B`) across the same PK3 load order.
-When `build_dataset` runs with `--profile occlusion` and `--occluders`, `composite` places foreground projectile or explosion sprites either partially in front of the target body (updating the ground-truth box to the remaining visible body pixels) or as separate foreground distractors in the scene.
+When `build_dataset` runs with `--profile occlusion` and `--occluders`, `composite` places foreground projectile or explosion sprites either partially in front of the target body (updating the ground-truth box to the remaining visible body pixels) or as separate foreground distractors in the scene, while `_overlay_occluder_on_annotated_image` augments existing mixed datasets with left/right/bottom partial occlusions (including lower-body Mega Buster clipping) and MM8BDM yellow hit-flash linear blends (`RGB' = (1 - alpha)*RGB + alpha*(255, 255, 0)`).
 
 ## Post-attack occlusion grace, width-scaled association, bounded horizontal search, bounded combat strafe, and visual patrol in `StableAim` and `BodyAimPolicy`
 

@@ -597,5 +597,20 @@
       "maximum": 142.0494
     }
   },
-  "tests_passed": 263
+  "colab_v6a_bundle_v2": {
+    "pk3_sources": [
+      "MM8BDM-v6a.pk3",
+      "classes-v9fh.pk3",
+      "gondolapatchv2.7h2.pk3"
+    ],
+    "upright_views": 136,
+    "occluder_count": 249,
+    "train_images": 2328,
+    "validation_images": 128,
+    "augment_occluders": 512,
+    "bottom_edge_clipping": true,
+    "yellow_hit_flash_augmentation": true,
+    "archive_sha256": "08290d1ef4f25e51088489251fb2ccdbdaf922d491902ad7c3688f6718a979b5"
+  },
+  "tests_passed": 264
 }
