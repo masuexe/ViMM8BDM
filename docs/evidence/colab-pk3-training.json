@@ -503,5 +503,47 @@
       "maximum": 97.0989
     }
   },
-  "tests_passed": 258
+  "attended_live_validation_body_aim_21": {
+    "device": "cuda",
+    "practice_mode": "buddha_with_power_regeneration",
+    "yellow_damage_flash_unblending": true,
+    "damage_counter_search_24px": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "counter_search": 104,
+      "patrol_target": 60,
+      "track_target": 59,
+      "search_target": 56,
+      "search_brake": 9,
+      "missing_target": 6,
+      "confirm_target": 2,
+      "post_attack_occlusion": 2
+    },
+    "track_target_frames": 59,
+    "counter_search_frames": 104,
+    "search_brake_frames": 9,
+    "dispatched_attack_frames": [55, 280],
+    "damage_flash_frames_ge_12": 32,
+    "max_damage_flash_k": 78,
+    "hud_hp_pixels_min": 4,
+    "hud_hp_pixels_max": 304,
+    "input_ms": {
+      "p50": 0.74705,
+      "p95": 1.1329,
+      "maximum": 7.5159
+    },
+    "policy_ms": {
+      "p50": 17.9813,
+      "p95": 35.1463,
+      "maximum": 52.2535
+    },
+    "loop_ms": {
+      "p50": 34.5398,
+      "p95": 51.9693,
+      "maximum": 67.8768
+    }
+  },
+  "tests_passed": 261
 }

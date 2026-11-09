@@ -221,3 +221,54 @@ class BodyAimTests(unittest.TestCase):
         self.assertEqual(policy.predict(stale_frame),Action())
         self.assertEqual(policy.tracker.matches,0)
         self.assertEqual(policy.navigator.phase,'settle')
+
+    def test_patrol_hit_triggers_counter_search_and_unblends_yellow_damage_flash_for_counterattack(self):
+        clock=SimpleNamespace(now=1_000_000_000)
+        state=SimpleNamespace(box=None,seen_red=None)
+        def model(inputs):
+            t=inputs[0]
+            state.seen_red=float(t[:,200,120][0]) if state.box is not None else None
+            if state.box is None:
+                return [dict(boxes=torch.zeros((0,4)),labels=torch.zeros((0,),dtype=torch.int64),scores=torch.zeros((0,)))]
+            return [dict(boxes=torch.tensor([state.box]),labels=torch.tensor([1]),scores=torch.tensor([.99]))]
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'model.pt';path.write_bytes(b'fixture')
+            with patch('vimm8bdm.body_shadow.load_checkpoint',return_value=(model,{})):
+                policy=BodyAimPolicy(path,lambda:clock.now,enable_attack=True,enable_search=True,
+                                     enable_strafe=True,enable_patrol=True)
+        def make_hud_frame(flash_k=0,hp_top=101,box=None):
+            img=Image.new('RGB',(640,480),(flash_k,flash_k,0))
+            draw=ImageDraw.Draw(img)
+            draw.rectangle((16,16,62,152),fill=(0,0,0))
+            draw.rectangle((50,hp_top,60,150),fill=(252,228,160))
+            if box is not None:
+                x1,y1,x2,y2=[int(v) for v in box]
+                alpha=flash_k/255.
+                color=(int(round(227*(1-alpha)+255*alpha)),int(round(255*alpha)),int(round(91*(1-alpha))))
+                draw.rectangle((x1,y1,x2-1,y2-1),fill=color)
+            clock.now+=100_000_000
+            return Frame(640,480,img.convert('RGBA').tobytes('raw','BGRA'),clock.now-1_000_000)
+        # Advance into active 'w' forward patrol
+        for _ in range(12):
+            act=policy.predict(make_hud_frame(flash_k=0,hp_top=101))
+        self.assertEqual(act,Action(keys=frozenset({'w'})))
+        self.assertEqual(policy.last_prediction['aim']['patrol_phase'],'forward')
+        # Ambushed from behind: flash_k jumps to 66, health drops (hp_top 101 -> 149)
+        hit_act=policy.predict(make_hud_frame(flash_k=66,hp_top=149))
+        self.assertEqual(hit_act,Action(mouse_dx=24))
+        self.assertEqual(hit_act.keys,frozenset())
+        self.assertEqual(policy.last_prediction['aim']['reason'],'counter_search')
+        self.assertTrue(policy.last_prediction['aim']['damaged'])
+        self.assertEqual(policy.navigator.phase,'settle')
+        # Cutman enters under decaying yellow flash (k=51): tensor + crop are unblended and search_brake fires!
+        state.box=[100.,180.,160.,280.]
+        brake_act=policy.predict(make_hud_frame(flash_k=51,hp_top=149,box=state.box))
+        self.assertEqual(policy.last_prediction['aim']['reason'],'confirm_target')
+        self.assertTrue(policy.last_prediction['aim']['search_brake'])
+        self.assertAlmostEqual(state.seen_red,227/255,delta=.03)
+        # Lock on (110 px post-brake displacement <= 144 px) and counter-fire while still tinted (k=39)
+        state.box=[210.,180.,270.,280.]
+        self.assertEqual(policy.predict(make_hud_frame(flash_k=45,hp_top=149,box=state.box)).keys,frozenset({'a'}))
+        state.box=[290.,180.,350.,280.]
+        fire_act=policy.predict(make_hud_frame(flash_k=39,hp_top=149,box=state.box))
+        self.assertTrue(fire_act.attack)

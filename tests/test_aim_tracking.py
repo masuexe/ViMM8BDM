@@ -4,7 +4,7 @@ try:
     from PIL import Image, ImageDraw
 except ImportError:
     Image = None
-from vimm8bdm.aim_tracking import StableAim, filter_candidates
+from vimm8bdm.aim_tracking import StableAim, filter_candidates, measure_damage_cues
 from vimm8bdm.control import Action
 
 
@@ -233,6 +233,39 @@ class StableAimTests(unittest.TestCase):
         self.assertEqual(close_det['range_key'], 's')
         self.assertEqual(close_act.keys, frozenset({'d', 's'}))
 
+    def test_damage_triggers_fast_counter_search_when_missing_and_keeps_lock_when_visible(self):
+        tracker = StableAim(enable_attack=True, enable_search=True, enable_strafe=True, enable_patrol=True)
+        # Initialize HUD baseline (104 lit pixels) while patrolling
+        for i in range(1, 11):
+            act, det = tracker.step([], 640, 480, i * 100_000_000, flash_k=0, hp_pixels=104)
+        self.assertEqual(det['reason'], 'patrol_target')
+        # Hit from behind (hp drops 104 -> 8, flash_k jumps 0 -> 66) interrupts patrol into 24 px/frame counter_search
+        cs_act, cs_det = tracker.step([], 640, 480, 1_100_000_000, flash_k=66, hp_pixels=8)
+        self.assertEqual(cs_act, Action(mouse_dx=24))
+        self.assertEqual(cs_det['reason'], 'counter_search')
+        self.assertTrue(cs_det['damaged'])
+        self.assertEqual(cs_det['counter_search_remaining'], 31)
+        # Decaying flash (62) continues counter_search without resetting budget
+        cs2_act, cs2_det = tracker.step([], 640, 480, 1_200_000_000, flash_k=62, hp_pixels=8)
+        self.assertEqual(cs2_act, Action(mouse_dx=24))
+        self.assertEqual(cs2_det['reason'], 'counter_search')
+        self.assertFalse(cs2_det['damaged'])
+        self.assertEqual(cs2_det['counter_search_remaining'], 30)
+        # Target enters right edge during counter_search -> immediate search_brake, then track_target + counterattack fire
+        edge_box = [candidate([400, 180, 60, 100])]
+        brake_act, brake_det = tracker.step(edge_box, 640, 480, 1_300_000_000, flash_k=51, hp_pixels=8)
+        self.assertEqual(brake_det['reason'], 'confirm_target')
+        self.assertTrue(brake_det['search_brake'])
+        self.assertEqual(brake_act.mouse_dx, 16.5)
+        center_box = [candidate([290, 180, 60, 100])]
+        track_act, track_det = tracker.step(center_box, 640, 480, 1_400_000_000, flash_k=0, hp_pixels=8)
+        self.assertEqual(track_det['reason'], 'track_target')
+        # Taking another hit at 1 HP (hp_pixels stays 8, flash_k spikes 0 -> 66) while visible keeps lock and fires back!
+        fire_act, fire_det = tracker.step(center_box, 640, 480, 1_500_000_000, flash_k=66, hp_pixels=8)
+        self.assertEqual(fire_det['reason'], 'track_target')
+        self.assertTrue(fire_det['damaged'])
+        self.assertTrue(fire_act.attack)
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):
@@ -261,3 +294,25 @@ class AimAppearanceTests(unittest.TestCase):
         good,bad=filter_candidates(image,[candidate([100,100,240,180])])
         self.assertFalse(good)
         self.assertEqual(bad[0]['reason'],'box_extent')
+
+    def test_yellow_hit_flash_cues_and_unblending_restore_cutman_appearance(self):
+        image=Image.new('RGB',(640,480),(51,51,0))
+        draw=ImageDraw.Draw(image)
+        # Solid black HUD border + 2 lit rows at bottom of health bar
+        draw.rectangle((16,16,62,152),fill=(0,0,0))
+        draw.rectangle((50,149,60,150),fill=(252,228,160))
+        # Yellow-blended Cutman (230, 51, 70) and yellow-blended blue projectile (91, 107, 112)
+        draw.rectangle((100,180,159,279),fill=(230,51,70))
+        draw.rectangle((220,180,279,279),fill=(91,107,112))
+        flash_k,hp_pixels=measure_damage_cues(image)
+        self.assertEqual(flash_k,51)
+        self.assertEqual(hp_pixels,8)
+        # Without unblending, yellow-shifted Cutman is rejected as cutman_appearance
+        raw_good,raw_bad=filter_candidates(image,[candidate([100,180,60,100])],flash_k=0)
+        self.assertFalse(raw_good)
+        self.assertEqual(raw_bad[0]['reason'],'cutman_appearance')
+        # With flash_k=51 unblending, Cutman passes while the blue projectile is still rejected
+        good,bad=filter_candidates(image,[candidate([100,180,60,100]),candidate([220,180,60,100])],flash_k=flash_k)
+        self.assertEqual(len(good),1)
+        self.assertEqual(good[0]['box'],[100,180,60,100])
+        self.assertEqual(bad[0]['reason'],'cutman_appearance')

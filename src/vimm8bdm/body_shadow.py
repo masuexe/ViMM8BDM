@@ -6,6 +6,7 @@ from PIL import Image
 import torch
 from torchvision.transforms.functional import pil_to_tensor
 
+from .aim_tracking import measure_damage_cues
 from .control import Action
 from .local_zoom import refine_with_local_zoom
 from .pretrained_detection import bind_single_class_postprocess as _bind_single_class_postprocess
@@ -81,10 +82,18 @@ class BodyShadowPolicy:
         self.last_capture_ns = frame.captured_ns
         image = Image.frombytes('RGB', (frame.width, frame.height), frame.bgra, 'raw', 'BGRX')
         self.last_image = image
+        flash_k, hp_pixels = measure_damage_cues(image)
         with torch.inference_mode():
             raw_tensor = pil_to_tensor(image)
             tensor = (raw_tensor.to(self.device).float().div_(255)
                       if self.device.startswith('cuda') else (raw_tensor.float() / 255).to(self.device))
+            if flash_k >= 12:
+                alpha = flash_k / 255.
+                inv = 1. / (1. - alpha)
+                tensor = tensor.clone()
+                tensor[0].sub_(alpha).mul_(inv).clamp_(0., 1.)
+                tensor[1].sub_(alpha).mul_(inv).clamp_(0., 1.)
+                tensor[2].mul_(inv).clamp_(0., 1.)
             prediction = self.model([tensor])[0]
             boxes, window = refine_with_local_zoom(self.model, image, prediction, tensor)
             if self.device.startswith('cuda'):
@@ -98,6 +107,8 @@ class BodyShadowPolicy:
                                     candidates=[] if stale else boxes,
                                     discarded_candidates=len(boxes) if stale else 0,
                                     local_zoom_crop=window,
+                                    damage_flash_k=flash_k,
+                                    hud_hp_pixels=hp_pixels,
                                     capture_age_at_result_ms=(finished-frame.captured_ns) / 1e6,
                                     processing_ms=(finished-started) / 1e6,
                                     reset_reason='result_age_invalid' if stale else None)

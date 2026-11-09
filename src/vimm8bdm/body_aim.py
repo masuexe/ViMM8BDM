@@ -36,8 +36,11 @@ class BodyAimPolicy(BodyShadowPolicy):
             result['aim'] = dict(reason='invalid_detection_result', matches=0)
             return Action()
         image = self.last_image or Image.frombytes('RGB', (frame.width,frame.height), frame.bgra, 'raw','BGRX')
-        candidates, rejected = filter_candidates(image, result['candidates'])
-        action, detail = self.tracker.step(candidates,frame.width,frame.height,frame.captured_ns)
+        flash_k = result.get('damage_flash_k', 0)
+        hp_pixels = result.get('hud_hp_pixels')
+        candidates, rejected = filter_candidates(image, result['candidates'], flash_k=flash_k)
+        action, detail = self.tracker.step(candidates, frame.width, frame.height, frame.captured_ns,
+                                           flash_k=flash_k, hp_pixels=hp_pixels)
         if detail['reason'] == 'patrol_target':
             self.navigator.turn_direction = self.tracker.search_direction
             action = self.navigator.predict(frame)
