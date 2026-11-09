@@ -75,8 +75,9 @@ class StableAim:
     def reset(self):
         self.previous = self.timestamp = self.prev_hp_pixels = None
         self.matches = self.missing_streak = self.strafe_step = 0
-        self.prev_flash_k = self.counter_search_frames = 0
+        self.prev_flash_k = self.counter_search_frames = self.counter_search_steps = 0
         self.attack_pulsed = self.occluded_after_attack = self.braked_from_search = False
+        self.counter_search_triggered = False
         self.search_direction = 1
 
     def step(self, candidates, width, height, captured_ns, flash_k=0, hp_pixels=None):
@@ -94,7 +95,9 @@ class StableAim:
             reason = 'missing_target' if not candidates else 'ambiguous_targets'
         if reason:
             interval = None if self.timestamp is None else (captured_ns - self.timestamp) / 1e9
-            if (reason == 'missing_target' and self.enable_attack and self.attack_pulsed
+            if (reason == 'missing_target' and (
+                    (self.enable_attack and self.attack_pulsed)
+                    or (self.enable_patrol and self.matches >= 2 and not self.occluded_after_attack))
                     and self.previous is not None and interval is not None and 0 < interval <= .2):
                 self.attack_pulsed = False
                 self.occluded_after_attack = True
@@ -106,10 +109,15 @@ class StableAim:
                 self.attack_pulsed = self.occluded_after_attack = self.braked_from_search = False
                 self.missing_streak += 1
                 self.timestamp = captured_ns
-                if damaged and (self.enable_search or self.enable_patrol):
+                if damaged and (self.enable_search or self.enable_patrol) and not self.counter_search_triggered:
                     self.counter_search_frames = 32
+                    self.counter_search_triggered = True
+                    self.counter_search_steps = 0
+                if self.enable_patrol and self.counter_search_steps >= 16:
+                    self.counter_search_frames = 0
                 if self.counter_search_frames > 0:
                     self.counter_search_frames -= 1
+                    self.counter_search_steps += 1
                     return Action(mouse_dx=24 * self.search_direction), dict(
                         reason='counter_search', matches=0,
                         search_direction=self.search_direction,
@@ -131,7 +139,8 @@ class StableAim:
         was_searching = (self.counter_search_frames > 0
                          or (self.enable_search and 2 <= self.missing_streak <= 120)
                          or (self.enable_patrol and self.missing_streak >= 2))
-        self.counter_search_frames = 0
+        self.counter_search_frames = self.counter_search_steps = 0
+        self.counter_search_triggered = False
         self.search_direction = -1 if x + w / 2 < width / 2 else 1
         self.missing_streak = 0
         interval = None if self.timestamp is None else (captured_ns-self.timestamp)/1e9

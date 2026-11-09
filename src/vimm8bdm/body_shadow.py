@@ -44,16 +44,17 @@ class BodyShadowPolicy:
 
     def keep_ready(self):
         """Warm idle inference without input so CUDA stays in P0 clock state."""
-        limit_ns = 400_000_000 if self.device.startswith('cuda') else 2_000_000_000
+        limit_ns = 120_000_000 if self.device.startswith('cuda') else 2_000_000_000
         if self.clock() - self.last_ready_ns < limit_ns:
             return False
-        h, w = (320, 320) if self.device.startswith('cuda') and self.idle_warmup_calls % 2 else (480, 640)
         with torch.inference_mode():
-            t = (torch.zeros((3, h, w), dtype=torch.uint8).to(self.device).float().div_(255)
-                 if self.device.startswith('cuda') else torch.zeros(3, h, w, device=self.device))
-            self.model([t])
             if self.device.startswith('cuda'):
+                t = torch.zeros((3, 480, 640), dtype=torch.uint8).to(self.device).float().div_(255)
+                self.model([t])
+                self.model([t[:, 80:400, 160:480]])
                 torch.cuda.synchronize()
+            else:
+                self.model([torch.zeros(3, 480, 640, device=self.device)])
         self.last_ready_ns = self.clock()
         self.idle_warmup_calls += 1
         return True

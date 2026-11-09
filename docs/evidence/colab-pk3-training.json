@@ -653,7 +653,63 @@
       "p50": 33.90055,
       "p95": 54.2586,
       "maximum": 99.3122
+    },
+    "counter_search_cap_and_track_occlusion_replay": {
+      "reasons": {
+        "counter_search": 81,
+        "patrol_target": 80,
+        "track_target": 54,
+        "search_target": 43,
+        "confirm_target": 17,
+        "missing_target": 13,
+        "post_attack_occlusion": 10
+      },
+      "attack_frames": [86, 216, 220, 222]
     }
   },
-  "tests_passed": 264
+  "attended_live_validation_body_aim_24": {
+    "device": "cuda",
+    "checkpoint_sha256": "41c87a1e2b0acf22fafdb6c55cde2ea29d31b6c6f0169c325d69939ec22969ee",
+    "cuda_p0_dual_pass_idle_warmup_120ms": true,
+    "idle_warmup_calls": 665,
+    "frames": 297,
+    "accepted_action_messages": 297,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "patrol_target": 219,
+      "track_target": 39,
+      "counter_search": 16,
+      "search_target": 13,
+      "missing_target": 4,
+      "confirm_target": 3,
+      "post_attack_occlusion": 3
+    },
+    "local_zoom_crops": 23,
+    "local_zoom_accepted_frames": 9,
+    "track_target_frames": 39,
+    "strafe_left_frames": 20,
+    "strafe_right_frames": 19,
+    "range_forward_w_frames": 3,
+    "range_backoff_s_frames": 8,
+    "patrol_forward_w_frames": 120,
+    "patrol_turn_frames": 83,
+    "post_attack_occlusion_frames": [7, 21, 53],
+    "dispatched_attack_frames": [4, 16, 28, 35, 44, 46, 52],
+    "input_ms": {
+      "p50": 1.0323,
+      "p95": 3.993,
+      "maximum": 17.1207
+    },
+    "policy_ms": {
+      "p50": 29.6375,
+      "p95": 53.9303,
+      "maximum": 81.4829
+    },
+    "loop_ms": {
+      "p50": 61.9496,
+      "p95": 87.0279,
+      "maximum": 131.7001
+    }
+  },
+  "tests_passed": 265
 }

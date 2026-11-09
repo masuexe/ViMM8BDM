@@ -266,6 +266,37 @@ class StableAimTests(unittest.TestCase):
         self.assertTrue(fire_det['damaged'])
         self.assertTrue(fire_act.attack)
 
+    def test_repeated_corner_damage_caps_counter_search_and_escapes_via_patrol_plus_track_occlusion_grace(self):
+        tracker = StableAim(enable_attack=True, enable_search=True, enable_strafe=True, enable_patrol=True)
+        center_box = [candidate([290, 180, 60, 100])]
+        # 2 frames to enter track_target without firing (matches == 2, attack_pulsed == False)
+        tracker.step(center_box, 640, 480, 100_000_000, flash_k=0, hp_pixels=104)
+        track_act, track_det = tracker.step(center_box, 640, 480, 200_000_000, flash_k=0, hp_pixels=104)
+        self.assertEqual(track_det['reason'], 'track_target')
+        self.assertEqual(track_det['matches'], 2)
+        self.assertFalse(track_act.attack)
+        # 1 missing frame during track_target coasts via post_attack_occlusion and resumes lock on next frame
+        occ_act, occ_det = tracker.step([], 640, 480, 300_000_000, flash_k=0, hp_pixels=104)
+        self.assertEqual(occ_act, Action())
+        self.assertEqual(occ_det['reason'], 'post_attack_occlusion')
+        self.assertEqual(occ_det['matches'], 2)
+        resume_act, resume_det = tracker.step(center_box, 640, 480, 400_000_000, flash_k=0, hp_pixels=104)
+        self.assertEqual(resume_det['reason'], 'track_target')
+        self.assertEqual(resume_det['matches'], 3)
+        self.assertTrue(resume_act.attack)
+        # Now lose target and take repeated hits in a corner: counter_search never resets to 31 and hands off to patrol_target after 16 steps
+        tracker.step([], 640, 480, 500_000_000, flash_k=0, hp_pixels=104)  # post_attack_occlusion
+        for step_idx in range(16):
+            ns = (6 + step_idx) * 100_000_000
+            # Simulate repeated hit spikes at steps 0 and 8
+            fk = 66 if step_idx in (0, 8) else 0
+            act, det = tracker.step([], 640, 480, ns, flash_k=fk, hp_pixels=8)
+            self.assertEqual(det['reason'], 'counter_search')
+            self.assertEqual(det['counter_search_remaining'], 31 - step_idx)
+        escape_act, escape_det = tracker.step([], 640, 480, 2_200_000_000, flash_k=66, hp_pixels=8)
+        self.assertEqual(escape_act, Action())
+        self.assertEqual(escape_det['reason'], 'patrol_target')
+
 
 @unittest.skipIf(Image is None,'Install Pillow')
 class AimAppearanceTests(unittest.TestCase):
