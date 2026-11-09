@@ -59,6 +59,8 @@ class BodyShadowPolicy:
         self.last_capture_ns = None
         self.last_prediction = None
         self.last_image = None
+        self.zoom_hint_box = None
+        self.zoom_accept_score = .5
         self.phase = 'observe'
 
     def predict(self, frame):
@@ -95,7 +97,10 @@ class BodyShadowPolicy:
                 tensor[1].sub_(alpha).mul_(inv).clamp_(0., 1.)
                 tensor[2].mul_(inv).clamp_(0., 1.)
             prediction = self.model([tensor])[0]
-            boxes, window = refine_with_local_zoom(self.model, image, prediction, tensor)
+            boxes, window = refine_with_local_zoom(
+                self.model, image, prediction, tensor,
+                hint_box=getattr(self, 'zoom_hint_box', None),
+                accept_score=getattr(self, 'zoom_accept_score', .5))
             if self.device.startswith('cuda'):
                 torch.cuda.synchronize()
         finished = self.clock()

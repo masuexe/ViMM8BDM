@@ -272,3 +272,43 @@ class BodyAimTests(unittest.TestCase):
         state.box=[290.,180.,350.,280.]
         fire_act=policy.predict(make_hud_frame(flash_k=39,hp_top=149,box=state.box))
         self.assertTrue(fire_act.attack)
+
+    def test_tracker_guided_local_zoom_and_fast_pitch_alignment_in_patrol_mode(self):
+        clock=SimpleNamespace(now=1_000_000_000)
+        state=SimpleNamespace(full_score=.99)
+        def model(inputs):
+            t=inputs[0]
+            if tuple(t.shape[-2:])==(320,320):
+                return [dict(boxes=torch.tensor([[130.,50.,190.,150.]]),
+                             labels=torch.tensor([1]),scores=torch.tensor([.99]))]
+            if state.full_score<=0:
+                return [dict(boxes=torch.zeros((0,4)),labels=torch.zeros((0,),dtype=torch.int64),scores=torch.zeros((0,)))]
+            return [dict(boxes=torch.tensor([[290.,50.,350.,150.]]),
+                         labels=torch.tensor([1]),scores=torch.tensor([state.full_score]))]
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'model.pt';path.write_bytes(b'fixture')
+            with patch('vimm8bdm.body_shadow.load_checkpoint',return_value=(model,{})):
+                policy=BodyAimPolicy(path,lambda:clock.now,enable_attack=True,enable_search=True,
+                                     enable_strafe=True,enable_patrol=True)
+        image=Image.new('RGB',(640,480),'black')
+        ImageDraw.Draw(image).rectangle((290,50,349,149),fill=(255,0,120))
+        pixels=image.convert('RGBA').tobytes('raw','BGRA')
+        # Frame 1: full-frame detection at [290, 50, 60, 100] (center_y = 100, error_y = -140)
+        clock.now+=100_000_000
+        self.assertEqual(policy.predict(Frame(640,480,pixels,clock.now-1_000_000)),Action())
+        self.assertEqual(policy.last_prediction['aim']['reason'],'confirm_target')
+        # Frame 2: full-frame score drops to .65 (< .80 accept_score), triggering local_zoom and fast -16 dy pitch
+        state.full_score=.65
+        clock.now+=100_000_000
+        act2=policy.predict(Frame(640,480,pixels,clock.now-1_000_000))
+        self.assertEqual(policy.last_prediction['local_zoom_crop'],(160,0,480,320))
+        self.assertEqual(policy.last_prediction['aim']['reason'],'track_target')
+        self.assertEqual(act2.mouse_dy,-16)
+        # Frame 3: full-frame score drops to 0, but tracker.previous hint_box guides local_zoom to keep lock!
+        state.full_score=0.
+        clock.now+=100_000_000
+        act3=policy.predict(Frame(640,480,pixels,clock.now-1_000_000))
+        self.assertEqual(policy.last_prediction['local_zoom_crop'],(160,0,480,320))
+        self.assertEqual(policy.last_prediction['aim']['reason'],'track_target')
+        self.assertEqual(policy.last_prediction['aim']['matches'],3)
+        self.assertEqual(act3.mouse_dy,-16)

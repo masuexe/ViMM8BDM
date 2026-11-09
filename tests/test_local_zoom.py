@@ -62,3 +62,17 @@ class LocalZoomTests(unittest.TestCase):
         self.assertEqual(len(boxes), 1)
         self.assertEqual(boxes[0]['box'], [170., 100., 20., 30.])
         self.assertEqual(seen_devices, [torch.device('meta')])
+
+    def test_accept_score_and_hint_box_recover_dead_zone_and_missed_proposals(self):
+        self.assertEqual(
+            crop_window(prediction([310, 230, 330, 250], .65), 640, 480, accept_score=.8),
+            (160, 80, 480, 400),
+        )
+        self.assertIsNone(
+            crop_window(prediction([310, 230, 330, 250], .85), 640, 480, accept_score=.8)
+        )
+        self.assertEqual(
+            crop_window(prediction([0, 0, 10, 10], .05), 640, 480,
+                        hint_box=[440, 180, 60, 80], accept_score=.8),
+            (310, 60, 630, 380),
+        )

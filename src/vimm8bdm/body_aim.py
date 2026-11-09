@@ -21,12 +21,16 @@ class BodyAimPolicy(BodyShadowPolicy):
 
     def reset(self):
         super().reset()
+        self.zoom_accept_score = .8
         self.tracker = StableAim(enable_attack=self.enable_attack, enable_search=self.enable_search,
                                  enable_strafe=self.enable_strafe, enable_patrol=self.enable_patrol)
         self.navigator = VisualNavigationPolicy(max_turn_step=16)
         self.phase = 'aim_and_attack' if self.enable_attack else 'aim_only'
 
     def predict(self, frame):
+        hint_ok = (self.tracker.previous is not None and self.tracker.timestamp is not None
+                   and 0 < frame.captured_ns - self.tracker.timestamp <= 200_000_000)
+        self.zoom_hint_box = list(self.tracker.previous) if hint_ok else None
         super().predict(frame)
         result = self.last_prediction
         result.pop('input_sent', None)

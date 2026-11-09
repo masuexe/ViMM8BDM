@@ -161,7 +161,8 @@ class StableAim:
                 detail['search_brake'] = True
                 return Action(mouse_dx=dx), detail
             return Action(), detail
-        dy = 0 if abs(error_y) <= 6 else max(-40*dt,min(40*dt,error_y*.15/.625))
+        limit_y = (160 if self.enable_patrol else 40) * dt
+        dy = 0 if abs(error_y) <= 6 else max(-limit_y,min(limit_y,error_y*.15/.625))
         window_x, window_y = max(8., w * .35), max(6., h * .35)
         in_attack_window = abs(error_x) <= window_x and abs(error_y) <= window_y
         attack = self.enable_attack and self.matches >= 3 and in_attack_window and not self.attack_pulsed

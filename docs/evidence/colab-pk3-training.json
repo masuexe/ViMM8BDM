@@ -545,5 +545,57 @@
       "maximum": 67.8768
     }
   },
-  "tests_passed": 261
+  "attended_live_validation_body_aim_22": {
+    "device": "cuda",
+    "practice_mode": "buddha_with_power_regeneration",
+    "yellow_damage_flash_unblending": true,
+    "damage_counter_search_24px": true,
+    "tracker_guided_local_zoom": true,
+    "fast_pitch_alignment_16px": true,
+    "frames": 298,
+    "accepted_action_messages": 298,
+    "stale_or_inactive_frames": 0,
+    "reasons": {
+      "patrol_target": 112,
+      "track_target": 77,
+      "counter_search": 41,
+      "search_target": 35,
+      "missing_target": 13,
+      "confirm_target": 9,
+      "search_brake": 8,
+      "post_attack_occlusion": 3
+    },
+    "local_zoom_crops": 60,
+    "local_zoom_accepted_frames": 37,
+    "track_target_frames": 77,
+    "strafe_left_frames": 40,
+    "strafe_right_frames": 37,
+    "range_forward_w_frames": 11,
+    "range_backoff_s_frames": 8,
+    "patrol_forward_w_frames": 65,
+    "patrol_turn_frames": 34,
+    "counter_search_frames": 41,
+    "search_brake_frames": 8,
+    "dispatched_attack_frames": [2, 15, 26, 35, 41, 46, 164],
+    "damage_flash_frames_ge_12": 67,
+    "max_damage_flash_k": 67,
+    "hud_hp_pixels_min": 52,
+    "hud_hp_pixels_max": 264,
+    "input_ms": {
+      "p50": 0.76905,
+      "p95": 3.2011,
+      "maximum": 6.9578
+    },
+    "policy_ms": {
+      "p50": 20.50985,
+      "p95": 39.7889,
+      "maximum": 124.7773
+    },
+    "loop_ms": {
+      "p50": 36.618,
+      "p95": 60.1425,
+      "maximum": 142.0494
+    }
+  },
+  "tests_passed": 263
 }
